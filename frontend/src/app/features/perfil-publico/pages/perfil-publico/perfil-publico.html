@@ -1,0 +1,101 @@
+<div class="perfil-publico-page">
+  <div class="topbar">
+    <a routerLink="/" class="brand">TopoPro</a>
+    <div class="topbar-actions">
+      <a routerLink="/publicaciones" class="volver">← Explorar trabajos</a>
+      <button class="btn-contactar" type="button" (click)="abrirContacto()" *ngIf="puedeContactar()">✉ Contactar</button>
+        <button *ngIf="puedeContactar()" class="btn-mensaje" type="button" (click)="enviarMensajeInterno()">💬 Mensaje interno</button>
+      <button class="btn-compartir" type="button" (click)="copiarPerfil()">{{ enlaceCopiado() ? '✓ Enlace copiado' : '↗ Compartir perfil' }}</button>
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <section class="estado"><div class="spinner"></div><p>Cargando perfil profesional...</p></section>
+  } @else if (error()) {
+    <section class="estado error"><h2>No pudimos encontrar este perfil</h2><p>{{ error() }}</p><a routerLink="/publicaciones">Volver a explorar</a></section>
+  } @else if (perfil(); as p) {
+    <main class="contenido-principal">
+      <section class="hero-perfil">
+        <div class="hero-cover"><div class="hero-grid"></div></div>
+        <div class="hero-content">
+          <div class="avatar-grande">
+            @if (p.foto) { <img [src]="p.foto" [alt]="nombreCompleto()"> } @else { <span>{{ iniciales() }}</span> }
+          </div>
+          <div class="identidad">
+            <span class="eyebrow">PROFESIONAL TOPOPRO</span>
+            <h1>{{ nombreCompleto() }}</h1>
+            <p class="profesion">{{ p.profesion || 'Profesional de la topografía' }}</p>
+            @if (p.empresa) { <p>🏢 {{ p.empresa }}</p> }
+            @if (p.ciudad || p.pais) { <p>📍 {{ p.ciudad || '' }}{{ p.ciudad && p.pais ? ', ' : '' }}{{ p.pais || '' }}</p> }
+          </div>
+        </div>
+        <div class="estadisticas">
+          <div><strong>{{ p.publicacionesCount }}</strong><span>trabajos</span></div>
+          <div><strong>{{ totalFotos() }}</strong><span>fotografías</span></div>
+          <div><strong>{{ tiposTrabajo().length }}</strong><span>especialidades</span></div>
+        </div>
+      </section>
+
+      @if (tiposTrabajo().length) {
+        <section class="especialidades panel">
+          <div class="seccion-cabecera"><div><span class="eyebrow">EXPERIENCIA</span><h2>Especialidades</h2></div></div>
+          <div class="chips">
+            @for (tipo of tiposTrabajo(); track tipo) { <span class="chip">🧭 {{ tipo }}</span> }
+          </div>
+        </section>
+      }
+
+      @if (fotos().length) {
+        <section class="galeria-profesional panel">
+          <div class="seccion-cabecera">
+            <div><span class="eyebrow">PORTAFOLIO VISUAL</span><h2>Trabajos en campo</h2></div>
+            <span class="contador">{{ totalFotos() }} fotos</span>
+          </div>
+          <div class="mosaico-fotos">
+            @for (foto of fotos().slice(0, 12); track foto.id + '-' + foto.url) {
+              <div class="foto-item"><img [src]="foto.url" [alt]="'Trabajo de ' + nombreCompleto()" loading="lazy"></div>
+            }
+          </div>
+        </section>
+      }
+
+      <section class="panel trabajos-section">
+        <div class="seccion-cabecera">
+          <div><span class="eyebrow">PORTAFOLIO</span><h2>Trabajos publicados</h2></div>
+          <span class="contador">{{ p.publicacionesCount }}</span>
+        </div>
+
+        @if (!p.publicaciones.length) {
+          <div class="vacio"><div>📐</div><h3>Aún no hay trabajos publicados</h3><p>Este profesional todavía no ha compartido trabajos con la comunidad.</p></div>
+        } @else {
+          <div class="grid-trabajos">
+            @for (publicacion of p.publicaciones; track publicacion.id) {
+              <app-publicacion-card [publicacion]="publicacion" />
+            }
+          </div>
+        }
+      </section>
+    </main>
+
+    @if (contactoAbierto()) {
+      <div class="modal-backdrop" (click)="cerrarContacto()">
+        <section class="modal-contacto" role="dialog" aria-modal="true" aria-labelledby="titulo-contacto" (click)="$event.stopPropagation()">
+          <button class="cerrar-modal" type="button" aria-label="Cerrar" (click)="cerrarContacto()">×</button>
+          <span class="eyebrow">CONTACTO PROFESIONAL</span>
+          <h2 id="titulo-contacto">Contactar a {{ nombreCompleto() }}</h2>
+          <p class="ayuda-contacto">Tu correo no se muestra públicamente. El profesional recibirá tu mensaje y podrá responderte directamente.</p>
+          <label>Asunto <span>(opcional)</span></label>
+          <input [(ngModel)]="asuntoContacto" maxlength="180" placeholder="Ej. Solicitud de servicio topográfico">
+          <label>Mensaje <span>*</span></label>
+          <textarea [(ngModel)]="mensajeContacto" maxlength="4000" rows="7" placeholder="Cuéntale brevemente qué necesitas..."></textarea>
+          @if (contactoError()) { <div class="alerta error">{{ contactoError() }}</div> }
+          @if (contactoExito()) { <div class="alerta exito">✓ {{ contactoExito() }}</div> }
+          <div class="acciones-contacto">
+            <button type="button" class="btn-secundario" (click)="cerrarContacto()" [disabled]="enviandoContacto()">Cancelar</button>
+            <button type="button" class="btn-enviar" (click)="enviarContacto()" [disabled]="enviandoContacto() || !mensajeContacto.trim()">{{ enviandoContacto() ? 'Enviando...' : 'Enviar mensaje' }}</button>
+          </div>
+        </section>
+      </div>
+    }
+  }
+</div>

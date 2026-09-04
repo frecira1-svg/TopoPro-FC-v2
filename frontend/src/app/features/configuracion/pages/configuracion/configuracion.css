@@ -1,0 +1,264 @@
+.configuracion-container {
+max-width: 1100px;
+margin: 0 auto;
+padding: 30px;
+}
+
+.configuracion-header {
+margin-bottom: 30px;
+}
+
+.configuracion-header h1 {
+margin: 0;
+font-size: 30px;
+font-weight: 700;
+}
+
+.configuracion-header p {
+margin-top: 8px;
+color: #6c757d;
+}
+
+.config-card {
+background: #ffffff;
+border-radius: 16px;
+padding: 25px;
+margin-bottom: 25px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.config-card-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-bottom: 1px solid #eee;
+padding-bottom: 15px;
+margin-bottom: 20px;
+}
+
+.config-card-header h2 {
+margin: 0;
+font-size: 20px;
+}
+
+.config-card-header span {
+font-size: 13px;
+color: #6c757d;
+}
+
+.config-content {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 20px;
+}
+
+.config-item {
+padding: 18px;
+border: 1px solid #eee;
+border-radius: 12px;
+}
+
+.config-item strong {
+display: block;
+margin-bottom: 8px;
+font-size: 16px;
+}
+
+.config-item p {
+margin: 0 0 12px;
+color: #6c757d;
+font-size: 14px;
+}
+
+.config-item a {
+color: #0d6efd;
+text-decoration: none;
+font-weight: 600;
+}
+
+.config-item select {
+padding: 8px 12px;
+border: 1px solid #ddd;
+border-radius: 8px;
+}
+
+.switch {
+position: relative;
+display: inline-block;
+width: 45px;
+height: 24px;
+}
+
+.switch input {
+display: none;
+}
+
+.switch span {
+position: absolute;
+inset: 0;
+background: #ccc;
+border-radius: 20px;
+cursor: pointer;
+}
+
+.switch span::before {
+content: "";
+position: absolute;
+width: 18px;
+height: 18px;
+left: 3px;
+top: 3px;
+background: white;
+border-radius: 50%;
+transition: 0.2s;
+}
+
+.switch input:checked + span {
+background: #198754;
+}
+
+.switch input:checked + span::before {
+transform: translateX(21px);
+}
+
+.form-password {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+  max-width: 320px;
+}
+
+.form-password input {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.form-password button {
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: #0d6efd;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.form-password button:hover:not(:disabled) {
+  background: #0b5ed7;
+}
+
+.form-password button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.permisos-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.permisos-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+}
+
+.permisos-selector label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.permisos-selector select {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.permisos-cargando {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.permisos-tabla {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.permisos-modulo {
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permisos-modulo strong {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.permisos-modulo label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+}
+
+.permisos-modulo input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.btn-guardar-permisos {
+  grid-column: 1 / -1;
+  height: 42px;
+  border: none;
+  border-radius: 8px;
+  background: #0d6efd;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-guardar-permisos:hover:not(:disabled) {
+  background: #0b5ed7;
+}
+
+.btn-guardar-permisos:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+
+.configuracion-container {
+padding: 20px;
+}
+
+.config-content {
+grid-template-columns: 1fr;
+}
+
+.permisos-tabla {
+  grid-template-columns: 1fr;
+}
+
+}

@@ -1,0 +1,286 @@
+<div class="dashboard-container">
+
+
+    <!-- ENCABEZADO -->
+
+    <section class="dashboard-header">
+
+        <div>
+
+            <h1 class="dashboard-title">
+                👋 Hola, {{ usuario?.nombre || 'Usuario' }}
+            </h1>
+
+
+            <p class="dashboard-subtitle">
+                Bienvenido nuevamente a TopoPro.
+                Aquí tienes el resumen de tu actividad.
+            </p>
+
+        </div>
+
+
+
+        <div class="user-badge">
+
+
+            <div class="user-avatar">
+
+                {{ usuario?.nombre?.charAt(0) || 'U' }}
+
+            </div>
+
+
+
+            <div>
+
+                <strong>
+                    {{ usuario?.nombre }}
+                </strong>
+
+
+                <small>
+                    {{ usuario?.rol }}
+                </small>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+    <!-- TARJETAS DE ESTADÍSTICAS -->
+
+
+    <section class="stats-grid">
+
+
+        <article class="stat-card">
+
+
+            <div class="stat-icon blue">
+                📁
+            </div>
+
+
+            <div class="stat-title">
+                Proyectos
+            </div>
+
+
+            <div class="stat-number">
+                {{ resumen.proyectos || 0 }}
+            </div>
+
+
+        </article>
+
+
+
+
+        <article class="stat-card">
+
+
+            <div class="stat-icon green">
+                👥
+            </div>
+
+
+            <div class="stat-title">
+                Clientes
+            </div>
+
+
+            <div class="stat-number">
+                {{ resumen.clientes || 0 }}
+            </div>
+
+
+        </article>
+
+
+
+
+        <article class="stat-card">
+
+
+            <div class="stat-icon orange">
+                📍
+            </div>
+
+
+            <div class="stat-title">
+                Levantamientos
+            </div>
+
+
+            <div class="stat-number">
+                {{ resumen.puntos || 0 }}
+            </div>
+
+
+        </article>
+
+
+
+
+        <article class="stat-card">
+
+
+            <div class="stat-icon purple">
+                🖥️
+            </div>
+
+
+            <div class="stat-title">
+                Equipos
+            </div>
+
+
+            <div class="stat-number">
+                {{ resumen.publicaciones || 0 }}
+            </div>
+
+
+        </article>
+
+
+    </section>
+
+
+
+
+
+
+
+    <!-- ACCESOS RÁPIDOS -->
+
+
+    <section class="quick-section">
+
+
+        <h2 class="section-title">
+            Accesos rápidos
+        </h2>
+
+
+
+        <div class="quick-grid">
+
+
+
+            <div
+                class="quick-card"
+                (click)="irAProyectos()"
+            >
+
+                <h3>
+                    ➕ Nuevo proyecto
+                </h3>
+
+                <p>
+                    Crear un nuevo levantamiento topográfico.
+                </p>
+
+            </div>
+
+
+
+
+            <div
+                class="quick-card"
+                (click)="irAClientes()"
+            >
+
+                <h3>
+                    👤 Nuevo cliente
+                </h3>
+
+                <p>
+                    Registrar información del cliente.
+                </p>
+
+            </div>
+
+
+
+
+            <div
+                class="quick-card"
+                (click)="irAPuntos()"
+            >
+
+                <h3>
+                    📍 Nuevo punto
+                </h3>
+
+                <p>
+                    Agregar coordenadas topográficas.
+                </p>
+
+            </div>
+
+
+
+
+            <div
+                class="quick-card"
+                (click)="irAReportes()"
+            >
+
+                <h3>
+                    📊 Reportes
+                </h3>
+
+                <p>
+                    Consultar información del sistema.
+                </p>
+
+            </div>
+
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+
+
+    <!-- PANEL FUTURO -->
+
+
+    <section class="dashboard-panel">
+
+
+        <h2 class="section-title">
+            Actividad reciente
+        </h2>
+
+
+
+        <p class="dashboard-subtitle">
+
+            En este espacio agregaremos gráficos,
+            reportes y movimientos recientes.
+
+        </p>
+
+
+
+    </section>
+
+
+
+
+</div>

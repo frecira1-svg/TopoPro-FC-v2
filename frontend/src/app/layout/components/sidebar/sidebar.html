@@ -1,0 +1,200 @@
+<div class="sidebar">
+
+    <ul>
+
+        <!-- ============================================== -->
+        <!-- DASHBOARD -->
+        <!-- ============================================== -->
+
+        <li>
+
+            <a
+                routerLink="/dashboard"
+                routerLinkActive="activo"
+                [routerLinkActiveOptions]="{ exact: true }"
+            >
+                📊 Dashboard
+            </a>
+
+        </li>
+
+
+        <!-- ============================================== -->
+        <!-- PROYECTOS -->
+        <!-- ============================================== -->
+
+        <li
+            *ngIf="!cargandoPermisos && puedeVerProyectos"
+        >
+
+            <a
+                routerLink="/proyectos"
+                routerLinkActive="activo"
+            >
+                📁 Proyectos
+            </a>
+
+        </li>
+
+
+        <!-- ============================================== -->
+        <!-- MAPAS -->
+        <!-- ============================================== -->
+
+        <li>
+
+            <a
+                routerLink="/mapas"
+                routerLinkActive="activo"
+            >
+                🗺️ Mapas
+            </a>
+
+        </li>
+
+
+        <!-- ============================================== -->
+        <!-- CLIENTES -->
+        <!-- ============================================== -->
+
+        <li>
+
+            <a
+                routerLink="/clientes"
+                routerLinkActive="activo"
+            >
+                👥 Clientes
+            </a>
+
+        </li>
+
+
+        <!-- ============================================== -->
+        <!-- PUBLICACIONES -->
+        <!-- ============================================== -->
+
+        <li>
+
+            <a
+                routerLink="/publicaciones"
+                routerLinkActive="activo"
+            >
+                📰 Publicaciones
+            </a>
+
+        </li>
+
+
+        <!-- ============================================== -->
+        <!-- LEVANTAMIENTOS -->
+        <!-- ============================================== -->
+
+        <li
+            *ngIf="
+                !cargandoPermisos &&
+                puedeVerLevantamientos
+            "
+        >
+
+            <a
+                routerLink="/levantamientos"
+                routerLinkActive="activo"
+            >
+                📋 Levantamientos
+            </a>
+
+        </li>
+
+
+        <!-- ============================================== -->
+        <!-- EQUIPOS -->
+        <!-- ============================================== -->
+
+        <li
+            *ngIf="
+                !cargandoPermisos &&
+                puedeVerEquipos
+            "
+        >
+
+            <a
+                routerLink="/equipos"
+                routerLinkActive="activo"
+            >
+                📡 Equipos
+            </a>
+
+        </li>
+
+
+        <!-- ============================================== -->
+        <!-- REPORTES -->
+        <!-- ============================================== -->
+
+        <li
+            *ngIf="
+                !cargandoPermisos &&
+                puedeVerReportes
+            "
+        >
+
+            <a
+                routerLink="/reportes"
+                routerLinkActive="activo"
+            >
+                📄 Reportes
+            </a>
+
+        </li>
+
+
+        <!-- ============================================== -->
+        <!-- MENSAJERÍA -->
+        <!-- ============================================== -->
+
+        <li>
+            <a routerLink="/mensajes" routerLinkActive="activo">
+                <span>💬 Mensajes</span>
+                <span *ngIf="mensajesNoLeidos > 0" class="badge-contactos" [attr.aria-label]="mensajesNoLeidos + ' mensajes no leídos'">
+                    {{ mensajesNoLeidos > 99 ? '99+' : mensajesNoLeidos }}
+                </span>
+            </a>
+        </li>
+
+
+        <!-- ============================================== -->
+        <!-- CONTACTOS -->
+        <!-- ============================================== -->
+
+        <li>
+            <a routerLink="/contactos" routerLinkActive="activo">
+                <span>📥 Contactos</span>
+                <span
+                    *ngIf="contactosPendientes > 0"
+                    class="badge-contactos"
+                    [attr.aria-label]="contactosPendientes + ' mensajes pendientes'"
+                >
+                    {{ contactosPendientes > 99 ? '99+' : contactosPendientes }}
+                </span>
+            </a>
+        </li>
+
+
+        <!-- ============================================== -->
+        <!-- CONFIGURACIÓN -->
+        <!-- ============================================== -->
+
+        <li>
+
+            <a
+                routerLink="/configuracion"
+                routerLinkActive="activo"
+            >
+                ⚙️ Configuración
+            </a>
+
+        </li>
+
+    </ul>
+
+</div>

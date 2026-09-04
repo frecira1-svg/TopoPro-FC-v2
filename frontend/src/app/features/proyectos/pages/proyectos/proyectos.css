@@ -1,0 +1,575 @@
+/* =========================================================
+   TOPoPRO — PROYECTOS
+   Diseño moderno, espacioso y responsive
+========================================================= */
+
+.proyectos-container {
+  width: 100%;
+  min-height: calc(100vh - 70px);
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 34px 42px 60px;
+  box-sizing: border-box;
+  background: #f5f7fb;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+
+  margin-bottom: 32px;
+  padding: 30px 34px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
+}
+
+.encabezado h1 {
+  margin: 0 0 8px;
+
+  color: #111827;
+  font-size: 36px;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.subtitulo {
+  margin: 0;
+
+  color: #6b7280;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   ESTADÍSTICAS
+========================================================= */
+
+.stats-proyectos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+
+  margin-bottom: 36px;
+}
+
+.stat-proyecto {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  min-height: 125px;
+  padding: 25px 28px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.stat-proyecto:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.09);
+}
+
+.stat-proyecto .icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 58px;
+  height: 58px;
+  min-width: 58px;
+
+  border-radius: 16px;
+
+  font-size: 25px;
+}
+
+.stat-proyecto .icono.blue {
+  background: #eff6ff;
+}
+
+.stat-proyecto .icono.orange {
+  background: #fff7ed;
+}
+
+.stat-proyecto .icono.green {
+  background: #ecfdf5;
+}
+
+.stat-proyecto .icono.purple {
+  background: #f5f3ff;
+}
+
+.stat-proyecto span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.stat-proyecto strong {
+  display: block;
+
+  color: #111827;
+  font-size: 30px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+:host ::ng-deep .p-datatable {
+  width: 100%;
+
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+:host ::ng-deep .p-datatable-table {
+  min-width: 1050px;
+}
+
+:host ::ng-deep .p-datatable-header {
+  padding: 20px 24px;
+
+  background: #ffffff;
+  border: none;
+  border-bottom: 1px solid #eef0f3;
+}
+
+
+/* =========================================================
+   ENCABEZADO DE TABLA
+========================================================= */
+
+:host ::ng-deep .p-datatable-thead > tr > th {
+  padding: 19px 24px;
+
+  background: #f8fafc;
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+
+  color: #374151;
+
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   FILAS
+========================================================= */
+
+:host ::ng-deep .p-datatable-tbody > tr {
+  transition: background 0.15s ease;
+}
+
+:host ::ng-deep .p-datatable-tbody > tr:hover {
+  background: #f8fafc;
+}
+
+:host ::ng-deep .p-datatable-tbody > tr > td {
+  padding: 20px 24px;
+
+  border: none;
+  border-bottom: 1px solid #eef0f3;
+
+  color: #374151;
+
+  font-size: 14px;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+
+:host ::ng-deep .p-datatable-tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   NOMBRE DEL PROYECTO
+========================================================= */
+
+:host ::ng-deep .p-datatable-tbody > tr > td strong {
+  display: inline-block;
+
+  margin-bottom: 4px;
+
+  color: #111827;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+:host ::ng-deep .p-datatable-tbody > tr > td small {
+  display: inline-block;
+
+  max-width: 320px;
+
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
+:host ::ng-deep .p-datatable-tbody .p-tag {
+  min-width: 105px;
+
+  justify-content: center;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   ACCIONES
+========================================================= */
+
+:host ::ng-deep .p-datatable-tbody > tr > td:last-child {
+  white-space: nowrap;
+}
+
+:host ::ng-deep .p-datatable-tbody .p-button {
+  width: 40px;
+  height: 40px;
+
+  margin-right: 5px;
+
+  border-radius: 10px;
+}
+
+:host ::ng-deep .p-datatable-tbody .p-button:last-child {
+  margin-right: 0;
+}
+
+
+/* =========================================================
+   BUSCADOR
+========================================================= */
+
+.tabla-caption {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  width: 100%;
+  padding: 0;
+}
+
+.tabla-caption .p-input-icon-left {
+  position: relative;
+  display: block;
+}
+
+.tabla-caption .p-input-icon-left > i {
+  position: absolute;
+  z-index: 2;
+
+  top: 50%;
+  left: 15px;
+
+  transform: translateY(-50%);
+
+  color: #9ca3af;
+}
+
+.tabla-caption input {
+  width: 340px;
+  height: 44px;
+
+  padding: 0 16px 0 42px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  color: #111827;
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.tabla-caption input:focus {
+  border-color: #2563eb;
+
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+
+  outline: none;
+}
+
+
+/* =========================================================
+   PAGINADOR
+========================================================= */
+
+:host ::ng-deep .p-paginator {
+  padding: 16px 20px;
+
+  border: none;
+  border-top: 1px solid #eef0f3;
+
+  background: #ffffff;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-page,
+:host ::ng-deep .p-paginator .p-paginator-next,
+:host ::ng-deep .p-paginator .p-paginator-prev {
+  min-width: 38px;
+  height: 38px;
+
+  border-radius: 9px;
+}
+
+
+/* =========================================================
+   SIN DATOS
+========================================================= */
+
+.sin-datos {
+  padding: 55px 30px !important;
+
+  color: #6b7280 !important;
+
+  text-align: center;
+  font-size: 15px;
+}
+
+
+/* =========================================================
+   SIN PERMISO
+========================================================= */
+
+.sin-permiso {
+  padding: 60px 30px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+
+  text-align: center;
+
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.sin-permiso-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 70px;
+  height: 70px;
+
+  margin: 0 auto 20px;
+
+  border-radius: 18px;
+
+  background: #fef2f2;
+
+  font-size: 30px;
+}
+
+.sin-permiso h2 {
+  margin: 0 0 8px;
+
+  color: #111827;
+  font-size: 22px;
+}
+
+.sin-permiso p {
+  margin: 0;
+
+  color: #6b7280;
+  font-size: 15px;
+}
+
+
+/* =========================================================
+   FORMULARIO DEL DIALOG
+========================================================= */
+
+.form-campo {
+  margin-bottom: 22px;
+}
+
+.form-campo label {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: #374151;
+
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.form-campo input,
+.form-campo textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep .form-campo .p-inputtext,
+:host ::ng-deep .form-campo .p-select,
+:host ::ng-deep .form-campo textarea {
+  border-radius: 10px;
+}
+
+:host ::ng-deep .p-dialog {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header {
+  padding: 22px 26px;
+
+  border-bottom: 1px solid #eef0f3;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  padding: 26px;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-footer {
+  padding: 18px 26px;
+
+  border-top: 1px solid #eef0f3;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .proyectos-container {
+    padding: 30px;
+  }
+
+  .stats-proyectos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — MÓVIL
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .proyectos-container {
+    padding: 20px 16px 40px;
+  }
+
+  .encabezado {
+    flex-direction: column;
+    align-items: flex-start;
+
+    padding: 24px;
+
+    gap: 20px;
+  }
+
+  .encabezado h1 {
+    font-size: 29px;
+  }
+
+  .stats-proyectos {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .stat-proyecto {
+    min-height: 105px;
+  }
+
+  .tabla-caption {
+    justify-content: stretch;
+  }
+
+  .tabla-caption .p-input-icon-left,
+  .tabla-caption input {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   MÓVILES PEQUEÑOS
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .proyectos-container {
+    padding: 16px 12px 30px;
+  }
+
+  .encabezado {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .encabezado h1 {
+    font-size: 26px;
+  }
+
+  .subtitulo {
+    font-size: 14px;
+  }
+
+  .stat-proyecto {
+    padding: 20px;
+  }
+
+  .stat-proyecto .icono {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+  }
+
+}

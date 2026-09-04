@@ -1,0 +1,145 @@
+<div
+    class="dialog-backdrop"
+    *ngIf="visible && publicacion"
+>
+
+    <div class="dialog">
+
+        <div class="dialog-header">
+
+            <div>
+
+                <h2>{{ publicacion.titulo }}</h2>
+
+                <small>
+
+                    {{ publicacion.usuario.nombre }}
+                    {{ publicacion.usuario.apellido }}
+
+                    ·
+
+                    {{ publicacion.createdAt | date:'dd/MM/yyyy HH:mm' }}
+
+                </small>
+
+            </div>
+
+            <button
+                class="btn-cerrar"
+                (click)="cerrarDialogo()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div class="dialog-body">
+
+            <p class="contenido">
+
+                {{ publicacion.contenido }}
+
+            </p>
+
+            <div class="galeria-detalle" *ngIf="imagenes().length">
+                <div class="foto-principal">
+                    <button *ngIf="imagenes().length > 1" type="button" class="nav-foto anterior" (click)="anteriorFoto()">‹</button>
+                    <img [src]="imagenes()[fotoActiva]" alt="Fotografía del trabajo">
+                    <button *ngIf="imagenes().length > 1" type="button" class="nav-foto siguiente" (click)="siguienteFoto()">›</button>
+                </div>
+                <div class="miniaturas" *ngIf="imagenes().length > 1">
+                    <button type="button" *ngFor="let foto of imagenes(); let i = index" [class.activa]="i === fotoActiva" (click)="seleccionarFoto(i)">
+                        <img [src]="foto" [alt]="'Fotografía ' + (i + 1)">
+                    </button>
+                </div>
+                <small>{{ fotoActiva + 1 }} / {{ imagenes().length }}</small>
+            </div>
+
+            <hr>
+
+            <h3>
+
+                Comentarios
+
+                ({{ publicacion.comentarios?.length ?? 0 }})
+
+            </h3>
+
+            <div
+                class="sin-comentarios"
+                *ngIf="!publicacion.comentarios?.length"
+            >
+
+                Todavía no hay comentarios.
+
+            </div>
+
+            <div
+                class="comentario"
+                *ngFor="let comentario of publicacion.comentarios"
+            >
+
+                <div class="comentario-header">
+
+                    <strong>
+
+                        {{ comentario.usuario.nombre }}
+                        {{ comentario.usuario.apellido }}
+
+                    </strong>
+
+                    <small>
+
+                        {{ comentario.createdAt | date:'dd/MM/yyyy HH:mm' }}
+
+                    </small>
+
+                </div>
+
+                <p>
+
+                    {{ comentario.contenido }}
+
+                </p>
+
+                <button
+                    class="btn-eliminar"
+                    *ngIf="puedeEliminarComentario(comentario.usuarioId)"
+                    (click)="eliminarComentario.emit(comentario.id)"
+                >
+
+                    🗑 Eliminar
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="dialog-footer" *ngIf="usuarioId">
+
+            <textarea
+                rows="3"
+                [(ngModel)]="comentario"
+                placeholder="Escribe un comentario..."
+            ></textarea>
+
+            <button
+                class="btn-publicar"
+                (click)="enviarComentario()"
+            >
+
+                Publicar comentario
+
+            </button>
+
+        </div>
+
+        <div class="login-comentario" *ngIf="!usuarioId">
+            <span>Inicia sesión para participar en la conversación.</span>
+            <a routerLink="/login">Iniciar sesión</a>
+        </div>
+
+    </div>
+
+</div>

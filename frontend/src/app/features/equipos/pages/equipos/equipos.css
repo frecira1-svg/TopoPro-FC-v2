@@ -1,0 +1,624 @@
+/* =========================================================
+   TOPOPRO FC - EQUIPOS
+   Diseño profesional y espacioso
+   ========================================================= */
+
+.equipos-container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 34px 42px 60px;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
+
+.equipos-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 30px;
+}
+
+.equipos-header h1 {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 36px;
+  font-weight: 750;
+  letter-spacing: -0.8px;
+}
+
+.equipos-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   BOTÓN NUEVO
+   ========================================================= */
+
+.btn-nuevo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 48px;
+  padding: 0 24px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.btn-nuevo:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 18px rgba(37, 99, 235, 0.25);
+}
+
+.btn-nuevo:active {
+  transform: translateY(0);
+}
+
+.btn-nuevo i {
+  font-size: 18px;
+}
+
+/* =========================================================
+   ESTADÍSTICAS
+   ========================================================= */
+
+.stats-equipos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+
+  width: 100%;
+  margin-bottom: 36px;
+}
+
+.equipo-stat {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  min-height: 125px;
+  padding: 25px 28px;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.055);
+
+  box-sizing: border-box;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.equipo-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 24px rgba(15, 23, 42, 0.09);
+}
+
+.stat-icon {
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+  font-size: 29px;
+}
+
+.stat-icon.blue {
+  background: #eff6ff;
+}
+
+.stat-icon.green {
+  background: #ecfdf5;
+}
+
+.stat-icon.orange {
+  background: #fff7ed;
+}
+
+.equipo-stat span {
+  display: block;
+  margin-bottom: 6px;
+
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.equipo-stat strong {
+  display: block;
+
+  color: #172033;
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 750;
+}
+
+/* =========================================================
+   FORMULARIO
+   ========================================================= */
+
+.formulario-card {
+  margin-bottom: 36px;
+  padding: 30px;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.07);
+}
+
+.form-header {
+  margin-bottom: 26px;
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.form-header h2 {
+  margin: 0;
+
+  color: #172033;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 28px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.campo label {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.campo input,
+.campo select {
+  width: 100%;
+  min-height: 46px;
+
+  padding: 10px 14px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+
+  background: #ffffff;
+  color: #172033;
+
+  font-size: 14px;
+
+  outline: none;
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.campo input:focus,
+.campo select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.campo input::placeholder {
+  color: #94a3b8;
+}
+
+/* =========================================================
+   ACCIONES FORMULARIO
+   ========================================================= */
+
+.acciones-formulario {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  margin-top: 30px;
+  padding-top: 22px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-cancelar,
+.btn-guardar {
+  min-height: 44px;
+  padding: 0 22px;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-cancelar {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+}
+
+.btn-cancelar:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.btn-guardar {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn-guardar:hover {
+  background: #1d4ed8;
+}
+
+/* =========================================================
+   TABLA
+   ========================================================= */
+
+.tabla-equipos {
+  width: 100%;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  overflow-x: auto;
+
+  box-shadow: 0 7px 22px rgba(15, 23, 42, 0.055);
+}
+
+.tabla-equipos table {
+  width: 100%;
+  min-width: 1000px;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  table-layout: auto;
+}
+
+/* =========================================================
+   CABECERA TABLA
+   ========================================================= */
+
+.tabla-equipos thead th {
+  padding: 18px 24px;
+
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+
+  color: #475569;
+
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+.tabla-equipos thead th:first-child {
+  border-top-left-radius: 15px;
+}
+
+.tabla-equipos thead th:last-child {
+  border-top-right-radius: 15px;
+}
+
+/* =========================================================
+   FILAS
+   ========================================================= */
+
+.tabla-equipos tbody td {
+  padding: 20px 24px;
+
+  border-bottom: 1px solid #eef2f7;
+
+  color: #334155;
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  vertical-align: middle;
+}
+
+.tabla-equipos tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-equipos tbody tr {
+  transition: background 0.15s ease;
+}
+
+.tabla-equipos tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* =========================================================
+   COLUMNAS
+   ========================================================= */
+
+.tabla-equipos tbody td:first-child {
+  min-width: 220px;
+
+  color: #172033;
+  font-weight: 650;
+}
+
+.tabla-equipos tbody td:nth-child(2) {
+  min-width: 160px;
+}
+
+.tabla-equipos tbody td:nth-child(3) {
+  min-width: 230px;
+}
+
+.tabla-equipos tbody td:nth-child(4) {
+  min-width: 170px;
+
+  color: #475569;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.tabla-equipos tbody td:nth-child(5) {
+  min-width: 150px;
+
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.tabla-equipos tbody td:last-child {
+  width: 130px;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   ACCIONES
+   ========================================================= */
+
+.btn-editar,
+.btn-eliminar {
+  width: 40px;
+  height: 40px;
+
+  margin-right: 8px;
+
+  border-radius: 9px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid transparent;
+
+  background: transparent;
+
+  font-size: 17px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.btn-editar {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+}
+
+.btn-editar:hover {
+  background: #dbeafe;
+  transform: translateY(-1px);
+}
+
+.btn-eliminar {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.btn-eliminar:hover {
+  background: #fee2e2;
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   SIN DATOS
+   ========================================================= */
+
+.sin-datos {
+  padding: 55px 20px !important;
+
+  color: #64748b !important;
+
+  font-size: 15px !important;
+  text-align: center !important;
+}
+
+/* =========================================================
+   CARGANDO
+   ========================================================= */
+
+.mensaje-carga {
+  padding: 55px 20px;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+
+  color: #64748b;
+
+  font-size: 15px;
+  text-align: center;
+}
+
+/* =========================================================
+   SIN PERMISO
+   ========================================================= */
+
+.sin-permiso {
+  padding: 60px 30px;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  text-align: center;
+
+  box-shadow: 0 7px 22px rgba(15, 23, 42, 0.055);
+}
+
+.sin-permiso i {
+  display: block;
+  margin-bottom: 15px;
+
+  color: #94a3b8;
+  font-size: 40px;
+}
+
+.sin-permiso h3 {
+  margin: 0 0 8px;
+
+  color: #172033;
+  font-size: 20px;
+}
+
+.sin-permiso p {
+  margin: 0;
+
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .equipos-container {
+    padding: 26px 22px 45px;
+  }
+
+  .equipos-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .btn-nuevo {
+    align-self: flex-start;
+  }
+
+  .stats-equipos {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE - MÓVIL
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .equipos-container {
+    padding: 20px 14px 35px;
+  }
+
+  .equipos-header h1 {
+    font-size: 28px;
+  }
+
+  .equipos-header p {
+    font-size: 14px;
+  }
+
+  .btn-nuevo {
+    width: 100%;
+  }
+
+  .equipo-stat {
+    min-height: 100px;
+    padding: 18px;
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
+    font-size: 23px;
+  }
+
+  .equipo-stat strong {
+    font-size: 27px;
+  }
+
+  .formulario-card {
+    padding: 20px;
+  }
+
+  .acciones-formulario {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancelar,
+  .btn-guardar {
+    width: 100%;
+  }
+
+  .tabla-equipos tbody td,
+  .tabla-equipos thead th {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}

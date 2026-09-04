@@ -1,0 +1,15 @@
+<div class="verificacion-container">
+  <div class="verificacion-card">
+    <div class="icono" [class.exito]="exito()" [class.error]="!exito()">
+      {{ exito() ? '✅' : '❌' }}
+    </div>
+
+    <h1>{{ exito() ? 'Correo verificado' : 'Verificación fallida' }}</h1>
+
+    <p>{{ mensaje() }}</p>
+
+    <button (click)="irALogin()">
+      Ir a iniciar sesión
+    </button>
+  </div>
+</div>

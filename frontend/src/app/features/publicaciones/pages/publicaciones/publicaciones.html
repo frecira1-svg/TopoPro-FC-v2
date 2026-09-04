@@ -1,0 +1,128 @@
+<p-toast></p-toast>
+<div class="publicaciones-container">
+
+    <div class="encabezado">
+
+        <div>
+
+            <h1>Explora trabajos de la comunidad</h1>
+
+            <p>
+                Descubre publicaciones, experiencias y trabajos compartidos por profesionales de la topografía.
+            </p>
+
+        </div>
+
+        <button
+            *ngIf="usuario()"
+            class="btn-nueva"
+            (click)="abrirNuevaPublicacion()"
+        >
+            ➕ Nueva publicación
+        </button>
+
+    <a routerLink="/directorio" class="btn-directorio">👥 Buscar profesionales</a>
+
+    </div>
+
+    <div class="barra-filtros">
+
+        <button
+            [class.activo]="filtro() === 'TODAS'"
+            (click)="cambiarFiltro('TODAS')"
+        >
+            Todas
+        </button>
+
+        <button
+            [class.activo]="filtro() === 'NOTICIA'"
+            (click)="cambiarFiltro('NOTICIA')"
+        >
+            Noticias
+        </button>
+
+        <button
+            [class.activo]="filtro() === 'COMUNIDAD'"
+            (click)="cambiarFiltro('COMUNIDAD')"
+        >
+            Comunidad
+        </button>
+
+    </div>
+
+    <div
+        class="estado"
+        *ngIf="cargando()"
+    >
+
+        Cargando publicaciones...
+
+    </div>
+
+    <div
+        class="estado"
+        *ngIf="!cargando() && publicacionesFiltradas().length === 0"
+    >
+
+        No hay publicaciones para mostrar.
+
+    </div>
+
+    <app-publicacion-card
+
+        *ngFor="let publicacion of publicacionesFiltradas()"
+
+        [publicacion]="publicacion"
+
+        [usuarioId]="usuario()?.id ?? null"
+
+        [esAdmin]="usuario()?.rol === 'ADMIN'"
+
+        (editar)="editarPublicacion($event)"
+
+        (eliminar)="eliminarPublicacion($event)"
+
+        (abrir)="abrirDetalle($event)"
+
+    >
+    </app-publicacion-card>
+
+    <!-- Diálogo para crear o editar publicaciones -->
+    <app-publicacion-dialog
+
+        [visible]="dialogoVisible()"
+
+        [modoEdicion]="modoEdicion()"
+
+        [esAdmin]="usuario()?.rol === 'ADMIN'"
+
+        [publicacion]="publicacionActual"
+
+        (guardar)="guardarPublicacion($event)"
+
+        (cerrar)="cerrarDialogo()"
+
+    >
+    </app-publicacion-dialog>
+
+    <!-- Diálogo de detalle y comentarios -->
+    <app-publicacion-detalle
+
+    [visible]="detalleVisible()"
+
+    [publicacion]="publicacionDetalle()"
+
+    [usuarioId]="usuario()?.id ?? null"
+
+    [esAdmin]="usuario()?.rol === 'ADMIN'"
+
+    (cerrar)="cerrarDetalle()"
+
+    (comentar)="crearComentario($event)"
+
+    (eliminarComentario)="eliminarComentario($event)"
+
+>
+</app-publicacion-detalle>
+
+</div>

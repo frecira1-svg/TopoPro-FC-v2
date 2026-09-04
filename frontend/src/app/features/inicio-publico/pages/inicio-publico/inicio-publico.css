@@ -1,0 +1,40 @@
+:host { display: block; }
+
+.landing { min-height: 100vh; background: #f7f9fc; color: #172033; }
+.navbar-publica { height: 76px; max-width: 1180px; margin: auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+.marca { display:flex; align-items:center; gap:10px; color:#172033; font-size:1.35rem; font-weight:800; }
+.marca-icono { width:38px; height:38px; border-radius:11px; display:grid; place-items:center; color:white; background:#172033; font-size:.85rem; letter-spacing:-1px; }
+.nav-acciones { display:flex; align-items:center; gap:20px; }
+.nav-acciones a { font-weight:600; }
+.btn-login { color:#172033; }
+.btn-registro, .btn-principal { color:white; background:#172033; border-radius:12px; padding:12px 19px; box-shadow:0 8px 20px rgba(23,32,51,.14); }
+
+.hero { max-width:1180px; margin:auto; padding:72px 24px 96px; display:grid; grid-template-columns:1.05fr .95fr; gap:60px; align-items:center; }
+.etiqueta { display:inline-block; font-size:.74rem; letter-spacing:.12em; font-weight:800; color:#5d6b82; margin-bottom:16px; }
+.hero h1 { font-size:clamp(2.7rem,5vw,4.8rem); line-height:1.02; letter-spacing:-.055em; margin:0 0 24px; font-weight:800; }
+.hero h1 strong { font-weight:800; }
+.hero-texto { max-width:610px; color:#657084; font-size:1.15rem; line-height:1.7; margin-bottom:30px; }
+.hero-acciones { display:flex; gap:14px; flex-wrap:wrap; }
+.btn-principal, .btn-secundario { display:inline-flex; align-items:center; justify-content:center; min-height:48px; font-weight:700; }
+.btn-secundario { color:#172033; border:1px solid #dce2eb; background:white; border-radius:12px; padding:12px 19px; }
+.hero-login { color:#7a8495; font-size:.9rem; margin-top:18px; }
+.hero-login a { color:#172033; font-weight:700; }
+
+.hero-visual { min-height:430px; display:grid; place-items:center; }
+.mapa-card { width:min(470px,100%); height:390px; position:relative; overflow:hidden; border-radius:28px; border:1px solid #dce3ed; background:linear-gradient(145deg,#e9eef4,#f8fafc); box-shadow:0 30px 70px rgba(32,49,76,.16); transform:rotate(2deg); }
+.mapa-grid { position:absolute; inset:0; opacity:.5; background-image:linear-gradient(#cbd4df 1px,transparent 1px),linear-gradient(90deg,#cbd4df 1px,transparent 1px); background-size:42px 42px; }
+.mapa-card:before, .mapa-card:after { content:""; position:absolute; background:#fff; opacity:.65; border-radius:50%; }
+.mapa-card:before { width:220px;height:220px;left:-55px;top:70px;box-shadow:250px 100px 0 40px #eef2f6; }
+.punto { position:absolute; width:16px; height:16px; border:4px solid white; border-radius:50%; background:#172033; box-shadow:0 3px 12px rgba(0,0,0,.2); z-index:3; }
+.punto-1 { left:24%; top:28%; }.punto-2 { left:62%; top:57%; }.punto-3 { left:43%; top:78%; }
+.linea { position:absolute; height:3px; background:#172033; transform-origin:left center; z-index:2; opacity:.75; }.linea-1 { width:190px; left:25%; top:30%; transform:rotate(29deg); }.linea-2 { width:130px; left:44%; top:79%; transform:rotate(-54deg); }
+.coordenada { position:absolute; z-index:4; background:rgba(255,255,255,.92); border:1px solid #e2e7ee; border-radius:9px; padding:8px 10px; font-size:.68rem; font-weight:700; box-shadow:0 8px 20px rgba(32,49,76,.08); }.coordenada-1{left:14%;top:16%;}.coordenada-2{right:10%;bottom:14%;}.brujula{position:absolute;right:20px;top:18px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:white;border:1px solid #dde4ed;font-weight:800;z-index:4;}
+
+.propuesta { background:white; padding:92px 24px; border-top:1px solid #e9edf3; border-bottom:1px solid #e9edf3; }
+.seccion-titulo { max-width:760px; margin:0 auto 48px; text-align:center; }.seccion-titulo h2{font-size:clamp(2rem,4vw,3rem);letter-spacing:-.04em;margin:0 0 12px}.seccion-titulo p{color:#6c7789;font-size:1.05rem}
+.tarjetas { max-width:1180px; margin:auto; display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }.tarjeta{padding:28px;border:1px solid #e5eaf1;border-radius:20px;background:#fbfcfe}.icono{font-size:1.8rem;margin-bottom:18px}.tarjeta h3{margin:0 0 9px}.tarjeta p{margin:0;color:#6d7788;line-height:1.6;font-size:.94rem}
+.comunidad { max-width:1180px; margin:70px auto; padding:58px 60px; border-radius:28px; background:#172033; color:white; display:flex; align-items:center; justify-content:space-between; gap:35px; }.comunidad .etiqueta{color:#aeb9ca}.comunidad h2{font-size:clamp(1.8rem,3vw,2.7rem);letter-spacing:-.04em;margin:0 0 12px;max-width:650px}.comunidad p{margin:0;color:#c2cad6;max-width:650px;line-height:1.6}.comunidad .btn-principal{background:white;color:#172033;white-space:nowrap}
+footer{max-width:1180px;margin:auto;padding:30px 24px 45px;display:flex;justify-content:space-between;gap:20px;color:#7b8494;font-size:.9rem}.marca-footer{font-weight:800;color:#172033}.marca-footer span{color:#7b8494}
+
+@media (max-width: 900px){.hero{grid-template-columns:1fr;padding-top:48px}.hero-visual{min-height:340px}.mapa-card{height:320px}.tarjetas{grid-template-columns:repeat(2,1fr)}.comunidad{margin:50px 24px;padding:42px 30px;flex-direction:column;align-items:flex-start}}
+@media (max-width: 600px){.navbar-publica{height:68px}.nav-acciones{gap:10px;font-size:.9rem}.nav-acciones .btn-registro{padding:9px 12px}.hero{padding:42px 20px 65px}.hero h1{font-size:2.65rem}.hero-visual{min-height:290px}.mapa-card{height:270px}.tarjetas{grid-template-columns:1fr}.propuesta{padding:65px 20px}.comunidad{margin:35px 20px;padding:35px 24px}footer{flex-direction:column;padding:25px 20px}}

@@ -1,0 +1,607 @@
+<p-toast></p-toast>
+
+<div class="configuracion-container">
+
+  <!-- ===================================================== -->
+  <!-- CABECERA -->
+  <!-- ===================================================== -->
+
+  <div class="configuracion-header">
+
+    <div>
+
+      <h1>⚙ Configuración</h1>
+
+      <p>
+        Administra tu cuenta, preferencias y permisos.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- USUARIO -->
+  <!-- ===================================================== -->
+
+  <section class="config-card">
+
+    <div class="config-card-header">
+
+      <h2>👤 Usuario</h2>
+
+      <span>Cuenta</span>
+
+    </div>
+
+
+    <div class="config-content">
+
+      <!-- PERFIL -->
+
+      <div class="config-item">
+
+        <strong>Perfil</strong>
+
+        <p>
+          Consulta y actualiza tu información personal.
+        </p>
+
+        <a routerLink="/perfil">
+          Editar perfil
+        </a>
+
+      </div>
+
+
+      <!-- SEGURIDAD -->
+
+      <div class="config-item">
+
+        <strong>Seguridad</strong>
+
+        <p>
+          Gestiona tu contraseña y seguridad de la cuenta.
+        </p>
+
+
+        <form
+          [formGroup]="formularioPassword"
+          (ngSubmit)="cambiarPassword()"
+          class="form-password"
+        >
+
+          <input
+            type="password"
+            formControlName="passwordActual"
+            placeholder="Contraseña actual"
+            autocomplete="current-password"
+          >
+
+
+          <input
+            type="password"
+            formControlName="passwordNueva"
+            placeholder="Nueva contraseña (mínimo 8 caracteres)"
+            autocomplete="new-password"
+          >
+
+
+          <input
+            type="password"
+            formControlName="confirmarPassword"
+            placeholder="Confirmar nueva contraseña"
+            autocomplete="new-password"
+          >
+
+
+          <button
+            type="submit"
+            [disabled]="guardandoPassword"
+          >
+
+            {{
+              guardandoPassword
+                ? 'Guardando...'
+                : 'Actualizar contraseña'
+            }}
+
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================== -->
+  <!-- PREFERENCIAS -->
+  <!-- ===================================================== -->
+
+  <section class="config-card">
+
+    <div class="config-card-header">
+
+      <h2>🎨 Preferencias</h2>
+
+      <span>Personalización</span>
+
+    </div>
+
+
+    <div class="config-content">
+
+      <!-- TEMA -->
+
+      <div class="config-item">
+
+        <strong>Tema</strong>
+
+        <p>
+          Personaliza la apariencia de TopoPro.
+        </p>
+
+
+        <select
+          [value]="themeService.tema()"
+          (change)="cambiarTema($event)"
+        >
+
+          <option value="claro">
+            Claro
+          </option>
+
+          <option value="oscuro">
+            Oscuro
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- NOTIFICACIONES -->
+
+      <div class="config-item">
+
+        <strong>Notificaciones</strong>
+
+        <p>
+          Configura las notificaciones de la aplicación.
+          (Próximamente)
+        </p>
+
+
+        <label class="switch">
+
+          <input
+            type="checkbox"
+            disabled
+          >
+
+          <span></span>
+
+        </label>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================== -->
+  <!-- PERMISOS -->
+  <!-- ===================================================== -->
+
+  <section
+    class="config-card"
+    *ngIf="esAdmin()"
+  >
+
+    <div class="config-card-header">
+
+      <h2>🔐 Permisos</h2>
+
+      <span>Acceso</span>
+
+    </div>
+
+
+    <div class="permisos-content">
+
+      <!-- SELECTOR DE USUARIO -->
+
+      <div class="permisos-selector">
+
+        <label for="usuarioPermisos">
+          Selecciona un usuario
+        </label>
+
+
+        <select
+          id="usuarioPermisos"
+          (change)="seleccionarUsuario($event)"
+          [disabled]="cargandoUsuarios"
+        >
+
+          <option value="">
+            Selecciona un usuario
+          </option>
+
+
+          <option
+            *ngFor="let usuario of usuarios"
+            [value]="usuario.id"
+          >
+
+            {{ usuario.nombre }}
+            {{ usuario.apellido }}
+            ({{ usuario.correo }})
+            — {{ usuario.rol }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- CARGANDO -->
+
+      <div
+        *ngIf="cargandoPermisos"
+        class="permisos-cargando"
+      >
+
+        Cargando permisos...
+
+      </div>
+
+
+      <!-- TABLA DE PERMISOS -->
+
+      <div
+        *ngIf="permisos"
+        class="permisos-tabla"
+      >
+
+
+        <!-- ================================================= -->
+        <!-- PROYECTOS -->
+        <!-- ================================================= -->
+
+        <div class="permisos-modulo">
+
+          <strong>
+            Proyectos
+          </strong>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.proyectosVer"
+              (change)="
+                permisos.proyectosVer =
+                $any($event.target).checked
+              "
+            >
+
+            Ver
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.proyectosCrear"
+              (change)="
+                permisos.proyectosCrear =
+                $any($event.target).checked
+              "
+            >
+
+            Crear
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.proyectosEditar"
+              (change)="
+                permisos.proyectosEditar =
+                $any($event.target).checked
+              "
+            >
+
+            Editar
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.proyectosEliminar"
+              (change)="
+                permisos.proyectosEliminar =
+                $any($event.target).checked
+              "
+            >
+
+            Eliminar
+
+          </label>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- LEVANTAMIENTOS -->
+        <!-- ================================================= -->
+
+        <div class="permisos-modulo">
+
+          <strong>
+            Levantamientos
+          </strong>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.levantamientosVer"
+              (change)="
+                permisos.levantamientosVer =
+                $any($event.target).checked
+              "
+            >
+
+            Ver
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.levantamientosCrear"
+              (change)="
+                permisos.levantamientosCrear =
+                $any($event.target).checked
+              "
+            >
+
+            Crear
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.levantamientosEditar"
+              (change)="
+                permisos.levantamientosEditar =
+                $any($event.target).checked
+              "
+            >
+
+            Editar
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.levantamientosEliminar"
+              (change)="
+                permisos.levantamientosEliminar =
+                $any($event.target).checked
+              "
+            >
+
+            Eliminar
+
+          </label>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- EQUIPOS -->
+        <!-- ================================================= -->
+
+        <div class="permisos-modulo">
+
+          <strong>
+            Equipos
+          </strong>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.equiposVer"
+              (change)="
+                permisos.equiposVer =
+                $any($event.target).checked
+              "
+            >
+
+            Ver
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.equiposCrear"
+              (change)="
+                permisos.equiposCrear =
+                $any($event.target).checked
+              "
+            >
+
+            Crear
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.equiposEditar"
+              (change)="
+                permisos.equiposEditar =
+                $any($event.target).checked
+              "
+            >
+
+            Editar
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.equiposEliminar"
+              (change)="
+                permisos.equiposEliminar =
+                $any($event.target).checked
+              "
+            >
+
+            Eliminar
+
+          </label>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- REPORTES -->
+        <!-- ================================================= -->
+
+        <div class="permisos-modulo">
+
+          <strong>
+            Reportes
+          </strong>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.reportesVer"
+              (change)="
+                permisos.reportesVer =
+                $any($event.target).checked
+              "
+            >
+
+            Ver
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.reportesCrear"
+              (change)="
+                permisos.reportesCrear =
+                $any($event.target).checked
+              "
+            >
+
+            Crear
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.reportesEditar"
+              (change)="
+                permisos.reportesEditar =
+                $any($event.target).checked
+              "
+            >
+
+            Editar
+
+          </label>
+
+
+          <label>
+
+            <input
+              type="checkbox"
+              [checked]="permisos.reportesEliminar"
+              (change)="
+                permisos.reportesEliminar =
+                $any($event.target).checked
+              "
+            >
+
+            Eliminar
+
+          </label>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- GUARDAR -->
+        <!-- ================================================= -->
+
+        <button
+          type="button"
+          class="btn-guardar-permisos"
+          [disabled]="guardandoPermisos"
+          (click)="guardarPermisos()"
+        >
+
+          {{
+            guardandoPermisos
+              ? 'Guardando...'
+              : 'Guardar permisos'
+          }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>

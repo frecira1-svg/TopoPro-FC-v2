@@ -1,0 +1,677 @@
+<p-toast></p-toast>
+<div class="levantamientos-container">
+
+    <!-- ==========================================
+         ENCABEZADO
+    =========================================== -->
+
+    <section class="levantamientos-header">
+
+        <div class="titulo-seccion">
+
+            <div class="titulo-icono">
+                <i class="pi pi-clipboard"></i>
+            </div>
+
+            <div>
+
+                <h1>Levantamientos</h1>
+
+                <p>
+                    Registra y administra las sesiones de trabajo
+                    realizadas en campo por proyecto.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <button
+  *ngIf="puedeCrear"
+  class="btn-nuevo"
+  type="button"
+  (click)="nuevoLevantamiento()"
+>
+  <span>+</span>
+  Nuevo Levantamiento
+</button>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         TARJETAS RESUMEN
+    =========================================== -->
+
+    <section class="stats-levantamientos">
+
+        <!-- TOTAL -->
+
+        <article class="levantamiento-stat">
+
+            <div class="stat-icon blue">
+
+                <i class="pi pi-clipboard"></i>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>Total de levantamientos</span>
+
+                <strong>
+                    {{ levantamientos.length }}
+                </strong>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- PLANIFICADOS -->
+
+        <article class="levantamiento-stat">
+
+            <div class="stat-icon orange">
+
+                <i class="pi pi-calendar"></i>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>Planificados</span>
+
+                <strong>
+                    {{ planificados }}
+                </strong>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- EN CAMPO -->
+
+        <article class="levantamiento-stat">
+
+            <div class="stat-icon green">
+
+                <i class="pi pi-map"></i>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>En campo</span>
+
+                <strong>
+                    {{ enCampo }}
+                </strong>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         FORMULARIO
+    =========================================== -->
+
+    <section
+        class="formulario-card"
+        *ngIf="mostrarFormulario"
+    >
+
+        <div class="form-header">
+
+            <div class="form-title">
+
+                <div class="form-icon">
+
+                    <i
+                        class="pi"
+                        [ngClass]="
+                            editando
+                                ? 'pi-pencil'
+                                : 'pi-plus'
+                        "
+                    ></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        {{
+                            editando
+                                ? 'Editar Levantamiento'
+                                : 'Nuevo Levantamiento'
+                        }}
+                    </h2>
+
+                    <span>
+                        {{
+                            editando
+                                ? 'Actualiza la información del levantamiento.'
+                                : 'Registra una nueva sesión de trabajo en campo.'
+                        }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <form
+            [formGroup]="formulario"
+            (ngSubmit)="guardarLevantamiento()"
+        >
+
+            <div class="form-grid">
+
+                <!-- PROYECTO -->
+
+                <div class="campo">
+
+                    <label>
+                        Proyecto <span>*</span>
+                    </label>
+
+                    <select formControlName="proyectoId">
+
+                        <option [ngValue]="null">
+                            Selecciona un proyecto
+                        </option>
+
+                        <option
+                            *ngFor="let proyecto of proyectos"
+                            [ngValue]="proyecto.id"
+                        >
+                            {{ proyecto.nombre }}
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- EQUIPO -->
+
+                <div class="campo">
+
+                    <label>
+                        Equipo
+                    </label>
+
+                    <select formControlName="equipoId">
+
+                        <option [ngValue]="null">
+                            Sin equipo asignado
+                        </option>
+
+                        <option
+                            *ngFor="let equipo of equipos"
+                            [ngValue]="equipo.id"
+                        >
+                            {{ equipo.nombre }}
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- FECHA -->
+
+                <div class="campo">
+
+                    <label>
+                        Fecha
+                    </label>
+
+                    <input
+                        type="date"
+                        formControlName="fecha"
+                    />
+
+                </div>
+
+
+
+                <!-- ESTADO -->
+
+                <div class="campo">
+
+                    <label>
+                        Estado
+                    </label>
+
+                    <select formControlName="estado">
+
+                        <option
+                            *ngFor="let opcion of opcionesEstado"
+                            [value]="opcion"
+                        >
+                            {{ opcion }}
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- DESCRIPCIÓN -->
+
+                <div class="campo campo-completo">
+
+                    <label>
+                        Descripción
+                    </label>
+
+                    <input
+                        type="text"
+                        formControlName="descripcion"
+                        placeholder="Describe el trabajo realizado..."
+                    />
+
+                </div>
+
+
+
+                <!-- OBSERVACIONES -->
+
+                <div class="campo campo-completo">
+
+                    <label>
+                        Observaciones
+                    </label>
+
+                    <textarea
+                        formControlName="observaciones"
+                        rows="3"
+                        placeholder="Registra observaciones adicionales..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ACCIONES -->
+
+            <div class="acciones-formulario">
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    (click)="cancelar()"
+                >
+
+                    <i class="pi pi-times"></i>
+
+                    Cancelar
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn-guardar"
+                >
+
+                    <i
+                        class="pi"
+                        [ngClass]="
+                            editando
+                                ? 'pi-check'
+                                : 'pi-save'
+                        "
+                    ></i>
+
+                    {{
+                        editando
+                            ? 'Actualizar'
+                            : 'Guardar'
+                    }}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         CARGANDO
+    =========================================== -->
+
+    <div
+        *ngIf="cargando"
+        class="mensaje-carga"
+    >
+
+        <div class="spinner-carga">
+            <i class="pi pi-spin pi-spinner"></i>
+        </div>
+
+        <span>
+            Cargando levantamientos...
+        </span>
+
+    </div>
+
+<div
+  *ngIf="!cargandoPermisos && !puedeVer"
+  class="sin-permiso"
+>
+  <i class="pi pi-lock"></i>
+
+  <h3>Acceso restringido</h3>
+
+  <p>
+    No tienes permiso para consultar levantamientos.
+  </p>
+</div>
+
+    <!-- ==========================================
+         TABLA
+    =========================================== -->
+
+    <section
+        class="tabla-levantamientos"
+        *ngIf="!cargando"
+    >
+
+        <div class="tabla-header">
+
+            <div class="tabla-title">
+
+                <div class="tabla-icon">
+
+                    <i class="pi pi-list"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        Lista de Levantamientos
+                    </h2>
+
+                    <span>
+                        Registro de sesiones de trabajo en campo
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="tabla-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Fecha</th>
+
+                        <th>Proyecto</th>
+
+                        <th>Equipo</th>
+
+                        <th>Estado</th>
+
+                        <th>Descripción</th>
+
+                        <th class="columna-acciones">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+                    <tr
+                        *ngFor="
+                            let levantamiento
+                            of levantamientos
+                        "
+                    >
+
+                        <!-- FECHA -->
+
+                        <td>
+
+                            <div class="fecha-cell">
+
+                                <div class="fecha-icon">
+
+                                    <i class="pi pi-calendar"></i>
+
+                                </div>
+
+                                <span>
+
+                                    {{
+                                        levantamiento.fecha
+                                            | date:'dd/MM/yyyy'
+                                    }}
+
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- PROYECTO -->
+
+                        <td>
+
+                            <div class="proyecto-cell">
+
+                                <i class="pi pi-folder"></i>
+
+                                <span>
+
+                                    {{
+                                        nombreProyecto(
+                                            levantamiento.proyectoId
+                                        )
+                                    }}
+
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- EQUIPO -->
+
+                        <td>
+
+                            <div
+                                class="equipo-cell"
+                                *ngIf="
+                                    levantamiento.equipoId
+                                "
+                            >
+
+                                <i class="pi pi-cog"></i>
+
+                                <span>
+
+                                    {{
+                                        nombreEquipo(
+                                            levantamiento.equipoId
+                                        )
+                                    }}
+
+                                </span>
+
+                            </div>
+
+                            <span
+                                class="sin-equipo"
+                                *ngIf="
+                                    !levantamiento.equipoId
+                                "
+                            >
+                                Sin equipo
+                            </span>
+
+                        </td>
+
+
+
+                       <!-- ESTADO -->
+<td>
+    <span
+        class="estado-badge"
+        [ngClass]="{
+            'estado-planificado': levantamiento.estado === 'PLANIFICADO',
+            'estado-campo': levantamiento.estado === 'EN_CAMPO',
+            'estado-completado': levantamiento.estado === 'COMPLETADO'
+        }"
+    >
+        <i
+            class="pi"
+            [ngClass]="{
+                'pi-clock': levantamiento.estado === 'PLANIFICADO',
+                'pi-map': levantamiento.estado === 'EN_CAMPO',
+                'pi-check-circle': levantamiento.estado === 'COMPLETADO'
+            }"
+        ></i>
+        {{ levantamiento.estado }}
+    </span>
+</td>
+
+
+<!-- DESCRIPCIÓN -->
+
+                        <td>
+
+                            <span
+                                class="descripcion-cell"
+                                [title]="
+                                    levantamiento.descripcion || ''
+                                "
+                            >
+
+                                {{
+                                    levantamiento.descripcion
+                                    || '-'
+                                }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- ACCIONES -->
+
+                        <td class="acciones-tabla">
+
+                            <button
+  *ngIf="puedeEditar"
+  type="button"
+  class="btn-editar"
+  title="Editar levantamiento"
+  (click)="editarLevantamiento(levantamiento)"
+>
+  <i class="pi pi-pencil"></i>
+</button>
+
+
+                            <button
+  *ngIf="puedeEliminar"
+  type="button"
+  class="btn-eliminar"
+  title="Eliminar levantamiento"
+  (click)="eliminarLevantamiento(levantamiento)"
+>
+  <i class="pi pi-trash"></i>
+</button>
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <!-- SIN DATOS -->
+
+                    <tr
+                        *ngIf="
+                            levantamientos.length === 0
+                        "
+                    >
+
+                        <td
+                            colspan="6"
+                            class="sin-datos"
+                        >
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+
+                                    <i class="pi pi-clipboard"></i>
+
+                                </div>
+
+                                <strong>
+                                    No hay levantamientos registrados
+                                </strong>
+
+                                <span>
+                                    Los levantamientos del proyecto
+                                    aparecerán aquí.
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</div>

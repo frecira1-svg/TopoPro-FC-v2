@@ -1,0 +1,549 @@
+/* =========================================================
+   TOPOPRO FC — REPORTES
+   Diseño compacto y profesional
+   ========================================================= */
+
+.reportes-container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 24px 30px 40px;
+  background: #f8fafc;
+}
+
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 24px;
+  padding: 22px 26px;
+  background: #ffffff;
+  border: 1px solid #e7ecf2;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+}
+
+.encabezado h1 {
+  margin: 0;
+  color: #172033;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.encabezado p {
+  margin: 6px 0 0;
+  color: #718096;
+  font-size: 14px;
+}
+
+.btn-recargar {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid #dce3eb;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #344054;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.btn-recargar:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* =========================================================
+   SECCIONES
+   ========================================================= */
+
+.seccion {
+  margin-bottom: 26px;
+}
+
+.seccion h2 {
+  margin: 0 0 14px;
+  color: #172033;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.seccion.interna {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.seccion.interna h3 {
+  margin: 0 0 14px;
+  color: #253044;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+/* =========================================================
+   ESTADÍSTICAS
+   ========================================================= */
+
+.estadisticas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.tarjeta {
+  min-height: 92px;
+  padding: 17px 19px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #ffffff;
+  border: 1px solid #e7ecf2;
+  border-radius: 14px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+  transition: 0.2s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+.icono {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #f1f5f9;
+  font-size: 22px;
+}
+
+.numero {
+  display: block;
+  color: #172033;
+  font-size: 25px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.texto {
+  display: block;
+  margin-top: 5px;
+  color: #667085;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   TABLAS
+   ========================================================= */
+
+.tabla-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e6ebf1;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+}
+
+table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f8fafc;
+}
+
+th,
+td {
+  padding: 13px 17px;
+  text-align: left;
+  border-bottom: 1px solid #edf0f4;
+}
+
+th {
+  color: #475467;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+td {
+  color: #344054;
+  font-size: 13px;
+}
+
+tbody tr:hover {
+  background: #fafbfc;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+td strong {
+  color: #172033;
+  font-weight: 750;
+}
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
+
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475467;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   BOTONES DE REPORTE
+   ========================================================= */
+
+.acciones-reporte {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-reporte {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #dfe5ec;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #344054;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: 0.18s ease;
+}
+
+.btn-reporte:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.btn-reporte:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   REPORTE TÉCNICO
+   ========================================================= */
+
+.reporte-tecnico {
+  padding: 24px;
+  border: 1px solid #e5eaf0;
+  border-radius: 17px;
+  background: #ffffff;
+  box-shadow: 0 7px 24px rgba(15, 23, 42, 0.06);
+}
+
+.reporte-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.reporte-titulo h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.reporte-titulo p {
+  margin: 5px 0 0;
+  color: #667085;
+  font-size: 13px;
+}
+
+/* =========================================================
+   INFORMACIÓN DEL REPORTE
+   ========================================================= */
+
+.reporte-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.reporte-card {
+  padding: 18px;
+  border: 1px solid #e6ebf1;
+  border-radius: 13px;
+  background: #fbfcfe;
+}
+
+.reporte-card h3 {
+  margin: 0 0 14px;
+  color: #253044;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.dato {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 9px 0;
+  border-bottom: 1px solid #e9edf2;
+}
+
+.dato:first-of-type {
+  padding-top: 0;
+}
+
+.dato:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.dato > span:first-child {
+  color: #667085;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dato strong {
+  max-width: 65%;
+  color: #172033;
+  font-size: 13px;
+  font-weight: 750;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   ESTADÍSTICAS DEL REPORTE
+   ========================================================= */
+
+.reporte-estadisticas {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.reporte-estadisticas .tarjeta {
+  min-height: 82px;
+  padding: 15px;
+}
+
+.reporte-estadisticas .numero {
+  font-size: 23px;
+}
+
+/* =========================================================
+   ELEVACIONES
+   ========================================================= */
+
+.elevaciones-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.elevacion-card {
+  padding: 16px 18px;
+  border: 1px solid #e5eaf0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.elevacion-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: #667085;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.elevacion-card strong {
+  color: #172033;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* =========================================================
+   EXPORTACIONES
+   ========================================================= */
+
+.reporte-exportaciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #edf0f4;
+}
+
+.reporte-exportaciones .btn-reporte {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 12px;
+}
+
+/* =========================================================
+   ESTADOS
+   ========================================================= */
+
+.estado {
+  padding: 38px 20px;
+  border: 1px solid #e7ecf2;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #667085;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.error {
+  margin-bottom: 18px;
+  padding: 13px 16px;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: #b42318;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.vacio {
+  padding: 30px 20px !important;
+  color: #98a2b3;
+  text-align: center !important;
+  font-size: 13px;
+}
+
+/* =========================================================
+   SCROLL
+   ========================================================= */
+
+.tabla-container::-webkit-scrollbar {
+  height: 7px;
+}
+
+.tabla-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.tabla-container::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #cbd5e1;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .reportes-container {
+    padding: 22px 24px 35px;
+  }
+
+  .estadisticas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reporte-estadisticas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reporte-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .reportes-container {
+    padding: 16px 14px 30px;
+  }
+
+  .encabezado {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 19px;
+    margin-bottom: 20px;
+  }
+
+  .encabezado h1 {
+    font-size: 26px;
+  }
+
+  .btn-recargar {
+    width: 100%;
+  }
+
+  .estadisticas,
+  .reporte-estadisticas,
+  .elevaciones-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reporte-tecnico {
+    padding: 18px;
+  }
+
+  .reporte-titulo {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dato {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .dato strong {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .acciones-reporte {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .acciones-reporte .btn-reporte {
+    width: 100%;
+  }
+
+  .reporte-exportaciones {
+    flex-direction: column;
+  }
+
+  .reporte-exportaciones .btn-reporte {
+    width: 100%;
+  }
+}

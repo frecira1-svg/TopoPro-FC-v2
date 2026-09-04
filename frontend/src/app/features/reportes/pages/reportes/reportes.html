@@ -1,0 +1,1750 @@
+<div class="reportes-container">
+
+    <!-- ===================================================== -->
+    <!-- ENCABEZADO -->
+    <!-- ===================================================== -->
+
+    <div class="encabezado">
+
+        <div>
+
+            <h1>📄 Reportes</h1>
+
+            <p>
+                Resumen general y reportes técnicos de TopoPro
+            </p>
+
+        </div>
+
+
+        <button
+            *ngIf="puedeVer"
+            class="btn-recargar"
+            type="button"
+            (click)="cargarDatos()"
+        >
+
+            🔄 Actualizar
+
+        </button>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- CARGANDO PERMISOS -->
+    <!-- ===================================================== -->
+
+    <div
+        *ngIf="cargandoPermisos"
+        class="estado"
+    >
+
+        Cargando permisos...
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- ACCESO RESTRINGIDO -->
+    <!-- ===================================================== -->
+
+    <div
+        *ngIf="!cargandoPermisos && !puedeVer"
+        class="error"
+    >
+
+        🔒
+
+        <strong>
+            Acceso restringido
+        </strong>
+
+        <p>
+            No tienes permiso para consultar reportes.
+        </p>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- CARGANDO INFORMACIÓN -->
+    <!-- ===================================================== -->
+
+    <div
+        *ngIf="puedeVer && cargando"
+        class="estado"
+    >
+
+        Cargando información...
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- ERROR -->
+    <!-- ===================================================== -->
+
+    <div
+        *ngIf="puedeVer && error"
+        class="error"
+    >
+
+        {{ error }}
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <!-- ===================================================== -->
+
+    <ng-container
+        *ngIf="puedeVer && !cargando"
+    >
+
+
+        <!-- ================================================= -->
+        <!-- RESUMEN GENERAL -->
+        <!-- ================================================= -->
+
+        <section class="seccion">
+
+            <h2>📊 Resumen general</h2>
+
+
+            <div class="estadisticas">
+
+
+                <!-- PROYECTOS -->
+
+                <div class="tarjeta">
+
+                    <span class="icono">
+                        📁
+                    </span>
+
+                    <div>
+
+                        <span class="numero">
+                            {{ totalProyectos }}
+                        </span>
+
+                        <span class="texto">
+                            Proyectos
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LEVANTAMIENTOS -->
+
+                <div class="tarjeta">
+
+                    <span class="icono">
+                        📋
+                    </span>
+
+                    <div>
+
+                        <span class="numero">
+                            {{ totalLevantamientos }}
+                        </span>
+
+                        <span class="texto">
+                            Levantamientos
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EQUIPOS -->
+
+                <div class="tarjeta">
+
+                    <span class="icono">
+                        📡
+                    </span>
+
+                    <div>
+
+                        <span class="numero">
+                            {{ totalEquipos }}
+                        </span>
+
+                        <span class="texto">
+                            Equipos
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PLANIFICADOS -->
+
+                <div class="tarjeta">
+
+                    <span class="icono">
+                        📋
+                    </span>
+
+                    <div>
+
+                        <span class="numero">
+                            {{ planificados }}
+                        </span>
+
+                        <span class="texto">
+                            Planificados
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EN CAMPO -->
+
+                <div class="tarjeta">
+
+                    <span class="icono">
+                        🚧
+                    </span>
+
+                    <div>
+
+                        <span class="numero">
+                            {{ enCampo }}
+                        </span>
+
+                        <span class="texto">
+                            En campo
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COMPLETADOS -->
+
+                <div class="tarjeta">
+
+                    <span class="icono">
+                        ✅
+                    </span>
+
+                    <div>
+
+                        <span class="numero">
+                            {{ completados }}
+                        </span>
+
+                        <span class="texto">
+                            Completados
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- PROYECTOS -->
+        <!-- ================================================= -->
+
+        <section class="seccion">
+
+            <h2>📁 Proyectos</h2>
+
+
+            <div class="tabla-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Nombre
+                            </th>
+
+                            <th>
+                                Cliente
+                            </th>
+
+                            <th>
+                                Ubicación
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Inicio
+                            </th>
+
+                            <th>
+                                Reportes
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr
+                            *ngFor="
+                                let proyecto of proyectos
+                            "
+                        >
+
+                            <td>
+                                {{ proyecto.nombre }}
+                            </td>
+
+
+                            <td>
+                                {{ proyecto.cliente }}
+                            </td>
+
+
+                            <td>
+                                {{ proyecto.ubicacion }}
+                            </td>
+
+
+                            <td>
+
+                                <span class="estado-badge">
+                                    {{ proyecto.estado }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+                                {{
+                                    proyecto.fechaInicio
+                                        | date:'dd/MM/yyyy'
+                                }}
+                            </td>
+
+
+                            <td>
+
+                                <div
+                                    class="acciones-reporte"
+                                >
+
+
+                                    <!-- VER REPORTE -->
+
+                                    <button
+                                        class="btn-reporte"
+                                        type="button"
+                                        (click)="
+                                            seleccionarProyecto(
+                                                proyecto.id
+                                            )
+                                        "
+                                        [disabled]="
+                                            cargandoReporte
+                                        "
+                                    >
+
+                                        📊 Ver reporte
+
+                                    </button>
+
+
+                                    <!-- PDF -->
+
+                                    <button
+                                        class="btn-reporte"
+                                        type="button"
+                                        [disabled]="
+                                            descargando === proyecto.id
+                                        "
+                                        (click)="
+                                            descargarMemoriaPDF(
+                                                proyecto
+                                            )
+                                        "
+                                    >
+
+                                        {{
+                                            descargando === proyecto.id
+                                                ? '...'
+                                                : '📄 PDF'
+                                        }}
+
+                                    </button>
+
+
+                                    <!-- EXCEL -->
+
+                                    <button
+                                        class="btn-reporte"
+                                        type="button"
+                                        [disabled]="
+                                            descargando === proyecto.id
+                                        "
+                                        (click)="
+                                            descargarMemoriaExcel(
+                                                proyecto
+                                            )
+                                        "
+                                    >
+
+                                        {{
+                                            descargando === proyecto.id
+                                                ? '...'
+                                                : '📊 Excel'
+                                        }}
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr
+                            *ngIf="
+                                proyectos.length === 0
+                            "
+                        >
+
+                            <td
+                                colspan="6"
+                                class="vacio"
+                            >
+
+                                No hay proyectos registrados.
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- REPORTE TÉCNICO -->
+        <!-- ================================================= -->
+
+        <section
+            class="seccion reporte-tecnico"
+            *ngIf="
+                reporteProyecto ||
+                cargandoReporte
+            "
+        >
+
+
+            <div class="reporte-titulo">
+
+                <div>
+
+                    <h2>
+                        📊 Reporte técnico
+                    </h2>
+
+
+                    <p
+                        *ngIf="reporteProyecto"
+                    >
+                        {{
+                            reporteProyecto.proyecto.nombre
+                        }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- CARGANDO REPORTE -->
+
+            <div
+                *ngIf="cargandoReporte"
+                class="estado reporte-loading"
+            >
+
+                Generando reporte técnico...
+
+            </div>
+
+
+            <ng-container
+                *ngIf="
+                    reporteProyecto &&
+                    !cargandoReporte
+                "
+            >
+
+
+                <!-- ========================================= -->
+                <!-- INFORMACIÓN DEL PROYECTO -->
+                <!-- ========================================= -->
+
+                <div class="reporte-grid">
+
+
+                    <!-- PROYECTO -->
+
+                    <div class="reporte-card">
+
+                        <h3>
+                            📁 Proyecto
+                        </h3>
+
+
+                        <div class="dato">
+
+                            <span>
+                                Nombre
+                            </span>
+
+                            <strong>
+                                {{
+                                    reporteProyecto.proyecto.nombre
+                                }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span>
+                                Cliente
+                            </span>
+
+                            <strong>
+                                {{
+                                    reporteProyecto.proyecto.cliente
+                                }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span>
+                                Ubicación
+                            </span>
+
+                            <strong>
+                                {{
+                                    reporteProyecto.proyecto.ubicacion
+                                }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span>
+                                Estado
+                            </span>
+
+                            <span class="estado-badge">
+                                {{
+                                    reporteProyecto.proyecto.estado
+                                }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span>
+                                Fecha de inicio
+                            </span>
+
+                            <strong>
+
+                                {{
+                                    reporteProyecto.proyecto.fechaInicio
+                                        | date:'dd/MM/yyyy'
+                                }}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ===================================== -->
+                    <!-- RESPONSABLE -->
+                    <!-- ===================================== -->
+
+                    <div class="reporte-card">
+
+                        <h3>
+                            👷 Responsable
+                        </h3>
+
+
+                        <div class="dato">
+
+                            <span>
+                                Nombre
+                            </span>
+
+                            <strong>
+
+                                {{
+                                    reporteProyecto.responsable.nombre
+                                }}
+
+                                {{
+                                    reporteProyecto.responsable.apellido
+                                }}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span>
+                                Profesión
+                            </span>
+
+                            <strong>
+
+                                {{
+                                    reporteProyecto.responsable.profesion
+                                    || '-'
+                                }}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span>
+                                Empresa
+                            </span>
+
+                            <strong>
+
+                                {{
+                                    reporteProyecto.responsable.empresa
+                                    || '-'
+                                }}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dato">
+
+                            <span>
+                                Correo
+                            </span>
+
+                            <strong>
+                                {{
+                                    reporteProyecto.responsable.correo
+                                }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- ESTADÍSTICAS -->
+                <!-- ========================================= -->
+
+                <div class="seccion interna">
+
+                    <h3>
+                        📊 Estadísticas topográficas
+                    </h3>
+
+
+                    <div
+                        class="estadisticas reporte-estadisticas"
+                    >
+
+
+                        <!-- PUNTOS -->
+
+                        <div class="tarjeta">
+
+                            <span class="icono">
+                                📍
+                            </span>
+
+                            <div>
+
+                                <span class="numero">
+
+                                    {{
+                                        reporteProyecto
+                                            .estadisticas
+                                            .totalPuntos
+                                    }}
+
+                                </span>
+
+                                <span class="texto">
+                                    Puntos topográficos
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- LEVANTAMIENTOS -->
+
+                        <div class="tarjeta">
+
+                            <span class="icono">
+                                📋
+                            </span>
+
+                            <div>
+
+                                <span class="numero">
+
+                                    {{
+                                        reporteProyecto
+                                            .estadisticas
+                                            .totalLevantamientos
+                                    }}
+
+                                </span>
+
+                                <span class="texto">
+                                    Levantamientos
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- EQUIPOS -->
+
+                        <div class="tarjeta">
+
+                            <span class="icono">
+                                📡
+                            </span>
+
+                            <div>
+
+                                <span class="numero">
+
+                                    {{
+                                        reporteProyecto
+                                            .estadisticas
+                                            .totalEquipos
+                                    }}
+
+                                </span>
+
+                                <span class="texto">
+                                    Equipos
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ARCHIVOS -->
+
+                        <div class="tarjeta">
+
+                            <span class="icono">
+                                📎
+                            </span>
+
+                            <div>
+
+                                <span class="numero">
+
+                                    {{
+                                        reporteProyecto
+                                            .estadisticas
+                                            .totalArchivos
+                                    }}
+
+                                </span>
+
+                                <span class="texto">
+                                    Archivos
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ELEVACIONES -->
+
+                    <div class="elevaciones-grid">
+
+
+                        <div class="elevacion-card">
+
+                            <span>
+                                Elevación mínima
+                            </span>
+
+                            <strong>
+
+                                {{
+                                    formatearNumero(
+                                        reporteProyecto
+                                            .estadisticas
+                                            .elevacionMinima
+                                    )
+                                }}
+                                m
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="elevacion-card">
+
+                            <span>
+                                Elevación promedio
+                            </span>
+
+                            <strong>
+
+                                {{
+                                    formatearNumero(
+                                        reporteProyecto
+                                            .estadisticas
+                                            .elevacionPromedio
+                                    )
+                                }}
+                                m
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="elevacion-card">
+
+                            <span>
+                                Elevación máxima
+                            </span>
+
+                            <strong>
+
+                                {{
+                                    formatearNumero(
+                                        reporteProyecto
+                                            .estadisticas
+                                            .elevacionMaxima
+                                    )
+                                }}
+                                m
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- PUNTOS TOPOGRÁFICOS -->
+                <!-- ========================================= -->
+
+                <div class="seccion interna">
+
+                    <h3>
+                        📍 Puntos topográficos
+                    </h3>
+
+
+                    <div class="tabla-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Código
+                                    </th>
+
+                                    <th>
+                                        Norte
+                                    </th>
+
+                                    <th>
+                                        Este
+                                    </th>
+
+                                    <th>
+                                        Elevación
+                                    </th>
+
+                                    <th>
+                                        Tipo
+                                    </th>
+
+                                    <th>
+                                        Precisión
+                                    </th>
+
+                                    <th>
+                                        Equipo
+                                    </th>
+
+                                    <th>
+                                        Método
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <tr
+                                    *ngFor="
+                                        let punto
+                                        of reporteProyecto.puntos
+                                    "
+                                >
+
+                                    <td>
+                                        <strong>
+                                            {{ punto.codigo }}
+                                        </strong>
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            formatearNumero(
+                                                punto.norte
+                                            )
+                                        }}
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            formatearNumero(
+                                                punto.este
+                                            )
+                                        }}
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            formatearNumero(
+                                                punto.elevacion
+                                            )
+                                        }}
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            punto.tipo || '-'
+                                        }}
+                                    </td>
+
+
+                                    <td>
+
+                                        {{
+                                            punto.precision !== null
+                                                ? formatearNumero(
+                                                    punto.precision
+                                                )
+                                                : '-'
+                                        }}
+
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            punto.equipo || '-'
+                                        }}
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            punto.metodo || '-'
+                                        }}
+                                    </td>
+
+                                </tr>
+
+
+                                <tr
+                                    *ngIf="
+                                        reporteProyecto
+                                            .puntos
+                                            .length === 0
+                                    "
+                                >
+
+                                    <td
+                                        colspan="8"
+                                        class="vacio"
+                                    >
+
+                                        No hay puntos topográficos.
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- LEVANTAMIENTOS DEL PROYECTO -->
+                <!-- ========================================= -->
+
+                <div class="seccion interna">
+
+                    <h3>
+                        📋 Levantamientos del proyecto
+                    </h3>
+
+
+                    <div class="tabla-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Fecha
+                                    </th>
+
+                                    <th>
+                                        Descripción
+                                    </th>
+
+                                    <th>
+                                        Equipo
+                                    </th>
+
+                                    <th>
+                                        Responsable
+                                    </th>
+
+                                    <th>
+                                        Estado
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <tr
+                                    *ngFor="
+                                        let levantamiento
+                                        of reporteProyecto.levantamientos
+                                    "
+                                >
+
+                                    <td>
+
+                                        {{
+                                            levantamiento.fecha
+                                                | date:'dd/MM/yyyy'
+                                        }}
+
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            levantamiento.descripcion
+                                            || '-'
+                                        }}
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            levantamiento.equipo?.nombre
+                                            || '-'
+                                        }}
+                                    </td>
+
+
+                                    <td>
+
+                                        {{
+                                            levantamiento.responsable.nombre
+                                        }}
+
+                                        {{
+                                            levantamiento.responsable.apellido
+                                        }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="estado-badge">
+                                            {{
+                                                levantamiento.estado
+                                            }}
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr
+                                    *ngIf="
+                                        reporteProyecto
+                                            .levantamientos
+                                            .length === 0
+                                    "
+                                >
+
+                                    <td
+                                        colspan="5"
+                                        class="vacio"
+                                    >
+
+                                        No hay levantamientos para este proyecto.
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- EQUIPOS DEL PROYECTO -->
+                <!-- ========================================= -->
+
+                <div class="seccion interna">
+
+                    <h3>
+                        📡 Equipos del proyecto
+                    </h3>
+
+
+                    <div class="tabla-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Nombre
+                                    </th>
+
+                                    <th>
+                                        Tipo
+                                    </th>
+
+                                    <th>
+                                        Marca
+                                    </th>
+
+                                    <th>
+                                        Modelo
+                                    </th>
+
+                                    <th>
+                                        Número de serie
+                                    </th>
+
+                                    <th>
+                                        Estado
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <tr
+                                    *ngFor="
+                                        let equipo
+                                        of reporteProyecto.equipos
+                                    "
+                                >
+
+                                    <td>
+                                        <strong>
+                                            {{ equipo.nombre }}
+                                        </strong>
+                                    </td>
+
+
+                                    <td>
+                                        {{ equipo.tipo }}
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            equipo.marca || '-'
+                                        }}
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            equipo.modelo || '-'
+                                        }}
+                                    </td>
+
+
+                                    <td>
+                                        {{
+                                            equipo.numeroSerie || '-'
+                                        }}
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="estado-badge">
+                                            {{ equipo.estado }}
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr
+                                    *ngIf="
+                                        reporteProyecto
+                                            .equipos
+                                            .length === 0
+                                    "
+                                >
+
+                                    <td
+                                        colspan="6"
+                                        class="vacio"
+                                    >
+
+                                        No hay equipos asociados a este proyecto.
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- ARCHIVOS -->
+                <!-- ========================================= -->
+
+                <div class="seccion interna">
+
+                    <h3>
+                        📎 Archivos del proyecto
+                    </h3>
+
+
+                    <div class="tabla-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Archivo
+                                    </th>
+
+                                    <th>
+                                        Tipo
+                                    </th>
+
+                                    <th>
+                                        Fecha
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <tr
+                                    *ngFor="
+                                        let archivo
+                                        of reporteProyecto.archivos
+                                    "
+                                >
+
+                                    <td>
+                                        {{ archivo.nombre }}
+                                    </td>
+
+
+                                    <td>
+                                        {{ archivo.tipo }}
+                                    </td>
+
+
+                                    <td>
+
+                                        {{
+                                            archivo.createdAt
+                                                | date:'dd/MM/yyyy'
+                                        }}
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr
+                                    *ngIf="
+                                        reporteProyecto
+                                            .archivos
+                                            .length === 0
+                                    "
+                                >
+
+                                    <td
+                                        colspan="3"
+                                        class="vacio"
+                                    >
+
+                                        No hay archivos asociados.
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- EXPORTACIONES -->
+                <!-- ========================================= -->
+
+                <div class="reporte-exportaciones">
+
+
+                    <!-- PDF -->
+
+                    <button
+                        class="btn-reporte"
+                        type="button"
+                        [disabled]="
+                            descargando ===
+                            reporteProyecto.proyecto.id
+                        "
+                        (click)="
+                            descargarMemoriaPDF(
+                                reporteProyecto.proyecto
+                            )
+                        "
+                    >
+
+                        📄 Descargar PDF
+
+                    </button>
+
+
+                    <!-- EXCEL -->
+
+                    <button
+                        class="btn-reporte"
+                        type="button"
+                        [disabled]="
+                            descargando ===
+                            reporteProyecto.proyecto.id
+                        "
+                        (click)="
+                            descargarMemoriaExcel(
+                                reporteProyecto.proyecto
+                            )
+                        "
+                    >
+
+                        📊 Descargar Excel
+
+                    </button>
+
+                </div>
+
+            </ng-container>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- LEVANTAMIENTOS GENERALES -->
+        <!-- ================================================= -->
+
+        <section class="seccion">
+
+            <h2>
+                📋 Levantamientos
+            </h2>
+
+
+            <div class="tabla-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Fecha
+                            </th>
+
+                            <th>
+                                Descripción
+                            </th>
+
+                            <th>
+                                Proyecto
+                            </th>
+
+                            <th>
+                                Equipo
+                            </th>
+
+                            <th>
+                                Responsable
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr
+                            *ngFor="
+                                let levantamiento
+                                of levantamientos
+                            "
+                        >
+
+                            <td>
+
+                                {{
+                                    levantamiento.fecha
+                                        | date:'dd/MM/yyyy'
+                                }}
+
+                            </td>
+
+
+                            <td>
+
+                                {{
+                                    levantamiento.descripcion
+                                    || '-'
+                                }}
+
+                            </td>
+
+
+                            <td>
+
+                                {{
+                                    nombreProyecto(
+                                        levantamiento.proyectoId
+                                    )
+                                }}
+
+                            </td>
+
+
+                            <td>
+
+                                {{
+                                    nombreEquipo(
+                                        levantamiento.equipoId
+                                    )
+                                }}
+
+                            </td>
+
+
+                            <td>
+
+                                {{
+                                    nombreResponsable(
+                                        levantamiento
+                                    )
+                                }}
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="estado-badge">
+                                    {{ levantamiento.estado }}
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr
+                            *ngIf="
+                                levantamientos.length === 0
+                            "
+                        >
+
+                            <td
+                                colspan="6"
+                                class="vacio"
+                            >
+
+                                No hay levantamientos registrados.
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- EQUIPOS GENERALES -->
+        <!-- ================================================= -->
+
+        <section class="seccion">
+
+            <h2>
+                📡 Equipos
+            </h2>
+
+
+            <div class="tabla-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Nombre
+                            </th>
+
+                            <th>
+                                Tipo
+                            </th>
+
+                            <th>
+                                Marca
+                            </th>
+
+                            <th>
+                                Modelo
+                            </th>
+
+                            <th>
+                                Número de serie
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr
+                            *ngFor="
+                                let equipo
+                                of equipos
+                            "
+                        >
+
+                            <td>
+                                {{ equipo.nombre }}
+                            </td>
+
+
+                            <td>
+                                {{ equipo.tipo }}
+                            </td>
+
+
+                            <td>
+                                {{
+                                    equipo.marca || '-'
+                                }}
+                            </td>
+
+
+                            <td>
+                                {{
+                                    equipo.modelo || '-'
+                                }}
+                            </td>
+
+
+                            <td>
+                                {{
+                                    equipo.numeroSerie || '-'
+                                }}
+                            </td>
+
+
+                            <td>
+
+                                <span class="estado-badge">
+                                    {{ equipo.estado }}
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr
+                            *ngIf="
+                                equipos.length === 0
+                            "
+                        >
+
+                            <td
+                                colspan="6"
+                                class="vacio"
+                            >
+
+                                No hay equipos registrados.
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </ng-container>
+
+</div>

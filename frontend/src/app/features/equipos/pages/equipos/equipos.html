@@ -1,0 +1,450 @@
+<p-toast></p-toast>
+
+<div class="equipos-container">
+
+    <!-- ===================================================== -->
+    <!-- ENCABEZADO -->
+    <!-- ===================================================== -->
+
+    <section class="equipos-header">
+
+        <div>
+            <h1>🛠️ Equipos</h1>
+
+            <p>
+                Administra el inventario de equipos topográficos y su disponibilidad.
+            </p>
+        </div>
+
+        <button
+            *ngIf="puedeCrear"
+            class="btn-nuevo"
+            type="button"
+            (click)="nuevoEquipo()"
+        >
+            <i class="bi bi-plus-circle"></i>
+            Nuevo Equipo
+        </button>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- TARJETAS RESUMEN -->
+    <!-- ===================================================== -->
+
+    <section
+        class="stats-equipos"
+        *ngIf="puedeVer"
+    >
+
+        <article class="equipo-stat">
+
+            <div class="stat-icon blue">
+                🛠️
+            </div>
+
+            <div>
+
+                <span>
+                    Total equipos
+                </span>
+
+                <strong>
+                    {{ equipos.length }}
+                </strong>
+
+            </div>
+
+        </article>
+
+
+        <article class="equipo-stat">
+
+            <div class="stat-icon green">
+                ✅
+            </div>
+
+            <div>
+
+                <span>
+                    Disponibles
+                </span>
+
+                <strong>
+                    {{ disponibles }}
+                </strong>
+
+            </div>
+
+        </article>
+
+
+        <article class="equipo-stat">
+
+            <div class="stat-icon orange">
+                🔧
+            </div>
+
+            <div>
+
+                <span>
+                    En uso
+                </span>
+
+                <strong>
+                    {{ enUso }}
+                </strong>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- ACCESO RESTRINGIDO -->
+    <!-- ===================================================== -->
+
+    <section
+        *ngIf="!cargandoPermisos && !puedeVer"
+        class="sin-permiso"
+    >
+
+        <i class="pi pi-lock"></i>
+
+        <h3>
+            Acceso restringido
+        </h3>
+
+        <p>
+            No tienes permiso para consultar equipos.
+        </p>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- FORMULARIO -->
+    <!-- ===================================================== -->
+
+    <section
+        class="formulario-card"
+        *ngIf="mostrarFormulario"
+    >
+
+        <div class="form-header">
+
+            <h2>
+                {{
+                    editando
+                        ? 'Editar Equipo'
+                        : 'Nuevo Equipo'
+                }}
+            </h2>
+
+        </div>
+
+
+        <form
+            [formGroup]="formulario"
+            (ngSubmit)="guardarEquipo()"
+        >
+
+            <div class="form-grid">
+
+
+                <!-- NOMBRE -->
+
+                <div class="campo">
+
+                    <label>
+                        Nombre *
+                    </label>
+
+                    <input
+                        type="text"
+                        formControlName="nombre"
+                    >
+
+                </div>
+
+
+                <!-- TIPO -->
+
+                <div class="campo">
+
+                    <label>
+                        Tipo *
+                    </label>
+
+                    <input
+                        type="text"
+                        formControlName="tipo"
+                        placeholder="Estación Total, GPS, Nivel..."
+                    >
+
+                </div>
+
+
+                <!-- MARCA -->
+
+                <div class="campo">
+
+                    <label>
+                        Marca
+                    </label>
+
+                    <input
+                        type="text"
+                        formControlName="marca"
+                    >
+
+                </div>
+
+
+                <!-- MODELO -->
+
+                <div class="campo">
+
+                    <label>
+                        Modelo
+                    </label>
+
+                    <input
+                        type="text"
+                        formControlName="modelo"
+                    >
+
+                </div>
+
+
+                <!-- NUMERO DE SERIE -->
+
+                <div class="campo">
+
+                    <label>
+                        Número de serie
+                    </label>
+
+                    <input
+                        type="text"
+                        formControlName="numeroSerie"
+                    >
+
+                </div>
+
+
+                <!-- FECHA DE COMPRA -->
+
+                <div class="campo">
+
+                    <label>
+                        Fecha de compra
+                    </label>
+
+                    <input
+                        type="date"
+                        formControlName="fechaCompra"
+                    >
+
+                </div>
+
+
+                <!-- ESTADO -->
+
+                <div class="campo">
+
+                    <label>
+                        Estado
+                    </label>
+
+                    <select
+                        formControlName="estado"
+                    >
+
+                        <option
+                            *ngFor="let opcion of opcionesEstado"
+                            [value]="opcion"
+                        >
+                            {{ opcion }}
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACCIONES FORMULARIO -->
+
+            <div class="acciones-formulario">
+
+                <button
+                    type="button"
+                    class="btn-cancelar"
+                    (click)="cancelar()"
+                >
+                    Cancelar
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn-guardar"
+                >
+                    {{
+                        editando
+                            ? 'Actualizar'
+                            : 'Guardar'
+                    }}
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- CARGANDO -->
+    <!-- ===================================================== -->
+
+    <div
+        *ngIf="cargandoPermisos || cargando"
+        class="mensaje-carga"
+    >
+        Cargando equipos...
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- TABLA -->
+    <!-- ===================================================== -->
+
+    <section
+        class="tabla-equipos"
+        *ngIf="!cargando && !cargandoPermisos && puedeVer"
+    >
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Nombre
+                    </th>
+
+                    <th>
+                        Tipo
+                    </th>
+
+                    <th>
+                        Marca/Modelo
+                    </th>
+
+                    <th>
+                        N° Serie
+                    </th>
+
+                    <th>
+                        Estado
+                    </th>
+
+                    <th>
+                        Acciones
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr
+                    *ngFor="let equipo of equipos"
+                >
+
+                    <td>
+                        {{ equipo.nombre }}
+                    </td>
+
+                    <td>
+                        {{ equipo.tipo }}
+                    </td>
+
+                    <td>
+                        {{ equipo.marca }}
+                        {{ equipo.modelo }}
+                    </td>
+
+                    <td>
+                        {{ equipo.numeroSerie }}
+                    </td>
+
+                    <td>
+                        {{ equipo.estado }}
+                    </td>
+
+                    <td>
+
+
+                        <!-- EDITAR -->
+
+                        <button
+                            *ngIf="puedeEditar"
+                            class="btn-editar"
+                            type="button"
+                            title="Editar equipo"
+                            (click)="editarEquipo(equipo)"
+                        >
+                            ✏️
+                        </button>
+
+
+                        <!-- ELIMINAR -->
+
+                        <button
+                            *ngIf="puedeEliminar"
+                            class="btn-eliminar"
+                            type="button"
+                            title="Eliminar equipo"
+                            (click)="eliminarEquipo(equipo)"
+                        >
+                            🗑️
+                        </button>
+
+
+                    </td>
+
+                </tr>
+
+
+                <!-- SIN DATOS -->
+
+                <tr
+                    *ngIf="equipos.length === 0"
+                >
+
+                    <td
+                        colspan="6"
+                        class="sin-datos"
+                    >
+                        No hay equipos registrados.
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</div>

@@ -1,0 +1,49 @@
+<div class="directorio-page">
+  <header class="topbar">
+    <a routerLink="/" class="brand">TopoPro</a>
+    <nav><a routerLink="/publicaciones">Trabajos</a><a routerLink="/login" class="btn-login">Iniciar sesión</a></nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <span class="eyebrow">RED PROFESIONAL TOPOPRO</span>
+      <h1>Encuentra profesionales de la topografía</h1>
+      <p>Explora perfiles, especialidades y trabajos publicados por profesionales de la comunidad.</p>
+      <form class="filtros" (ngSubmit)="buscar()">
+        <input name="busqueda" [(ngModel)]="busqueda" placeholder="Nombre, profesión o empresa" aria-label="Buscar profesional">
+        <input name="ciudad" [(ngModel)]="ciudad" placeholder="Ciudad" aria-label="Filtrar por ciudad">
+        <select name="especialidad" [(ngModel)]="especialidad" aria-label="Filtrar por especialidad">
+          <option value="">Todas las especialidades</option>
+          <option>Levantamiento topográfico</option><option>GNSS / RTK</option><option>Nivelación</option>
+          <option>Fotogrametría</option><option>Cartografía</option><option>Replanteo</option>
+        </select>
+        <button type="submit">Buscar profesionales</button>
+        @if (busqueda || ciudad || especialidad) { <button type="button" class="btn-limpiar" (click)="limpiar()">Limpiar</button> }
+      </form>
+    </section>
+
+    <section class="resultados">
+      <div class="resultado-head"><div><span class="eyebrow">COMUNIDAD</span><h2>Profesionales destacados</h2></div><strong>{{ profesionales().length }}</strong></div>
+      @if (cargando()) { <div class="estado"><div class="spinner"></div><p>Buscando profesionales...</p></div> }
+      @else if (error()) { <div class="estado error"><p>{{ error() }}</p><button (click)="buscar()">Reintentar</button></div> }
+      @else if (!profesionales().length) { <div class="vacio"><div>🔎</div><h3>No encontramos profesionales</h3><p>Prueba con otra ciudad, especialidad o término de búsqueda.</p></div> }
+      @else {
+        <div class="grid">
+          @for (p of profesionales(); track p.id) {
+            <article class="card">
+              <div class="perfil-mini">
+                <div class="avatar">@if (p.foto) { <img [src]="p.foto" [alt]="nombre(p)"> } @else { {{ iniciales(p) }} }</div>
+                <div><h3>{{ nombre(p) }}</h3><p>{{ p.profesion || 'Profesional de la topografía' }}</p></div>
+              </div>
+              @if (p.empresa || p.ciudad) { <div class="meta">@if (p.empresa) { <span>🏢 {{ p.empresa }}</span> } @if (p.ciudad) { <span>📍 {{ p.ciudad }}{{ p.pais ? ', ' + p.pais : '' }}</span> }</div> }
+              <div class="stats"><span><b>{{ p.publicacionesCount }}</b> trabajos</span><span><b>{{ p.especialidades.length }}</b> especialidades</span></div>
+              @if (p.especialidades.length) { <div class="chips">@for (e of p.especialidades; track e) { <span>{{ e }}</span> }</div> }
+              @if (p.trabajos.length) { <div class="mini-trabajos">@for (t of p.trabajos; track t.id) { <div>@if (t.imagen) { <img [src]="t.imagen" [alt]="t.titulo" loading="lazy"> } @else { <span>📐</span> }</div> }</div> }
+              <a class="ver" [routerLink]="['/perfil-publico', p.id]">Ver perfil y portafolio →</a>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  </main>
+</div>

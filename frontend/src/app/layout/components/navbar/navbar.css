@@ -1,0 +1,11 @@
+.navbar {
+    height: 70px;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+small {
+    opacity: .8;
+}

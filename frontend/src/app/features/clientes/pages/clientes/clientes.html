@@ -1,0 +1,611 @@
+<p-toast></p-toast>
+<div class="clientes-container">
+
+
+    <!-- ENCABEZADO -->
+
+    <section class="clientes-header">
+
+
+        <div>
+
+            <h1>
+                👥 Clientes
+            </h1>
+
+
+            <p>
+                Gestiona la información de tus clientes y contactos asociados.
+            </p>
+
+
+        </div>
+
+
+
+        <button
+
+            class="btn-nuevo"
+
+            (click)="nuevoCliente()"
+
+        >
+
+            <i class="bi bi-plus-circle"></i>
+
+            Nuevo Cliente
+
+        </button>
+
+
+    </section>
+
+
+
+
+
+
+    <!-- TARJETAS RESUMEN -->
+
+
+    <section class="stats-clientes">
+
+
+        <article class="cliente-stat">
+
+
+            <div class="stat-icon blue">
+                👥
+            </div>
+
+
+            <div>
+
+                <span>
+                    Total clientes
+                </span>
+
+
+                <strong>
+                    {{ clientes.length }}
+                </strong>
+
+
+            </div>
+
+
+        </article>
+
+
+
+
+
+        <article class="cliente-stat">
+
+
+            <div class="stat-icon green">
+                🏙️
+            </div>
+
+
+            <div>
+
+                <span>
+                    Ciudades
+                </span>
+
+                <strong>
+                    {{ ciudadesUnicas }}
+                </strong>
+
+
+            </div>
+
+
+        </article>
+
+
+
+
+
+        <article class="cliente-stat">
+
+
+            <div class="stat-icon orange">
+                📞
+            </div>
+
+
+            <div>
+
+                <span>
+                    Contactos
+                </span>
+
+
+                <strong>
+                    {{ contactosRegistrados }}
+                </strong>
+
+
+            </div>
+
+
+        </article>
+
+
+
+    </section>
+
+
+
+
+
+
+
+    <!-- FORMULARIO -->
+
+
+    <section
+
+        class="formulario-card"
+
+        *ngIf="mostrarFormulario"
+
+    >
+
+
+        <div class="form-header">
+
+
+            <h2>
+
+                {{ editando ? 'Editar Cliente' : 'Nuevo Cliente' }}
+
+            </h2>
+
+
+        </div>
+
+
+
+
+
+        <form
+
+            [formGroup]="formulario"
+
+            (ngSubmit)="guardarCliente()"
+
+        >
+
+
+
+            <div class="form-grid">
+
+
+
+                <div class="campo">
+
+
+                    <label>
+                        Nombre *
+                    </label>
+
+
+                    <input
+
+                        type="text"
+
+                        formControlName="nombre"
+
+                    />
+
+
+                </div>
+
+
+
+
+
+
+                <div class="campo">
+
+
+                    <label>
+                        NIT
+                    </label>
+
+
+                    <input
+
+                        type="text"
+
+                        formControlName="nit"
+
+                    />
+
+
+                </div>
+
+
+
+
+
+
+                <div class="campo">
+
+
+                    <label>
+                        Teléfono
+                    </label>
+
+
+                    <input
+
+                        type="text"
+
+                        formControlName="telefono"
+
+                    />
+
+
+                </div>
+
+
+
+
+
+
+                <div class="campo">
+
+
+                    <label>
+                        Correo
+                    </label>
+
+
+                    <input
+
+                        type="email"
+
+                        formControlName="correo"
+
+                    />
+
+
+                </div>
+
+
+
+
+
+
+                <div class="campo">
+
+
+                    <label>
+                        Ciudad
+                    </label>
+
+
+                    <input
+
+                        type="text"
+
+                        formControlName="ciudad"
+
+                    />
+
+
+                </div>
+
+
+
+
+
+
+                <div class="campo">
+
+
+                    <label>
+                        Contacto
+                    </label>
+
+
+                    <input
+
+                        type="text"
+
+                        formControlName="contacto"
+
+                    />
+
+
+                </div>
+
+
+
+
+
+
+                <div class="campo campo-completo">
+
+
+                    <label>
+                        Dirección
+                    </label>
+
+
+                    <input
+
+                        type="text"
+
+                        formControlName="direccion"
+
+                    />
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+            <div class="acciones-formulario">
+
+
+                <button
+
+                    type="button"
+
+                    class="btn-cancelar"
+
+                    (click)="cancelar()"
+
+                >
+
+                    Cancelar
+
+                </button>
+
+
+
+
+
+                <button
+
+                    type="submit"
+
+                    class="btn-guardar"
+
+                >
+
+                    {{ editando ? 'Actualizar' : 'Guardar' }}
+
+                </button>
+
+
+
+            </div>
+
+
+
+        </form>
+
+
+    </section>
+
+
+
+
+
+
+
+
+    <!-- CARGANDO -->
+
+
+    <div
+
+        *ngIf="cargando"
+
+        class="mensaje-carga"
+
+    >
+
+        Cargando clientes...
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <!-- TABLA -->
+
+
+    <section
+
+        class="tabla-clientes"
+
+        *ngIf="!cargando"
+
+    >
+
+
+
+        <table>
+
+
+            <thead>
+
+
+                <tr>
+
+                    <th>
+                        Nombre
+                    </th>
+
+
+                    <th>
+                        NIT
+                    </th>
+
+
+                    <th>
+                        Ciudad
+                    </th>
+
+
+                    <th>
+                        Teléfono
+                    </th>
+
+
+                    <th>
+                        Correo
+                    </th>
+
+
+                    <th>
+                        Acciones
+                    </th>
+
+
+                </tr>
+
+
+            </thead>
+
+
+
+
+
+            <tbody>
+
+
+                <tr
+
+                    *ngFor="let cliente of clientes"
+
+                >
+
+
+
+                    <td>
+                        {{ cliente.nombre }}
+                    </td>
+
+
+                    <td>
+                        {{ cliente.nit }}
+                    </td>
+
+
+                    <td>
+                        {{ cliente.ciudad }}
+                    </td>
+
+
+                    <td>
+                        {{ cliente.telefono }}
+                    </td>
+
+
+                    <td>
+                        {{ cliente.correo }}
+                    </td>
+
+
+
+
+                    <td>
+
+
+                        <button
+
+                            class="btn-editar"
+
+                            (click)="editarCliente(cliente)"
+
+                        >
+
+                            ✏️
+
+                        </button>
+
+
+
+
+
+                        <button
+
+                            class="btn-eliminar"
+
+                            (click)="eliminarCliente(cliente)"
+
+                        >
+
+                            🗑️
+
+                        </button>
+
+
+                    </td>
+
+
+
+                </tr>
+
+
+
+
+
+
+                <tr
+
+                    *ngIf="clientes.length === 0"
+
+                >
+
+
+                    <td
+
+                        colspan="6"
+
+                        class="sin-datos"
+
+                    >
+
+                        No hay clientes registrados.
+
+
+                    </td>
+
+
+                </tr>
+
+
+
+            </tbody>
+
+
+
+        </table>
+
+
+
+    </section>
+
+
+
+</div>

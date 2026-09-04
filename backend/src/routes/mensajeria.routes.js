@@ -1,0 +1,11 @@
+const express=require('express');
+const router=express.Router();
+const {protegerRuta}=require('../middleware/authMiddleware');
+const c=require('../controllers/mensajeria.controller');
+router.use(protegerRuta);
+router.get('/',c.conversaciones);
+router.get('/no-leidos',c.noLeidos);
+router.post('/',c.enviar);
+router.get('/:id',c.mensajes);
+router.patch('/:id/leer',c.leer);
+module.exports=router;

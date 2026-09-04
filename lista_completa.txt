@@ -1,0 +1,231 @@
+topopro@1.0.0 C:\Users\rave_\TopoPro FC
+├─┬ @prisma/client@6.16.2
+│ ├── prisma@6.16.2 deduped
+│ └── UNMET OPTIONAL DEPENDENCY typescript@>=5.1.0
+├── bcryptjs@3.0.3
+├─┬ cors@2.8.6
+│ ├── object-assign@4.1.1
+│ └── vary@1.1.2
+├── dotenv@17.4.2
+├─┬ express@5.2.1
+│ ├─┬ accepts@2.0.0
+│ │ ├── mime-types@3.0.2 deduped
+│ │ └── negotiator@1.0.0
+│ ├─┬ body-parser@2.3.0
+│ │ ├── bytes@3.1.2
+│ │ ├── content-type@2.0.0
+│ │ ├── debug@4.4.3 deduped
+│ │ ├── http-errors@2.0.1 deduped
+│ │ ├─┬ iconv-lite@0.7.3
+│ │ │ └── safer-buffer@2.1.2
+│ │ ├── on-finished@2.4.1 deduped
+│ │ ├── qs@6.15.3 deduped
+│ │ ├─┬ raw-body@3.0.2
+│ │ │ ├── bytes@3.1.2 deduped
+│ │ │ ├── http-errors@2.0.1 deduped
+│ │ │ ├── iconv-lite@0.7.3 deduped
+│ │ │ └── unpipe@1.0.0
+│ │ └── type-is@2.1.0 deduped
+│ ├── content-disposition@1.1.0
+│ ├── content-type@1.0.5
+│ ├── cookie-signature@1.2.2
+│ ├── cookie@0.7.2
+│ ├─┬ debug@4.4.3
+│ │ └── ms@2.1.3 deduped
+│ ├── depd@2.0.0
+│ ├── encodeurl@2.0.0
+│ ├── escape-html@1.0.3
+│ ├── etag@1.8.1
+│ ├─┬ finalhandler@2.1.1
+│ │ ├── debug@4.4.3 deduped
+│ │ ├── encodeurl@2.0.0 deduped
+│ │ ├── escape-html@1.0.3 deduped
+│ │ ├── on-finished@2.4.1 deduped
+│ │ ├── parseurl@1.3.3 deduped
+│ │ └── statuses@2.0.2 deduped
+│ ├── fresh@2.0.0
+│ ├─┬ http-errors@2.0.1
+│ │ ├── depd@2.0.0 deduped
+│ │ ├── inherits@2.0.4
+│ │ ├── setprototypeof@1.2.0
+│ │ ├── statuses@2.0.2 deduped
+│ │ └── toidentifier@1.0.1
+│ ├── merge-descriptors@2.0.0
+│ ├─┬ mime-types@3.0.2
+│ │ └── mime-db@1.54.0
+│ ├─┬ on-finished@2.4.1
+│ │ └── ee-first@1.1.1
+│ ├─┬ once@1.4.0
+│ │ └── wrappy@1.0.2
+│ ├── parseurl@1.3.3
+│ ├─┬ proxy-addr@2.0.7
+│ │ ├── forwarded@0.2.0
+│ │ └── ipaddr.js@1.9.1
+│ ├─┬ qs@6.15.3
+│ │ ├── es-define-property@1.0.1
+│ │ └─┬ side-channel@1.1.1
+│ │   ├── es-errors@1.3.0
+│ │   ├── object-inspect@1.13.4
+│ │   ├─┬ side-channel-list@1.0.1
+│ │   │ ├── es-errors@1.3.0 deduped
+│ │   │ └── object-inspect@1.13.4 deduped
+│ │   ├─┬ side-channel-map@1.0.1
+│ │   │ ├─┬ call-bound@1.0.4
+│ │   │ │ ├─┬ call-bind-apply-helpers@1.0.2
+│ │   │ │ │ ├── es-errors@1.3.0 deduped
+│ │   │ │ │ └── function-bind@1.1.2 deduped
+│ │   │ │ └── get-intrinsic@1.3.0 deduped
+│ │   │ ├── es-errors@1.3.0 deduped
+│ │   │ ├─┬ get-intrinsic@1.3.0
+│ │   │ │ ├── call-bind-apply-helpers@1.0.2 deduped
+│ │   │ │ ├── es-define-property@1.0.1 deduped
+│ │   │ │ ├── es-errors@1.3.0 deduped
+│ │   │ │ ├─┬ es-object-atoms@1.1.2
+│ │   │ │ │ └── es-errors@1.3.0 deduped
+│ │   │ │ ├── function-bind@1.1.2
+│ │   │ │ ├─┬ get-proto@1.0.1
+│ │   │ │ │ ├─┬ dunder-proto@1.0.1
+│ │   │ │ │ │ ├── call-bind-apply-helpers@1.0.2 deduped
+│ │   │ │ │ │ ├── es-errors@1.3.0 deduped
+│ │   │ │ │ │ └── gopd@1.2.0 deduped
+│ │   │ │ │ └── es-object-atoms@1.1.2 deduped
+│ │   │ │ ├── gopd@1.2.0
+│ │   │ │ ├── has-symbols@1.1.0
+│ │   │ │ ├─┬ hasown@2.0.4
+│ │   │ │ │ └── function-bind@1.1.2 deduped
+│ │   │ │ └── math-intrinsics@1.1.0
+│ │   │ └── object-inspect@1.13.4 deduped
+│ │   └─┬ side-channel-weakmap@1.0.2
+│ │     ├── call-bound@1.0.4 deduped
+│ │     ├── es-errors@1.3.0 deduped
+│ │     ├── get-intrinsic@1.3.0 deduped
+│ │     ├── object-inspect@1.13.4 deduped
+│ │     └── side-channel-map@1.0.1 deduped
+│ ├── range-parser@1.3.0
+│ ├─┬ router@2.2.0
+│ │ ├── debug@4.4.3 deduped
+│ │ ├── depd@2.0.0 deduped
+│ │ ├── is-promise@4.0.0
+│ │ ├── parseurl@1.3.3 deduped
+│ │ └── path-to-regexp@8.4.2
+│ ├─┬ send@1.2.1
+│ │ ├── debug@4.4.3 deduped
+│ │ ├── encodeurl@2.0.0 deduped
+│ │ ├── escape-html@1.0.3 deduped
+│ │ ├── etag@1.8.1 deduped
+│ │ ├── fresh@2.0.0 deduped
+│ │ ├── http-errors@2.0.1 deduped
+│ │ ├── mime-types@3.0.2 deduped
+│ │ ├── ms@2.1.3 deduped
+│ │ ├── on-finished@2.4.1 deduped
+│ │ ├── range-parser@1.3.0 deduped
+│ │ └── statuses@2.0.2 deduped
+│ ├─┬ serve-static@2.2.1
+│ │ ├── encodeurl@2.0.0 deduped
+│ │ ├── escape-html@1.0.3 deduped
+│ │ ├── parseurl@1.3.3 deduped
+│ │ └── send@1.2.1 deduped
+│ ├── statuses@2.0.2
+│ ├─┬ type-is@2.1.0
+│ │ ├── content-type@2.0.0
+│ │ ├── media-typer@1.1.0
+│ │ └── mime-types@3.0.2 deduped
+│ └── vary@1.1.2 deduped
+├─┬ jsonwebtoken@9.0.3
+│ ├─┬ jws@4.0.1
+│ │ ├─┬ jwa@2.0.1
+│ │ │ ├── buffer-equal-constant-time@1.0.1
+│ │ │ ├─┬ ecdsa-sig-formatter@1.0.11
+│ │ │ │ └── safe-buffer@5.2.1 deduped
+│ │ │ └── safe-buffer@5.2.1 deduped
+│ │ └── safe-buffer@5.2.1
+│ ├── lodash.includes@4.3.0
+│ ├── lodash.isboolean@3.0.3
+│ ├── lodash.isinteger@4.0.4
+│ ├── lodash.isnumber@3.0.3
+│ ├── lodash.isplainobject@4.0.6
+│ ├── lodash.isstring@4.0.1
+│ ├── lodash.once@4.1.1
+│ ├── ms@2.1.3
+│ └── semver@7.8.5
+├─┬ nodemon@3.1.14
+│ ├─┬ chokidar@3.6.0
+│ │ ├─┬ anymatch@3.1.3
+│ │ │ ├── normalize-path@3.0.0 deduped
+│ │ │ └── picomatch@2.3.2
+│ │ ├─┬ braces@3.0.3
+│ │ │ └─┬ fill-range@7.1.1
+│ │ │   └─┬ to-regex-range@5.0.1
+│ │ │     └── is-number@7.0.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY fsevents@~2.3.2
+│ │ ├─┬ glob-parent@5.1.2
+│ │ │ └── is-glob@4.0.3 deduped
+│ │ ├─┬ is-binary-path@2.1.0
+│ │ │ └── binary-extensions@2.3.0
+│ │ ├─┬ is-glob@4.0.3
+│ │ │ └── is-extglob@2.1.1
+│ │ ├── normalize-path@3.0.0
+│ │ └─┬ readdirp@3.6.0
+│ │   └── picomatch@2.3.2 deduped
+│ ├── debug@4.4.3 deduped
+│ ├── ignore-by-default@1.0.1
+│ ├─┬ minimatch@10.2.5
+│ │ └─┬ brace-expansion@5.0.8
+│ │   └── balanced-match@4.0.4
+│ ├── pstree.remy@1.1.8
+│ ├── semver@7.8.5 deduped
+│ ├─┬ simple-update-notifier@2.0.0
+│ │ └── semver@7.8.5 deduped
+│ ├─┬ supports-color@5.5.0
+│ │ └── has-flag@3.0.0
+│ ├── touch@3.1.1
+│ └── undefsafe@2.0.5
+└─┬ prisma@6.16.2
+  ├─┬ @prisma/config@6.16.2
+  │ ├─┬ c12@3.1.0
+  │ │ ├─┬ chokidar@4.0.3
+  │ │ │ └── readdirp@4.1.2
+  │ │ ├── confbox@0.2.4
+  │ │ ├── defu@6.1.7
+  │ │ ├── dotenv@16.6.1
+  │ │ ├── exsolve@1.1.0
+  │ │ ├─┬ giget@2.0.0
+  │ │ │ ├─┬ citty@0.1.6
+  │ │ │ │ └── consola@3.4.2 deduped
+  │ │ │ ├── consola@3.4.2
+  │ │ │ ├── defu@6.1.7 deduped
+  │ │ │ ├── node-fetch-native@1.6.7
+  │ │ │ ├─┬ nypm@0.6.8
+  │ │ │ │ ├── citty@0.2.2
+  │ │ │ │ ├── pathe@2.0.3 deduped
+  │ │ │ │ └── tinyexec@1.2.4
+  │ │ │ └── pathe@2.0.3 deduped
+  │ │ ├── jiti@2.7.0
+  │ │ ├── UNMET OPTIONAL DEPENDENCY magicast@^0.3.5
+  │ │ ├── ohash@2.0.11
+  │ │ ├── pathe@2.0.3
+  │ │ ├── perfect-debounce@1.0.0
+  │ │ ├─┬ pkg-types@2.3.1
+  │ │ │ ├── confbox@0.2.4 deduped
+  │ │ │ ├── exsolve@1.1.0 deduped
+  │ │ │ └── pathe@2.0.3 deduped
+  │ │ └─┬ rc9@2.1.2
+  │ │   ├── defu@6.1.7 deduped
+  │ │   └── destr@2.0.5
+  │ ├── deepmerge-ts@7.1.5
+  │ ├─┬ effect@3.16.12
+  │ │ ├── @standard-schema/spec@1.1.0
+  │ │ └─┬ fast-check@3.23.2
+  │ │   └── pure-rand@6.1.0
+  │ └── empathic@2.0.0
+  ├─┬ @prisma/engines@6.16.2
+  │ ├── @prisma/debug@6.16.2
+  │ ├── @prisma/engines-version@6.16.0-7.1c57fdcd7e44b29b9313256c76699e91c3ac3c43
+  │ ├─┬ @prisma/fetch-engine@6.16.2
+  │ │ ├── @prisma/debug@6.16.2 deduped
+  │ │ ├── @prisma/engines-version@6.16.0-7.1c57fdcd7e44b29b9313256c76699e91c3ac3c43 deduped
+  │ │ └── @prisma/get-platform@6.16.2 deduped
+  │ └─┬ @prisma/get-platform@6.16.2
+  │   └── @prisma/debug@6.16.2 deduped
+  └── UNMET OPTIONAL DEPENDENCY typescript@>=5.1.0
+

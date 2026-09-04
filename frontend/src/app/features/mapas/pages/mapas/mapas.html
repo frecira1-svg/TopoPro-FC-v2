@@ -1,0 +1,186 @@
+<div class="mapas-container">
+
+    <!-- =====================================================
+         ENCABEZADO
+    ====================================================== -->
+
+    <section class="mapas-header">
+
+        <div>
+            <h1>🗺️ Mapa General</h1>
+
+            <p>
+                Vista consolidada de todos tus proyectos y
+                puntos topográficos georreferenciados.
+            </p>
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ESTADÍSTICAS
+    ====================================================== -->
+
+    <section class="stats-mapas">
+
+        <article class="mapa-stat">
+
+            <div class="stat-icon blue">
+                📁
+            </div>
+
+            <div>
+
+                <span>
+                    Proyectos en el mapa
+                </span>
+
+                <strong>
+                    {{ totalProyectos }}
+                </strong>
+
+            </div>
+
+        </article>
+
+
+        <article class="mapa-stat">
+
+            <div class="stat-icon green">
+                📍
+            </div>
+
+            <div>
+
+                <span>
+                    Puntos en el mapa
+                </span>
+
+                <strong>
+                    {{ totalPuntos }}
+                </strong>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         CONTROLES
+    ====================================================== -->
+
+    <section class="mapas-controles">
+
+        <button
+            type="button"
+            class="btn-mapa"
+            (click)="mostrarProyectos()"
+        >
+            📁 Proyectos
+        </button>
+
+
+        <button
+            type="button"
+            class="btn-mapa"
+            (click)="mostrarPuntos()"
+        >
+            📍 Puntos
+        </button>
+
+
+        <button
+            type="button"
+            class="btn-mapa"
+            (click)="ajustarMapaPublico()"
+        >
+            🎯 Ver todo
+        </button>
+
+
+        <button
+            type="button"
+            class="btn-mapa"
+            (click)="recargar()"
+        >
+            🔄 Recargar
+        </button>
+
+    </section>
+
+
+    <!-- =====================================================
+         SELECTOR DE PROYECTO
+    ====================================================== -->
+
+    <section
+        class="selector-proyecto"
+        *ngIf="proyectos.length > 0"
+    >
+
+        <label for="proyectoMapa">
+            📁 Centrar proyecto
+        </label>
+
+        <select
+            id="proyectoMapa"
+            (change)="seleccionarProyecto($event)"
+        >
+
+            <option value="">
+                Seleccione un proyecto
+            </option>
+
+            <option
+                *ngFor="let proyecto of proyectos"
+                [value]="proyecto.id"
+            >
+                {{ proyecto.nombre }}
+            </option>
+
+        </select>
+
+    </section>
+
+
+    <!-- =====================================================
+         CARGANDO
+    ====================================================== -->
+
+    <div
+        *ngIf="cargando"
+        class="mensaje-carga"
+    >
+        Cargando mapa...
+    </div>
+
+
+    <!-- =====================================================
+         ERROR
+    ====================================================== -->
+
+    <div
+        *ngIf="error && !cargando"
+        class="mensaje-error"
+    >
+        {{ error }}
+    </div>
+
+
+    <!-- =====================================================
+         MAPA
+    ====================================================== -->
+
+    <section class="mapa-card">
+
+        <div
+            id="mapaGeneral"
+            class="mapa"
+        ></div>
+
+    </section>
+
+</div>

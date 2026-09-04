@@ -1,0 +1,91 @@
+<p-toast />
+
+<div class="perfil-container">
+
+  @if (cargando()) {
+    <p>Cargando perfil...</p>
+  } @else if (usuario()) {
+
+    <p-card header="Mi Perfil">
+
+      <div class="perfil-foto-seccion">
+        <img
+          [src]="usuario()!.foto || 'https://ui-avatars.com/api/?name=' + usuario()!.nombre + '+' + usuario()!.apellido"
+          alt="Foto de perfil"
+          class="foto-perfil"
+        />
+
+        <div>
+          <input
+            #inputFoto
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            (change)="onFotoSeleccionada($event)"
+            hidden
+          />
+          <p-button
+            label="Cambiar foto"
+            icon="pi pi-camera"
+            [loading]="subiendoFoto()"
+            styleClass="p-button-outlined"
+            (onClick)="inputFoto.click()"
+          />
+        </div>
+      </div>
+
+      <div class="perfil-datos-readonly">
+        <p><strong>Correo:</strong> {{ usuario()!.correo }}</p>
+        <p><strong>Rol:</strong> {{ usuario()!.rol }}</p>
+      </div>
+
+      <div class="perfil-formulario">
+
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input pInputText id="nombre" [(ngModel)]="datosEditables.nombre" />
+        </div>
+
+        <div class="campo">
+          <label for="apellido">Apellido</label>
+          <input pInputText id="apellido" [(ngModel)]="datosEditables.apellido" />
+        </div>
+
+        <div class="campo">
+          <label for="telefono">Teléfono</label>
+          <input pInputText id="telefono" [(ngModel)]="datosEditables.telefono" />
+        </div>
+
+        <div class="campo">
+          <label for="profesion">Profesión</label>
+          <input pInputText id="profesion" [(ngModel)]="datosEditables.profesion" />
+        </div>
+
+        <div class="campo">
+          <label for="empresa">Empresa</label>
+          <input pInputText id="empresa" [(ngModel)]="datosEditables.empresa" />
+        </div>
+
+        <div class="campo">
+          <label for="ciudad">Ciudad</label>
+          <input pInputText id="ciudad" [(ngModel)]="datosEditables.ciudad" />
+        </div>
+
+        <div class="campo">
+          <label for="pais">País</label>
+          <input pInputText id="pais" [(ngModel)]="datosEditables.pais" />
+        </div>
+
+      </div>
+
+      <p-button
+        label="Guardar cambios"
+        icon="pi pi-check"
+        [loading]="guardando()"
+        (onClick)="guardar()"
+      />
+
+    </p-card>
+
+  }
+
+</div>

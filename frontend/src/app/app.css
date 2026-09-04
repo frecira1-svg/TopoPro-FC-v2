@@ -1,0 +1,28 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.layout {
+  display: flex;
+}
+
+.contenido {
+  flex: 1;
+  padding: 30px;
+  background: var(--color-fondo);
+  min-height: calc(100vh - 70px);
+}
+
+.contenido{
+
+    flex:1;
+
+    padding:30px;
+
+    background:#f5f7fa;
+
+    min-height:calc(100vh - 70px);
+
+}

@@ -1,0 +1,195 @@
+.card-publicacion {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,.05);
+    transition: all .25s ease;
+}
+
+.card-publicacion:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(0,0,0,.08);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.usuario {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #198754;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.datos-usuario h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #212529;
+    font-weight: 600;
+}
+
+.datos-usuario small {
+    color: #6c757d;
+    font-size: .85rem;
+}
+
+.badge {
+    padding: .45rem .8rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.badge-noticia {
+    background: #dc3545;
+    color: white;
+}
+
+.badge-comunidad {
+    background: #198754;
+    color: white;
+}
+
+.card-body h2 {
+    font-size: 1.25rem;
+    margin-bottom: .75rem;
+    color: #212529;
+}
+
+.card-body p {
+    color: #495057;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+.imagen-publicacion {
+    width: 100%;
+    margin-top: 1rem;
+    border-radius: 12px;
+    max-height: 500px;
+    object-fit: cover;
+    border: 1px solid #dee2e6;
+}
+
+.card-footer {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+.btn-link {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #198754;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.btn-link:hover {
+    color: #146c43;
+}
+
+.acciones {
+    display: flex;
+    gap: .5rem;
+}
+
+.btn-icon {
+    border: none;
+    background: #f8f9fa;
+    padding: .5rem .9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .2s;
+    font-weight: 500;
+}
+
+.btn-icon:hover {
+    background: #e9ecef;
+}
+
+.btn-icon.danger {
+    color: #dc3545;
+}
+
+.btn-icon.danger:hover {
+    background: #ffe5e8;
+}
+
+@media (max-width: 768px) {
+
+    .card-header,
+    .card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .acciones {
+        width: 100%;
+    }
+
+    .btn-icon {
+        flex: 1;
+    }
+}
+
+
+.meta-trabajo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 8px 0 14px;
+    font-size: 13px;
+    color: #52606d;
+}
+
+.meta-trabajo span, .etiquetas span {
+    background: #f1f5f9;
+    border-radius: 999px;
+    padding: 5px 10px;
+}
+
+.etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #2563eb;
+}
+.nombre-usuario { border:0; padding:0; background:none; font:inherit; font-weight:700; cursor:pointer; color:inherit; text-align:left; }
+.nombre-usuario:hover { color:#1677ff; text-decoration:underline; }
+.galeria-card{position:relative}.galeria-card .imagen-publicacion{display:block}.contador-fotos{position:absolute;right:12px;bottom:12px;background:rgba(0,0,0,.72);color:#fff;padding:6px 10px;border-radius:10px;font-size:12px;font-weight:700}

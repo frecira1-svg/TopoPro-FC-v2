@@ -1,0 +1,678 @@
+<p-toast />
+<p-confirmDialog />
+
+<div class="puntos-container">
+
+    <!-- ==========================================
+         ENCABEZADO
+    =========================================== -->
+
+    <section class="puntos-header">
+
+        <div class="titulo-seccion">
+
+            <div class="titulo-icono">
+                <i class="pi pi-map-marker"></i>
+            </div>
+
+            <div>
+                <h1>Puntos Topográficos</h1>
+
+                <p>
+                    Administra, consulta y visualiza los puntos
+                    topográficos registrados en el proyecto.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="acciones-header">
+
+            <input
+                type="file"
+                accept=".csv"
+                #inputArchivo
+                hidden
+                (change)="seleccionarArchivo($event)"
+            />
+
+            <p-button
+                label="Importar CSV"
+                icon="pi pi-upload"
+                severity="secondary"
+                [loading]="importando()"
+                (onClick)="inputArchivo.click()"
+            />
+
+            <p-button
+                label="Nuevo Punto"
+                icon="pi pi-plus"
+                (onClick)="abrirNuevo()"
+            />
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         TARJETAS ESTADÍSTICAS
+    =========================================== -->
+
+    <section class="stats-grid">
+
+        <!-- TOTAL -->
+
+        <article class="stat-card">
+
+            <div class="stat-icon blue">
+                <i class="pi pi-map-marker"></i>
+            </div>
+
+            <div class="stat-info">
+
+                <span>Total de puntos</span>
+
+                <strong>
+                    {{ puntos().length }}
+                </strong>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- GEORREFERENCIADOS -->
+
+        <article class="stat-card">
+
+            <div class="stat-icon green">
+                <i class="pi pi-globe"></i>
+            </div>
+
+            <div class="stat-info">
+
+                <span>Georreferenciados</span>
+
+                <strong>
+                    {{ totalGeorreferenciados() }}
+                </strong>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ELEVACIÓN -->
+
+        <article class="stat-card">
+
+            <div class="stat-icon orange">
+                <i class="pi pi-chart-line"></i>
+            </div>
+
+            <div class="stat-info">
+
+                <span>Elevación promedio</span>
+
+                <strong>
+                    {{ elevacionPromedio() }} m
+                </strong>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         MAPA
+    =========================================== -->
+
+    <section class="mapa-card">
+
+        <div class="card-header">
+
+            <div class="card-title">
+
+                <div class="card-icon mapa-icon">
+                    <i class="pi pi-map"></i>
+                </div>
+
+                <div>
+
+                    <h2>Mapa del Proyecto</h2>
+
+                    <span>
+                        Ubicación de los puntos georreferenciados
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="mapaPuntos"
+            class="mapa"
+        ></div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         TABLA
+    =========================================== -->
+
+    <section class="tabla-card">
+
+        <div class="card-header">
+
+            <div class="card-title">
+
+                <div class="card-icon tabla-icon">
+                    <i class="pi pi-list"></i>
+                </div>
+
+                <div>
+
+                    <h2>Lista de Puntos</h2>
+
+                    <span>
+                        Información registrada de los puntos topográficos
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="tabla-wrapper">
+
+            <p-table
+
+                [value]="puntos()"
+
+                [loading]="cargando()"
+
+                [paginator]="true"
+
+                [rows]="10"
+
+                responsiveLayout="scroll"
+
+                styleClass="p-datatable-sm puntos-table"
+
+            >
+
+                <ng-template #header>
+
+                    <tr>
+
+                        <th>Código</th>
+
+                        <th>Norte</th>
+
+                        <th>Este</th>
+
+                        <th>Elevación</th>
+
+                        <th>Tipo</th>
+
+                        <th class="columna-acciones">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </ng-template>
+
+
+
+                <ng-template #body let-punto>
+
+                    <tr>
+
+                        <!-- CÓDIGO -->
+
+                        <td>
+
+                            <div class="codigo-punto">
+
+                                <span class="codigo-icono">
+                                    <i class="pi pi-map-marker"></i>
+                                </span>
+
+                                <strong>
+                                    {{ punto.codigo }}
+                                </strong>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- NORTE -->
+
+                        <td>
+                            {{ punto.norte }}
+                        </td>
+
+
+                        <!-- ESTE -->
+
+                        <td>
+                            {{ punto.este }}
+                        </td>
+
+
+                        <!-- ELEVACIÓN -->
+
+                        <td>
+
+                            <span class="elevacion">
+                                {{ punto.elevacion }} m
+                            </span>
+
+                        </td>
+
+
+                        <!-- TIPO -->
+
+                        <td>
+
+                            <span
+                                class="tipo-badge"
+                                *ngIf="punto.tipo"
+                            >
+                                {{ punto.tipo }}
+                            </span>
+
+                            <span
+                                class="sin-tipo"
+                                *ngIf="!punto.tipo"
+                            >
+                                -
+                            </span>
+
+                        </td>
+
+
+                        <!-- ACCIONES -->
+
+                        <td class="acciones-tabla">
+
+                            <!-- LOCALIZAR -->
+
+                            <p-button
+
+                                icon="pi pi-map-marker"
+
+                                severity="success"
+
+                                [text]="true"
+
+                                [rounded]="true"
+
+                                pTooltip="Localizar punto"
+
+                                tooltipPosition="top"
+
+                                (onClick)="localizarPunto(punto)"
+
+                            />
+
+
+                            <!-- EDITAR -->
+
+                            <p-button
+
+                                icon="pi pi-pencil"
+
+                                severity="info"
+
+                                [text]="true"
+
+                                [rounded]="true"
+
+                                pTooltip="Editar punto"
+
+                                tooltipPosition="top"
+
+                                (onClick)="abrirEdicion(punto)"
+
+                            />
+
+
+                            <!-- ELIMINAR -->
+
+                            <p-button
+
+                                icon="pi pi-trash"
+
+                                severity="danger"
+
+                                [text]="true"
+
+                                [rounded]="true"
+
+                                pTooltip="Eliminar punto"
+
+                                tooltipPosition="top"
+
+                                (onClick)="confirmarEliminar(punto)"
+
+                            />
+
+                        </td>
+
+                    </tr>
+
+                </ng-template>
+
+
+
+                <!-- SIN DATOS -->
+
+                <ng-template #emptymessage>
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="sin-datos"
+                        >
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+                                    <i class="pi pi-map-marker"></i>
+                                </div>
+
+                                <strong>
+                                    No hay puntos registrados
+                                </strong>
+
+                                <span>
+                                    Los puntos del proyecto aparecerán aquí.
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </ng-template>
+
+            </p-table>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+
+<!-- ==========================================
+     DIALOGO NUEVO / EDITAR
+=========================================== -->
+
+<p-dialog
+
+    [header]="modoEdicion() ? 'Editar Punto' : 'Nuevo Punto'"
+
+    [(visible)]="dialogoVisible"
+
+    [modal]="true"
+
+    [style]="{ width:'560px', 'max-width':'95vw' }"
+
+    [contentStyle]="{ 'overflow-y':'auto' }"
+
+>
+
+    <div class="dialog-descripcion">
+
+        <i class="pi pi-info-circle"></i>
+
+        <span>
+            Completa la información del punto topográfico.
+        </span>
+
+    </div>
+
+
+
+    <div class="form-grid">
+
+        <!-- CÓDIGO -->
+
+        <div class="form-campo">
+
+            <label>
+                Código <span>*</span>
+            </label>
+
+            <input
+                pInputText
+                [(ngModel)]="puntoActual.codigo"
+                placeholder="Ej. P-001"
+            />
+
+        </div>
+
+
+
+        <!-- NORTE -->
+
+        <div class="form-campo">
+
+            <label>
+                Norte <span>*</span>
+            </label>
+
+            <p-inputNumber
+
+                [(ngModel)]="puntoActual.norte"
+
+                [minFractionDigits]="2"
+
+                [useGrouping]="false"
+
+                placeholder="Coordenada Norte"
+
+                [style]="{width:'100%'}"
+
+            />
+
+        </div>
+
+
+
+        <!-- ESTE -->
+
+        <div class="form-campo">
+
+            <label>
+                Este <span>*</span>
+            </label>
+
+            <p-inputNumber
+
+                [(ngModel)]="puntoActual.este"
+
+                [minFractionDigits]="2"
+
+                [useGrouping]="false"
+
+                placeholder="Coordenada Este"
+
+                [style]="{width:'100%'}"
+
+            />
+
+        </div>
+
+
+
+        <!-- ELEVACIÓN -->
+
+        <div class="form-campo">
+
+            <label>
+                Elevación <span>*</span>
+            </label>
+
+            <p-inputNumber
+
+                [(ngModel)]="puntoActual.elevacion"
+
+                [minFractionDigits]="2"
+
+                [useGrouping]="false"
+
+                placeholder="Metros"
+
+                [style]="{width:'100%'}"
+
+            />
+
+        </div>
+
+
+
+        <!-- TIPO -->
+
+        <div class="form-campo">
+
+            <label>
+                Tipo
+            </label>
+
+            <input
+                pInputText
+                [(ngModel)]="puntoActual.tipo"
+                placeholder="Ej. Delta, BM, Control"
+            />
+
+        </div>
+
+
+
+        <!-- LATITUD -->
+
+        <div class="form-campo">
+
+            <label>
+                Latitud
+            </label>
+
+            <p-inputNumber
+
+                [(ngModel)]="puntoActual.latitud"
+
+                [minFractionDigits]="6"
+
+                [useGrouping]="false"
+
+                placeholder="6.244200"
+
+                [style]="{width:'100%'}"
+
+            />
+
+        </div>
+
+
+
+        <!-- LONGITUD -->
+
+        <div class="form-campo">
+
+            <label>
+                Longitud
+            </label>
+
+            <p-inputNumber
+
+                [(ngModel)]="puntoActual.longitud"
+
+                [minFractionDigits]="6"
+
+                [useGrouping]="false"
+
+                placeholder="-75.581200"
+
+                [style]="{width:'100%'}"
+
+            />
+
+        </div>
+
+
+
+        <!-- DESCRIPCIÓN -->
+
+        <div class="form-campo campo-completo">
+
+            <label>
+                Descripción
+            </label>
+
+            <input
+                pInputText
+                [(ngModel)]="puntoActual.descripcion"
+                placeholder="Descripción del punto"
+            />
+
+        </div>
+
+    </div>
+
+
+
+    <!-- FOOTER -->
+
+    <ng-template #footer>
+
+        <p-button
+
+            label="Cancelar"
+
+            icon="pi pi-times"
+
+            severity="secondary"
+
+            [text]="true"
+
+            (onClick)="dialogoVisible.set(false)"
+
+        />
+
+        <p-button
+
+            label="Guardar"
+
+            icon="pi pi-check"
+
+            (onClick)="guardar()"
+
+        />
+
+    </ng-template>
+
+</p-dialog>

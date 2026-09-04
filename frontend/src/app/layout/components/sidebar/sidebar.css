@@ -1,0 +1,87 @@
+.sidebar {
+
+    width: 250px;
+    min-height: calc(100vh - 70px);
+
+    background: #1f2937;
+
+    color: white;
+
+    padding: 20px 12px;
+
+    box-shadow: 3px 0 12px rgba(0, 0, 0, .15);
+
+}
+
+.sidebar ul {
+
+    list-style: none;
+
+    margin: 0;
+
+    padding: 0;
+
+}
+
+.sidebar li {
+
+    margin-bottom: 8px;
+
+}
+
+.sidebar a {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 14px 18px;
+
+    border-radius: 10px;
+
+    transition: all .25s ease;
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+}
+
+.sidebar a i {
+
+    font-size: 18px;
+
+    width: 22px;
+
+    text-align: center;
+
+}
+
+.sidebar a:hover {
+
+    background: #374151;
+
+    transform: translateX(5px);
+
+}
+
+.activo {
+
+    background: #16a34a;
+
+    font-weight: 600;
+
+    box-shadow: 0 4px 10px rgba(22, 163, 74, .35);
+
+}
+
+/* Indicador de mensajes nuevos */
+li a { position: relative; }
+.badge-contactos { margin-left: auto; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; background: #dc3545; color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,.9); animation: pulso-contactos 1.8s ease-in-out infinite; }
+@keyframes pulso-contactos { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }

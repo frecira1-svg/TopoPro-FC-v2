@@ -1,0 +1,129 @@
+<div class="card-publicacion">
+
+    <div class="card-header">
+
+        <div class="usuario">
+
+            <div class="avatar">
+
+                <img
+                    *ngIf="publicacion.usuario.foto"
+                    [src]="publicacion.usuario.foto"
+                    [alt]="obtenerNombreCompleto()"
+                >
+
+                <span *ngIf="!publicacion.usuario.foto">
+
+                    {{ obtenerIniciales() }}
+
+                </span>
+
+            </div>
+
+            <div class="datos-usuario">
+
+                <h3>
+
+                    <button class="nombre-usuario" type="button" (click)="verPerfil()">
+                        {{ obtenerNombreCompleto() }}
+                    </button>
+
+                </h3>
+
+                <small>
+
+                    {{ publicacion.createdAt | date:'dd/MM/yyyy HH:mm' }}
+
+                </small>
+
+            </div>
+
+        </div>
+
+        <span
+            class="badge"
+            [ngClass]="{
+                'badge-noticia': publicacion.tipo === 'NOTICIA',
+                'badge-comunidad': publicacion.tipo === 'COMUNIDAD'
+            }"
+        >
+
+            {{ publicacion.tipo }}
+
+        </span>
+
+    </div>
+
+    <div class="card-body">
+
+        <h2>
+
+            {{ publicacion.titulo }}
+
+        </h2>
+
+        <div class="meta-trabajo" *ngIf="publicacion.tipoTrabajo || publicacion.ubicacion">
+            <span *ngIf="publicacion.tipoTrabajo">🧭 {{ publicacion.tipoTrabajo }}</span>
+            <span *ngIf="publicacion.ubicacion">📍 {{ publicacion.ubicacion }}</span>
+        </div>
+
+        <p>
+
+            {{ publicacion.contenido }}
+
+        </p>
+
+        <div class="etiquetas" *ngIf="publicacion.etiquetas">
+            <span *ngFor="let etiqueta of publicacion.etiquetas.split(',')">#{{ etiqueta.trim() }}</span>
+        </div>
+
+        <div class="galeria-card" *ngIf="publicacion.imagen || publicacion.imagenes?.length">
+            <img
+                class="imagen-publicacion"
+                [src]="publicacion.imagenes?.[0]?.url || publicacion.imagen"
+                alt="Fotografía principal del trabajo"
+            >
+            <span class="contador-fotos" *ngIf="(publicacion.imagenes?.length ?? 0) > 1">+{{ (publicacion.imagenes?.length ?? 0) - 1 }} fotos</span>
+        </div>
+
+    </div>
+
+    <div class="card-footer">
+
+        <button
+            class="btn-link"
+            (click)="abrirDetalle()"
+        >
+
+            💬 {{ publicacion._count?.comentarios ?? 0 }} comentarios
+
+        </button>
+
+        <div
+            class="acciones"
+            *ngIf="puedeEditar()"
+        >
+
+            <button
+                class="btn-icon"
+                (click)="editarPublicacion()"
+            >
+
+                ✏️ Editar
+
+            </button>
+
+            <button
+                class="btn-icon danger"
+                (click)="eliminarPublicacion()"
+            >
+
+                🗑 Eliminar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

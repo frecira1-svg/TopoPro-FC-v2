@@ -1,0 +1,16 @@
+<div class="mensajeria-page">
+  <header class="cabecera"><div><span class="eyebrow">RED PROFESIONAL</span><h1>💬 Mensajería</h1><p>Conversa directamente con otros profesionales de TopoPro.</p></div><div class="acciones-cabecera"><button type="button" class="btn-sec" (click)="activarNotificaciones()">{{notificacionesActivas() ? '🔔 Notificaciones activas' : '🔔 Activar notificaciones'}}</button><a routerLink="/directorio" class="btn-sec">🔎 Buscar profesionales</a></div></header>
+  @if(error()){<div class="alerta">{{error()}}</div>}
+  <section class="chat-shell">
+    <aside class="lista-chats">
+      <div class="lista-titulo"><strong>Conversaciones</strong><button (click)="cargar()">↻</button></div>
+      @if(cargando()){<div class="vacio-lista">Cargando...</div>}
+      @else if(!conversaciones().length){<div class="vacio-lista"><div>💬</div><strong>Aún no tienes conversaciones</strong><p>Visita el perfil de un profesional para iniciar una.</p><a routerLink="/directorio">Explorar directorio</a></div>}
+      @else { @for(c of conversaciones();track c.id){<button class="chat-item" [class.activo]="seleccionado()?.id===c.id" (click)="abrir(c)"><div class="avatar">{{iniciales(c.otro)}}</div><div class="chat-resumen"><strong>{{nombre(c.otro)}}</strong><small>{{c.otro.profesion||'Profesional'}}</small><p>{{ultimoTexto(c)}}</p></div><span class="hora">{{fecha(c.updatedAt)}}</span></button> } }
+    </aside>
+    <main class="chat">
+      @if(!seleccionado() && !otro()){<div class="sin-chat"><div>💬</div><h2>Selecciona una conversación</h2><p>Tus conversaciones profesionales aparecerán aquí.</p></div>}
+      @else {<header class="chat-header"><div class="avatar">{{iniciales(otro())}}</div><div><strong>{{nombre(otro())}}</strong><span>{{otro()?.profesion||'Profesional'}}</span></div></header><div class="mensajes">@if(cargandoMensajes()){<div class="vacio-lista">Cargando conversación...</div>} @else { @for(m of mensajes();track m.id){<div class="burbuja-wrap" [class.mio]="esMio(m)"><div class="burbuja"><div>{{m.contenido}}</div><small>{{fecha(m.createdAt)}} <span>{{esMio(m)?'✓':' '}}</span></small></div></div>} @if(!mensajes().length){<div class="vacio-lista">Escribe el primer mensaje.</div>} }</div><form class="composer" (ngSubmit)="enviar()"><textarea name="mensaje" [(ngModel)]="texto" rows="2" maxlength="5000" placeholder="Escribe un mensaje profesional..."></textarea><button class="btn-primary" type="submit" [disabled]="enviando()||!texto.trim()">{{enviando()?'Enviando...':'Enviar ➤'}}</button></form>}
+    </main>
+  </section>
+</div>

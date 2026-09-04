@@ -1,0 +1,24 @@
+.verificacion-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.verificacion-card {
+  text-align: center;
+  max-width: 400px;
+  padding: 2rem;
+}
+
+.icono {
+  font-size: 48px;
+  margin-bottom: 1rem;
+}
+
+button {
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  cursor: pointer;
+}

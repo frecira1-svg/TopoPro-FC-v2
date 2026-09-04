@@ -1,0 +1,546 @@
+.clientes-container {
+
+    width: 100%;
+
+    min-height: calc(100vh - 70px);
+
+    padding: 30px;
+
+    background: #f5f7fb;
+
+}
+
+
+
+
+/* =========================
+   ENCABEZADO
+========================= */
+
+
+.clientes-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.06);
+
+    margin-bottom: 25px;
+
+}
+
+
+
+.clientes-header h1 {
+
+    margin: 0 0 8px;
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    color: #111827;
+
+}
+
+
+
+.clientes-header p {
+
+    margin: 0;
+
+    color: #6b7280;
+
+    font-size: 15px;
+
+}
+
+
+
+
+
+/* =========================
+   BOTONES
+========================= */
+
+
+.btn-nuevo {
+
+    border: none;
+
+    padding: 12px 22px;
+
+    border-radius: 12px;
+
+    background: #198754;
+
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+}
+
+
+
+.btn-nuevo:hover {
+
+    opacity: .9;
+
+}
+
+
+
+
+
+/* =========================
+   TARJETAS RESUMEN
+========================= */
+
+
+.stats-clientes {
+
+    display: grid;
+
+    grid-template-columns: repeat(3,1fr);
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+
+}
+
+
+
+.cliente-stat {
+
+    background: white;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,.05);
+
+}
+
+
+
+.cliente-stat span {
+
+    display:block;
+
+    color:#6b7280;
+
+    font-size:14px;
+
+}
+
+
+
+.cliente-stat strong {
+
+    display:block;
+
+    font-size:28px;
+
+    margin-top:5px;
+
+    color:#111827;
+
+}
+
+
+
+
+
+.stat-icon {
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:25px;
+
+}
+
+
+
+
+
+.blue {
+
+    background:#dbeafe;
+
+}
+
+
+
+.green {
+
+    background:#dcfce7;
+
+}
+
+
+
+.orange {
+
+    background:#ffedd5;
+
+}
+
+
+
+
+
+
+
+/* =========================
+   FORMULARIO
+========================= */
+
+
+.formulario-card {
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:20px;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.06);
+
+    margin-bottom:25px;
+
+}
+
+
+
+.form-header h2 {
+
+    margin-top:0;
+
+    margin-bottom:25px;
+
+    color:#111827;
+
+}
+
+
+
+.form-grid {
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:20px;
+
+}
+
+
+
+.campo {
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+
+.campo label {
+
+    font-size:14px;
+
+    font-weight:600;
+
+    margin-bottom:7px;
+
+    color:#374151;
+
+}
+
+
+
+.campo input {
+
+    padding:12px;
+
+    border-radius:10px;
+
+    border:1px solid #d1d5db;
+
+}
+
+
+
+.campo-completo {
+
+    grid-column:1/-1;
+
+}
+
+
+
+.acciones-formulario {
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    margin-top:25px;
+
+}
+
+
+
+.btn-guardar,
+.btn-cancelar {
+
+    border:none;
+
+    padding:11px 20px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+}
+
+
+
+.btn-guardar {
+
+    background:#198754;
+
+    color:white;
+
+}
+
+
+
+.btn-cancelar {
+
+    background:#6c757d;
+
+    color:white;
+
+}
+
+
+
+
+
+
+/* =========================
+   TABLA
+========================= */
+
+
+.tabla-clientes {
+
+    background:white;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.06);
+
+}
+
+
+
+.tabla-clientes table {
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+
+
+.tabla-clientes thead {
+
+    background:#198754;
+
+    color:white;
+
+}
+
+
+
+.tabla-clientes th {
+
+    padding:15px;
+
+    text-align:left;
+
+}
+
+
+
+.tabla-clientes td {
+
+    padding:15px;
+
+    border-bottom:1px solid #e5e7eb;
+
+}
+
+
+
+.tabla-clientes tbody tr:hover {
+
+    background:#f8fafc;
+
+}
+
+
+
+
+
+
+/* =========================
+   ACCIONES TABLA
+========================= */
+
+
+.btn-editar,
+.btn-eliminar {
+
+    border:none;
+
+    border-radius:8px;
+
+    padding:8px 10px;
+
+    cursor:pointer;
+
+    margin-right:5px;
+
+}
+
+
+
+.btn-editar {
+
+    background:#facc15;
+
+}
+
+
+
+.btn-eliminar {
+
+    background:#ef4444;
+
+    color:white;
+
+}
+
+
+
+
+
+
+.sin-datos,
+.mensaje-carga {
+
+    text-align:center;
+
+    padding:30px;
+
+    color:#6b7280;
+
+}
+
+
+
+
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+
+@media(max-width:900px){
+
+
+    .stats-clientes {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+
+    .form-grid {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+
+    .clientes-header {
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+
+}
+
+
+
+@media(max-width:600px){
+
+
+    .clientes-container {
+
+        padding:15px;
+
+    }
+
+
+}

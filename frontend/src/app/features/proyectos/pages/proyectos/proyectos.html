@@ -1,0 +1,692 @@
+<p-toast></p-toast>
+
+<p-confirmDialog></p-confirmDialog>
+
+
+<div class="proyectos-container">
+
+
+  <!-- =====================================================
+       ENCABEZADO
+  ====================================================== -->
+
+  <section class="encabezado">
+
+    <div>
+
+      <h1>
+        📁 Proyectos
+      </h1>
+
+      <p class="subtitulo">
+        Gestiona los levantamientos topográficos
+        asociados a tus clientes.
+      </p>
+
+    </div>
+
+
+    <p-button
+      *ngIf="puedeCrear()"
+      label="Nuevo Proyecto"
+      icon="pi pi-plus"
+      (onClick)="abrirNuevo()">
+    </p-button>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       SIN PERMISO
+  ====================================================== -->
+
+  <section
+    *ngIf="!cargandoPermisos() && !puedeVer()"
+    class="sin-permiso">
+
+    <div class="sin-permiso-icono">
+      🔒
+    </div>
+
+    <h2>
+      Acceso restringido
+    </h2>
+
+    <p>
+      No tienes permiso para consultar proyectos.
+    </p>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       CONTENIDO
+  ====================================================== -->
+
+  <ng-container *ngIf="puedeVer()">
+
+
+    <!-- ===================================================
+         ESTADÍSTICAS
+    ==================================================== -->
+
+    <section class="stats-proyectos">
+
+
+      <article class="stat-proyecto">
+
+        <div class="icono blue">
+          📁
+        </div>
+
+        <div>
+
+          <span>
+            Total proyectos
+          </span>
+
+          <strong>
+            {{ proyectos().length }}
+          </strong>
+
+        </div>
+
+      </article>
+
+
+
+      <article class="stat-proyecto">
+
+        <div class="icono orange">
+          🔄
+        </div>
+
+        <div>
+
+          <span>
+            En progreso
+          </span>
+
+          <strong>
+            {{
+              proyectos()
+                .filter(p => p.estado === 'EN_PROGRESO')
+                .length
+            }}
+          </strong>
+
+        </div>
+
+      </article>
+
+
+
+      <article class="stat-proyecto">
+
+        <div class="icono green">
+          ✅
+        </div>
+
+        <div>
+
+          <span>
+            Finalizados
+          </span>
+
+          <strong>
+            {{
+              proyectos()
+                .filter(p => p.estado === 'FINALIZADO')
+                .length
+            }}
+          </strong>
+
+        </div>
+
+      </article>
+
+
+
+      <article class="stat-proyecto">
+
+        <div class="icono purple">
+          ⏸️
+        </div>
+
+        <div>
+
+          <span>
+            Pausados
+          </span>
+
+          <strong>
+            {{
+              proyectos()
+                .filter(p => p.estado === 'PAUSADO')
+                .length
+            }}
+          </strong>
+
+        </div>
+
+      </article>
+
+
+    </section>
+
+
+
+    <!-- ===================================================
+         TABLA
+    ==================================================== -->
+
+    <p-table
+
+      #dt
+
+      [value]="proyectos()"
+
+      [loading]="cargando()"
+
+      [paginator]="true"
+
+      [rows]="10"
+
+      [globalFilterFields]="[
+        'nombre',
+        'cliente',
+        'ubicacion'
+      ]"
+
+      styleClass="p-datatable-sm">
+
+
+      <!-- =================================================
+           BUSCADOR
+      ================================================== -->
+
+      <ng-template #caption>
+
+        <div class="tabla-caption">
+
+          <span class="p-input-icon-left">
+
+            <i class="pi pi-search"></i>
+
+            <input
+
+              pInputText
+
+              type="text"
+
+              placeholder="Buscar proyecto..."
+
+              [(ngModel)]="filtroTexto"
+
+              (input)="
+                dt.filterGlobal(
+                  $any($event.target).value,
+                  'contains'
+                )
+              ">
+
+          </span>
+
+        </div>
+
+      </ng-template>
+
+
+
+      <!-- =================================================
+           ENCABEZADO
+      ================================================== -->
+
+      <ng-template #header>
+
+        <tr>
+
+          <th>
+            Proyecto
+          </th>
+
+          <th>
+            Cliente
+          </th>
+
+          <th>
+            Ubicación
+          </th>
+
+          <th>
+            Estado
+          </th>
+
+          <th>
+            Fecha inicio
+          </th>
+
+          <th>
+            Acciones
+          </th>
+
+        </tr>
+
+      </ng-template>
+
+
+
+      <!-- =================================================
+           CUERPO
+      ================================================== -->
+
+      <ng-template
+        #body
+        let-proyecto>
+
+        <tr>
+
+
+          <!-- PROYECTO -->
+
+          <td>
+
+            <strong>
+              {{ proyecto.nombre }}
+            </strong>
+
+            <br>
+
+            <small
+              *ngIf="proyecto.descripcion">
+
+              {{ proyecto.descripcion }}
+
+            </small>
+
+          </td>
+
+
+
+          <!-- CLIENTE -->
+
+          <td>
+            {{ proyecto.cliente }}
+          </td>
+
+
+
+          <!-- UBICACIÓN -->
+
+          <td>
+            {{ proyecto.ubicacion }}
+          </td>
+
+
+
+          <!-- ESTADO -->
+
+          <td>
+
+            <p-tag
+
+              [value]="proyecto.estado"
+
+              [severity]="
+                severidadEstado(
+                  proyecto.estado
+                )
+              ">
+
+            </p-tag>
+
+          </td>
+
+
+
+          <!-- FECHA -->
+
+          <td>
+
+            {{
+              proyecto.fechaInicio
+                | date:'dd/MM/yyyy'
+            }}
+
+          </td>
+
+
+
+          <!-- ACCIONES -->
+
+          <td>
+
+
+            <!-- VER PUNTOS -->
+
+            <p-button
+
+              *ngIf="puedeVer()"
+
+              icon="pi pi-map-marker"
+
+              [text]="true"
+
+              severity="info"
+
+              pTooltip="Ver puntos"
+
+              tooltipPosition="top"
+
+              (onClick)="
+                verPuntos(proyecto)
+              ">
+
+            </p-button>
+
+
+
+            <!-- EDITAR -->
+
+            <p-button
+
+              *ngIf="puedeEditar()"
+
+              icon="pi pi-pencil"
+
+              [text]="true"
+
+              severity="info"
+
+              pTooltip="Editar"
+
+              tooltipPosition="top"
+
+              (onClick)="
+                abrirEdicion(proyecto)
+              ">
+
+            </p-button>
+
+
+
+            <!-- ELIMINAR -->
+
+            <p-button
+
+              *ngIf="puedeEliminar()"
+
+              icon="pi pi-trash"
+
+              [text]="true"
+
+              severity="danger"
+
+              pTooltip="Eliminar"
+
+              tooltipPosition="top"
+
+              (onClick)="
+                confirmarEliminar(proyecto)
+              ">
+
+            </p-button>
+
+
+          </td>
+
+
+        </tr>
+
+      </ng-template>
+
+
+
+      <!-- =================================================
+           SIN DATOS
+      ================================================== -->
+
+      <ng-template #emptymessage>
+
+        <tr>
+
+          <td
+            colspan="6"
+            class="sin-datos">
+
+            No hay proyectos registrados todavía.
+
+          </td>
+
+        </tr>
+
+      </ng-template>
+
+
+    </p-table>
+
+
+  </ng-container>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     DIALOG CREAR / EDITAR
+====================================================== -->
+
+<p-dialog
+
+  *ngIf="
+    puedeCrear() ||
+    puedeEditar()
+  "
+
+  [header]="
+    modoEdicion()
+      ? 'Editar Proyecto'
+      : 'Nuevo Proyecto'
+  "
+
+  [(visible)]="dialogoVisible"
+
+  [modal]="true"
+
+  [style]="{
+    width: '450px',
+    'max-height': '90vh'
+  }"
+
+  [contentStyle]="{
+    'overflow-y': 'auto'
+  }">
+
+
+  <!-- ===================================================
+       NOMBRE
+  ==================================================== -->
+
+  <div class="form-campo">
+
+    <label>
+      Nombre del proyecto *
+    </label>
+
+    <input
+
+      pInputText
+
+      [(ngModel)]="proyectoActual.nombre"
+
+      placeholder="Nombre del proyecto"
+
+      style="width: 100%;">
+
+  </div>
+
+
+
+  <!-- ===================================================
+     CLIENTE
+==================================================== -->
+
+<div class="form-campo">
+
+  <label>
+    Cliente *
+  </label>
+
+  <p-select
+
+    [options]="clientes"
+
+    [(ngModel)]="proyectoActual.clienteId"
+
+    optionLabel="nombre"
+
+    optionValue="id"
+
+    placeholder="Selecciona un cliente"
+
+    [loading]="cargandoClientes()"
+
+    [filter]="true"
+
+    filterBy="nombre"
+
+    [showClear]="true"
+
+    [style]="{
+      width: '100%'
+    }">
+
+  </p-select>
+
+</div>
+
+
+
+  <!-- ===================================================
+       UBICACIÓN
+  ==================================================== -->
+
+  <div class="form-campo">
+
+    <label>
+      Ubicación *
+    </label>
+
+    <input
+
+      pInputText
+
+      [(ngModel)]="proyectoActual.ubicacion"
+
+      placeholder="Medellín, Antioquia"
+
+      style="width: 100%;">
+
+  </div>
+
+
+
+  <!-- ===================================================
+       ESTADO
+  ==================================================== -->
+
+  <div class="form-campo">
+
+    <label>
+      Estado
+    </label>
+
+    <p-select
+
+      [options]="opcionesEstado"
+
+      [(ngModel)]="proyectoActual.estado"
+
+      optionLabel="label"
+
+      optionValue="value"
+
+      [style]="{
+        width: '100%'
+      }">
+
+    </p-select>
+
+  </div>
+
+
+
+  <!-- ===================================================
+       DESCRIPCIÓN
+  ==================================================== -->
+
+  <div class="form-campo">
+
+    <label>
+      Descripción
+    </label>
+
+    <textarea
+
+      pTextarea
+
+      rows="3"
+
+      [(ngModel)]="proyectoActual.descripcion"
+
+      placeholder="Descripción del proyecto"
+
+      style="width: 100%;">
+
+    </textarea>
+
+  </div>
+
+
+
+  <!-- ===================================================
+       FOOTER
+  ==================================================== -->
+
+  <ng-template #footer>
+
+    <p-button
+
+      label="Cancelar"
+
+      [text]="true"
+
+      (onClick)="
+        dialogoVisible.set(false)
+      ">
+
+    </p-button>
+
+
+    <p-button
+
+      *ngIf="
+        (modoEdicion() && puedeEditar()) ||
+        (!modoEdicion() && puedeCrear())
+      "
+
+      label="Guardar"
+
+      icon="pi pi-save"
+
+      (onClick)="guardar()">
+
+    </p-button>
+
+  </ng-template>
+
+
+</p-dialog>

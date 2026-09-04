@@ -1,0 +1,170 @@
+<div
+    class="dialog-backdrop"
+    *ngIf="visible"
+>
+
+    <div class="dialog">
+
+        <div class="dialog-header">
+
+            <h2>
+
+                {{ modoEdicion ? 'Editar trabajo' : 'Publicar trabajo' }}
+
+            </h2>
+
+            <button
+                class="btn-cerrar"
+                (click)="cerrarDialogo()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div class="dialog-body">
+
+            <div class="campo">
+
+                <label>
+
+                    Título
+
+                </label>
+
+                <input
+               type="text"
+               [(ngModel)]="modelo.titulo"
+               maxlength="100"
+            >
+
+            </div>
+
+            <div class="campo">
+
+                <label>
+
+                    Tipo de trabajo
+
+                </label>
+
+                <select [(ngModel)]="modelo.tipoTrabajo">
+                    <option value="">Selecciona una categoría</option>
+                    <option value="Levantamiento topográfico">Levantamiento topográfico</option>
+                    <option value="GNSS / RTK">GNSS / RTK</option>
+                    <option value="Nivelación">Nivelación</option>
+                    <option value="Fotogrametría">Fotogrametría</option>
+                    <option value="Cartografía">Cartografía</option>
+                    <option value="Replanteo">Replanteo</option>
+                    <option value="Otro">Otro</option>
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label>
+
+                    Contenido / descripción
+
+                </label>
+
+                <textarea
+                 rows="7"
+                 [(ngModel)]="modelo.contenido"
+                 maxlength="1000"
+                ></textarea>
+
+            </div>
+
+            <div class="campo">
+                <label>Ubicación</label>
+                <input type="text" [(ngModel)]="modelo.ubicacion" maxlength="150" placeholder="Ej. Medellín, Antioquia">
+            </div>
+
+            <div class="campo">
+                <label>Etiquetas</label>
+                <input type="text" [(ngModel)]="modelo.etiquetas" maxlength="200" placeholder="Ej. GNSS, RTK, levantamiento">
+            </div>
+
+            <div
+                class="campo"
+                *ngIf="esAdmin"
+            >
+
+                <label>
+
+                    Tipo
+
+                </label>
+
+                <select
+                    [(ngModel)]="modelo.tipo"
+                >
+
+                    <option value="COMUNIDAD">
+
+                        Comunidad
+
+                    </option>
+
+                    <option value="NOTICIA">
+
+                        Noticia
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo imagen-campo">
+                <label>Fotografías del trabajo (opcional)</label>
+                <input type="file" accept="image/jpeg,image/png,image/webp" multiple (change)="seleccionarImagenes($event)">
+                <small>Hasta 10 fotografías · JPG, PNG o WEBP · máximo 8 MB cada una</small>
+
+                <div class="galeria-seleccion" *ngIf="vistasPreviaImagenes.length">
+                    <div class="miniatura" *ngFor="let vista of vistasPreviaImagenes; let i = index">
+                        <img [src]="vista" [alt]="'Fotografía ' + (i + 1)">
+                        <span *ngIf="i === 0">Principal</span>
+                        <button type="button" (click)="quitarImagen(i)">✕</button>
+                    </div>
+                </div>
+
+                <div class="imagen-preview" *ngIf="!vistasPreviaImagenes.length && vistaPreviaImagen">
+                    <img [src]="vistaPreviaImagen" alt="Fotografía principal del trabajo">
+                </div>
+
+                <div class="url-alternativa" *ngIf="!archivosImagenes.length">
+                    <span>O usa una imagen existente por URL:</span>
+                    <input type="url" [(ngModel)]="modelo.imagen" placeholder="https://...">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="dialog-footer">
+
+            <button
+                class="btn-secundario"
+                (click)="cerrarDialogo()"
+            >
+
+                Cancelar
+
+            </button>
+
+            <button
+                class="btn-principal"
+                (click)="guardarPublicacion()"
+            >
+
+                {{ modoEdicion ? 'Guardar cambios' : 'Publicar trabajo' }}
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

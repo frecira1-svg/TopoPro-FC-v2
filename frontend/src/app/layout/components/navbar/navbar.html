@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+
+  <div class="container-fluid">
+
+    <a class="navbar-brand fw-bold fs-3" href="#">
+      <i class="pi pi-map text-warning me-2"></i>
+      TopoPro FC
+    </a>
+
+    <div class="d-flex align-items-center">
+
+      <div class="text-white text-end me-3">
+
+        <div class="fw-semibold">
+          {{ usuario?.nombre }}
+        </div>
+
+        <small class="text-light">
+          {{ usuario?.rol }}
+        </small>
+
+      </div>
+
+      <button
+        class="btn btn-outline-light btn-sm"
+        (click)="cerrarSesion()">
+
+        <i class="pi pi-sign-out me-2"></i>
+        Salir
+
+      </button>
+
+    </div>
+
+  </div>
+
+</nav>
