@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface PermisosUsuario {
   id: number;
@@ -35,7 +36,7 @@ export interface PermisosUsuario {
 })
 export class PermisoService {
 
-  private apiUrl = 'http://localhost:3000/api/permisos';
+  private apiUrl = `${environment.apiUrl}/permisos`;
 
   private permisos: PermisosUsuario | null = null;
 
