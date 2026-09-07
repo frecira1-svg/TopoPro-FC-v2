@@ -6,8 +6,8 @@ import { environment } from '../../../environments/environment';
 export interface DashboardResumen {
   proyectos: number;
   clientes: number;
-  puntos: number;
-  publicaciones: number;
+  levantamientos: number;
+  equipos: number;
 }
 
 @Injectable({

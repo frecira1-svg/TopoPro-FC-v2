@@ -11,7 +11,6 @@
                 👋 Hola, {{ usuario?.nombre || 'Usuario' }}
             </h1>
 
-
             <p class="dashboard-subtitle">
                 Bienvenido nuevamente a TopoPro.
                 Aquí tienes el resumen de tu actividad.
@@ -20,17 +19,11 @@
         </div>
 
 
-
         <div class="user-badge">
 
-
             <div class="user-avatar">
-
                 {{ usuario?.nombre?.charAt(0) || 'U' }}
-
             </div>
-
-
 
             <div>
 
@@ -38,115 +31,98 @@
                     {{ usuario?.nombre }}
                 </strong>
 
-
                 <small>
                     {{ usuario?.rol }}
                 </small>
 
             </div>
 
-
         </div>
 
-
     </section>
-
-
 
 
 
     <!-- TARJETAS DE ESTADÍSTICAS -->
 
-
     <section class="stats-grid">
 
 
+        <!-- PROYECTOS -->
+
         <article class="stat-card">
 
-
             <div class="stat-icon blue">
-                📁
+                📋
             </div>
-
 
             <div class="stat-title">
                 Proyectos
             </div>
 
-
             <div class="stat-number">
                 {{ resumen.proyectos || 0 }}
             </div>
-
 
         </article>
 
 
 
+        <!-- CLIENTES -->
 
         <article class="stat-card">
-
 
             <div class="stat-icon green">
                 👥
             </div>
 
-
             <div class="stat-title">
                 Clientes
             </div>
-
 
             <div class="stat-number">
                 {{ resumen.clientes || 0 }}
             </div>
 
-
         </article>
 
 
 
+        <!-- LEVANTAMIENTOS -->
 
         <article class="stat-card">
-
 
             <div class="stat-icon orange">
                 📍
             </div>
 
-
             <div class="stat-title">
                 Levantamientos
             </div>
 
-
             <div class="stat-number">
-                {{ resumen.puntos || 0 }}
+                {{ resumen.levantamientos || 0 }}
             </div>
-
 
         </article>
 
 
 
+        <!-- EQUIPOS -->
 
         <article class="stat-card">
-
 
             <div class="stat-icon purple">
                 🖥️
             </div>
 
-
             <div class="stat-title">
                 Equipos
             </div>
 
-
             <div class="stat-number">
-                {{ resumen.publicaciones || 0 }}
+                {{ resumen.equipos || 0 }}
             </div>
-
 
         </article>
 
@@ -155,25 +131,19 @@
 
 
 
-
-
-
-
     <!-- ACCESOS RÁPIDOS -->
 
-
     <section class="quick-section">
-
 
         <h2 class="section-title">
             Accesos rápidos
         </h2>
 
 
-
         <div class="quick-grid">
 
 
+            <!-- NUEVO PROYECTO -->
 
             <div
                 class="quick-card"
@@ -192,6 +162,7 @@
 
 
 
+            <!-- NUEVO CLIENTE -->
 
             <div
                 class="quick-card"
@@ -210,6 +181,7 @@
 
 
 
+            <!-- NUEVO PUNTO -->
 
             <div
                 class="quick-card"
@@ -228,6 +200,7 @@
 
 
 
+            <!-- REPORTES -->
 
             <div
                 class="quick-card"
@@ -245,29 +218,19 @@
             </div>
 
 
-
         </div>
-
 
     </section>
 
 
 
-
-
-
-
     <!-- PANEL FUTURO -->
 
-
     <section class="dashboard-panel">
-
 
         <h2 class="section-title">
             Actividad reciente
         </h2>
-
-
 
         <p class="dashboard-subtitle">
 
@@ -276,11 +239,7 @@
 
         </p>
 
-
-
     </section>
-
-
 
 
 </div>

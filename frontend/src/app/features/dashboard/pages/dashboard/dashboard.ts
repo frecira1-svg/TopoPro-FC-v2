@@ -44,16 +44,11 @@ export class Dashboard implements OnInit {
 
 
   resumen: DashboardResumen = {
-
-    proyectos: 0,
-
-    clientes: 0,
-
-    puntos: 0,
-
-    publicaciones: 0
-
-  };
+  proyectos: 0,
+  clientes: 0,
+  levantamientos: 0,
+  equipos: 0
+};
 
 
 
@@ -144,19 +139,12 @@ export class Dashboard implements OnInit {
 
 
 
-          this.resumen = {
-
-
-            proyectos: respuesta.proyectos ?? 0,
-
-            clientes: respuesta.clientes ?? 0,
-
-            puntos: respuesta.puntos ?? 0,
-
-            publicaciones: respuesta.publicaciones ?? 0
-
-
-          };
+    this.resumen = {
+  proyectos: respuesta.proyectos ?? 0,
+  clientes: respuesta.clientes ?? 0,
+  levantamientos: respuesta.levantamientos ?? 0,
+  equipos: respuesta.equipos ?? 0
+};
 
 
 
