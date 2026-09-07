@@ -1,4 +1,12 @@
 require('./config/env');
+
+// Comprobación segura de DATABASE_URL.
+// NO muestra la contraseña ni la URL completa.
+console.log(
+  'DATABASE_URL válida:',
+  /^(postgresql|postgres):\/\//.test(process.env.DATABASE_URL || '')
+);
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -20,7 +28,6 @@ const equipoRoutes = require('./routes/equipoRoutes');
 const reporteRoutes = require('./routes/reporteRoutes');
 const permisoRoutes = require('./routes/permiso.routes');
 const errorHandler = require('./middleware/errorHandler');
-
 
 const app = express();
 
