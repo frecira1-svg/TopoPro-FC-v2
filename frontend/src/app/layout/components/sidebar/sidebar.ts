@@ -14,6 +14,7 @@ import {
   PermisoService,
   PermisosUsuario
 } from '../../../core/services/permiso.service';
+
 import { ContactoProfesionalService } from '../../../core/services/contacto-profesional.service';
 import { MensajeriaService } from '../../../core/services/mensajeria.service';
 
@@ -35,10 +36,14 @@ export class Sidebar implements OnInit {
   private permisoService = inject(PermisoService);
 
   private cdr = inject(ChangeDetectorRef);
+
   private contactoService = inject(ContactoProfesionalService);
+
   private mensajeriaService = inject(MensajeriaService);
 
+
   contactosPendientes = 0;
+
   mensajesNoLeidos = 0;
 
 
@@ -66,15 +71,29 @@ export class Sidebar implements OnInit {
   ngOnInit(): void {
 
     this.cargarPermisos();
+
+
     this.contactoService.pendientes$.subscribe(total => {
+
       this.contactosPendientes = total;
+
       this.cdr.detectChanges();
+
     });
+
+
     this.contactoService.iniciarNotificaciones();
+
+
     this.mensajeriaService.noLeidos$.subscribe(total => {
+
       this.mensajesNoLeidos = total;
+
       this.cdr.detectChanges();
+
     });
+
+
     this.mensajeriaService.iniciarNotificaciones();
 
   }
@@ -90,11 +109,16 @@ export class Sidebar implements OnInit {
       this.authService.usuarioActual();
 
 
+    // =================================================
+    // SIN USUARIO
+    // =================================================
+
     if (!usuario) {
 
       this.cargandoPermisos = false;
 
       return;
+
     }
 
 
@@ -156,6 +180,7 @@ export class Sidebar implements OnInit {
           this.cdr.detectChanges();
 
         },
+
 
         error: (error: any) => {
 

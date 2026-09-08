@@ -23,9 +23,7 @@
         <!-- PROYECTOS -->
         <!-- ============================================== -->
 
-        <li
-            *ngIf="!cargandoPermisos && puedeVerProyectos"
-        >
+        <li *ngIf="puedeVerProyectos">
 
             <a
                 routerLink="/proyectos"
@@ -89,12 +87,7 @@
         <!-- LEVANTAMIENTOS -->
         <!-- ============================================== -->
 
-        <li
-            *ngIf="
-                !cargandoPermisos &&
-                puedeVerLevantamientos
-            "
-        >
+        <li *ngIf="puedeVerLevantamientos">
 
             <a
                 routerLink="/levantamientos"
@@ -110,12 +103,7 @@
         <!-- EQUIPOS -->
         <!-- ============================================== -->
 
-        <li
-            *ngIf="
-                !cargandoPermisos &&
-                puedeVerEquipos
-            "
-        >
+        <li *ngIf="puedeVerEquipos">
 
             <a
                 routerLink="/equipos"
@@ -131,12 +119,7 @@
         <!-- REPORTES -->
         <!-- ============================================== -->
 
-        <li
-            *ngIf="
-                !cargandoPermisos &&
-                puedeVerReportes
-            "
-        >
+        <li *ngIf="puedeVerReportes">
 
             <a
                 routerLink="/reportes"
@@ -153,12 +136,26 @@
         <!-- ============================================== -->
 
         <li>
-            <a routerLink="/mensajes" routerLinkActive="activo">
-                <span>💬 Mensajes</span>
-                <span *ngIf="mensajesNoLeidos > 0" class="badge-contactos" [attr.aria-label]="mensajesNoLeidos + ' mensajes no leídos'">
+
+            <a
+                routerLink="/mensajes"
+                routerLinkActive="activo"
+            >
+
+                <span>
+                    💬 Mensajes
+                </span>
+
+                <span
+                    *ngIf="mensajesNoLeidos > 0"
+                    class="badge-contactos"
+                    [attr.aria-label]="mensajesNoLeidos + ' mensajes no leídos'"
+                >
                     {{ mensajesNoLeidos > 99 ? '99+' : mensajesNoLeidos }}
                 </span>
+
             </a>
+
         </li>
 
 
@@ -167,8 +164,16 @@
         <!-- ============================================== -->
 
         <li>
-            <a routerLink="/contactos" routerLinkActive="activo">
-                <span>📥 Contactos</span>
+
+            <a
+                routerLink="/contactos"
+                routerLinkActive="activo"
+            >
+
+                <span>
+                    📥 Contactos
+                </span>
+
                 <span
                     *ngIf="contactosPendientes > 0"
                     class="badge-contactos"
@@ -176,7 +181,9 @@
                 >
                     {{ contactosPendientes > 99 ? '99+' : contactosPendientes }}
                 </span>
+
             </a>
+
         </li>
 
 
