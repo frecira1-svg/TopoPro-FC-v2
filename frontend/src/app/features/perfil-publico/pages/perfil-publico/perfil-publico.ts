@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PerfilPublicoService } from '../../../../core/services/perfil-publico.service';
 import { PerfilPublico as PerfilPublicoModel } from '../../../../core/models/perfil-publico.model';
 import { Publicacion, PublicacionImagen } from '../../../../core/models/publicacion.model';
@@ -21,6 +21,7 @@ export class PerfilPublico implements OnInit {
   private readonly perfilService = inject(PerfilPublicoService);
   private readonly auth = inject(AuthService);
   private readonly contactoService = inject(ContactoProfesionalService);
+  private readonly router = inject(Router);
 
   perfil = signal<PerfilPublicoModel | null>(null);
   cargando = signal(true);
@@ -132,10 +133,14 @@ export class PerfilPublico implements OnInit {
   }
 
   enviarMensajeInterno(): void {
-    const p = this.perfil();
-    if (!p || !this.auth.estaAutenticado() || this.auth.usuarioActual()?.id === p.id) return;
-    window.location.href = `/mensajes/nuevo?destinatario=${p.id}`;
+  const p = this.perfil();
+
+  if (!p || !this.auth.estaAutenticado() || this.auth.usuarioActual()?.id === p.id) {
+    return;
   }
+
+  this.router.navigate(['/mensajes', p.id]);
+}
 
   copiarPerfil(): void {
     if (typeof navigator === 'undefined' || !navigator.clipboard) return;
