@@ -1,419 +1,725 @@
-<main class="landing">
+<div class="landing-page">
 
-  <!-- NAVBAR -->
-  <nav class="navbar-publica">
-    <a class="marca" routerLink="/">
-      <span class="marca-icono">TP</span>
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
 
-      <span class="marca-texto">
-        <strong>TopoPro</strong>
-        <small>FC</small>
-      </span>
-    </a>
+  <header class="landing-navbar">
 
-    <div class="nav-acciones">
-      <a routerLink="/login" class="btn-login">Iniciar sesión</a>
-      <a routerLink="/registro" class="btn-registro">Crear cuenta</a>
-    </div>
-  </nav>
-
-
-  <!-- HERO -->
-  <section class="hero">
-
-    <div class="hero-contenido">
-
-      <span class="etiqueta">
-        PLATAFORMA PROFESIONAL DE TOPOGRAFÍA
+    <a class="landing-logo" routerLink="/">
+      <span class="logo-mark">
+        <span></span>
+        <span></span>
       </span>
 
-      <h1>
-        La tecnología que
-        <span>transforma</span>
-        la topografía.
-      </h1>
-
-      <p class="hero-texto">
-        TopoPro reúne en un solo lugar las herramientas que necesitas
-        para organizar proyectos, gestionar puntos topográficos,
-        levantamientos, equipos, mapas y reportes.
-      </p>
-
-      <div class="hero-acciones">
-        <a routerLink="/registro" class="btn-principal">
-          🚀 Comenzar ahora
-        </a>
-
-        <a routerLink="/publicaciones" class="btn-secundario">
-          Explorar trabajos
-        </a>
-      </div>
-
-      <p class="hero-login">
-        ¿Ya tienes una cuenta?
-        <a routerLink="/login">Inicia sesión</a>
-      </p>
-
-      <div class="hero-firma">
-        <span>Desarrollado por</span>
+      <span class="logo-text">
+        Topo<span>Pro</span>
         <strong>FC</strong>
-        <span>· Founder</span>
-      </div>
-
-    </div>
-
-
-    <!-- VISUAL TOPOGRÁFICO -->
-    <div class="hero-visual" aria-hidden="true">
-
-      <div class="mapa-card">
-
-        <div class="mapa-grid"></div>
-
-        <div class="curva curva-1"></div>
-        <div class="curva curva-2"></div>
-        <div class="curva curva-3"></div>
-
-        <div class="punto punto-1"></div>
-        <div class="punto punto-2"></div>
-        <div class="punto punto-3"></div>
-        <div class="punto punto-4"></div>
-
-        <div class="linea linea-1"></div>
-        <div class="linea linea-2"></div>
-        <div class="linea linea-3"></div>
-
-        <div class="coordenada coordenada-1">
-          N 1.183.398
-          <span>·</span>
-          E 836.373
-        </div>
-
-        <div class="coordenada coordenada-2">
-          COTA 1.550,949 m
-        </div>
-
-        <div class="coordenada coordenada-3">
-          GPS-03
-        </div>
-
-        <div class="brujula">
-          <span>N</span>
-        </div>
-
-        <div class="mapa-label">
-          <strong>TOPOPRO</strong>
-          <span>CONTROL TOPOGRÁFICO</span>
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ESTADÍSTICAS / CONCEPTO -->
-  <section class="confianza">
-
-    <div class="confianza-item">
-      <strong>01</strong>
-      <span>Organiza</span>
-    </div>
-
-    <div class="confianza-item">
-      <strong>02</strong>
-      <span>Gestiona</span>
-    </div>
-
-    <div class="confianza-item">
-      <strong>03</strong>
-      <span>Visualiza</span>
-    </div>
-
-    <div class="confianza-item">
-      <strong>04</strong>
-      <span>Conecta</span>
-    </div>
-
-  </section>
-
-
-  <!-- PROPUESTA DE VALOR -->
-  <section class="propuesta">
-
-    <div class="seccion-titulo">
-
-      <span class="etiqueta">
-        TODO EN UN SOLO LUGAR
       </span>
-
-      <h2>
-        Tu trabajo topográfico,
-        <span>más organizado.</span>
-      </h2>
-
-      <p>
-        Una plataforma pensada para profesionales que necesitan
-        tener el control de su información y sus proyectos.
-      </p>
-
-    </div>
-
-
-    <div class="tarjetas">
-
-      <article class="tarjeta">
-
-        <div class="tarjeta-numero">01</div>
-
-        <div class="icono">📐</div>
-
-        <h3>Proyectos</h3>
-
-        <p>
-          Administra tus proyectos, clientes y toda la información
-          relacionada con cada trabajo.
-        </p>
-
-        <a routerLink="/registro">Conocer más →</a>
-
-      </article>
-
-
-      <article class="tarjeta">
-
-        <div class="tarjeta-numero">02</div>
-
-        <div class="icono">📍</div>
-
-        <h3>Puntos topográficos</h3>
-
-        <p>
-          Gestiona coordenadas, elevaciones, descripciones y
-          referencias de tus puntos desde un solo lugar.
-        </p>
-
-        <a routerLink="/registro">Conocer más →</a>
-
-      </article>
-
-
-      <article class="tarjeta">
-
-        <div class="tarjeta-numero">03</div>
-
-        <div class="icono">🗺️</div>
-
-        <h3>Mapas</h3>
-
-        <p>
-          Visualiza la información espacial de tus proyectos
-          y trabaja con una perspectiva geográfica.
-        </p>
-
-        <a routerLink="/registro">Conocer más →</a>
-
-      </article>
-
-
-      <article class="tarjeta">
-
-        <div class="tarjeta-numero">04</div>
-
-        <div class="icono">📊</div>
-
-        <h3>Levantamientos</h3>
-
-        <p>
-          Lleva el seguimiento de tus levantamientos y
-          mantén organizada la información de campo.
-        </p>
-
-        <a routerLink="/registro">Conocer más →</a>
-
-      </article>
-
-
-      <article class="tarjeta">
-
-        <div class="tarjeta-numero">05</div>
-
-        <div class="icono">🧰</div>
-
-        <h3>Equipos</h3>
-
-        <p>
-          Registra y organiza los equipos utilizados en
-          tus proyectos y trabajos topográficos.
-        </p>
-
-        <a routerLink="/registro">Conocer más →</a>
-
-      </article>
-
-
-      <article class="tarjeta">
-
-        <div class="tarjeta-numero">06</div>
-
-        <div class="icono">📄</div>
-
-        <h3>Reportes</h3>
-
-        <p>
-          Mantén centralizada la información necesaria para
-          consultar y documentar tus proyectos.
-        </p>
-
-        <a routerLink="/registro">Conocer más →</a>
-
-      </article>
-
-
-      <article class="tarjeta">
-
-        <div class="tarjeta-numero">07</div>
-
-        <div class="icono">📸</div>
-
-        <h3>Publicaciones</h3>
-
-        <p>
-          Comparte tus trabajos, experiencias y conocimientos
-          con otros profesionales.
-        </p>
-
-        <a routerLink="/publicaciones">Explorar →</a>
-
-      </article>
-
-
-      <article class="tarjeta">
-
-        <div class="tarjeta-numero">08</div>
-
-        <div class="icono">🤝</div>
-
-        <h3>Comunidad</h3>
-
-        <p>
-          Descubre profesionales y crea conexiones alrededor
-          del mundo de la topografía.
-        </p>
-
-        <a routerLink="/directorio">Conectar →</a>
-
-      </article>
-
-    </div>
-
-  </section>
-
-
-  <!-- MENSAJE DE MARCA -->
-  <section class="vision">
-
-    <div class="vision-contenido">
-
-      <span class="etiqueta">
-        UNA NUEVA GENERACIÓN
-      </span>
-
-      <h2>
-        De los datos de campo
-        <span>a la gestión del proyecto.</span>
-      </h2>
-
-      <p>
-        TopoPro nace para ayudar a los profesionales de la topografía
-        a digitalizar, organizar y gestionar su trabajo de una manera
-        más sencilla, moderna y profesional.
-      </p>
-
-      <div class="vision-firma">
-        <strong>TopoPro FC</strong>
-        <span>Tecnología que transforma la topografía.</span>
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- COMUNIDAD -->
-  <section class="comunidad">
-
-    <div class="comunidad-texto">
-
-      <span class="etiqueta">
-        COMUNIDAD TOPOPRO
-      </span>
-
-      <h2>
-        Tu experiencia también puede
-        <span>ayudar a otros.</span>
-      </h2>
-
-      <p>
-        Comparte levantamientos, proyectos, conocimientos,
-        experiencias y novedades del mundo de la topografía.
-      </p>
-
-    </div>
-
-    <a routerLink="/registro" class="btn-principal">
-      Crear mi perfil profesional
     </a>
 
-  </section>
+    <nav class="landing-nav">
 
+      <a href="#inicio">Inicio</a>
+      <a href="#caracteristicas">Características</a>
+      <a href="#proceso">Cómo funciona</a>
+      <a href="#comunidad">Comunidad</a>
+      <a href="#nosotros">Nosotros</a>
 
-  <!-- CTA FINAL -->
-  <section class="cta-final">
+    </nav>
 
-    <span class="etiqueta">
-      TOPOPRO FC
-    </span>
-
-    <h2>
-      El futuro de la gestión
-      <span>topográfica comienza aquí.</span>
-    </h2>
-
-    <p>
-      Empieza a organizar tu trabajo con una plataforma
-      creada para profesionales de la topografía.
-    </p>
-
-    <a routerLink="/registro" class="btn-principal">
-      🚀 Crear mi cuenta
+    <a
+      routerLink="/login"
+      class="nav-login"
+    >
+      Iniciar sesión
+      <span>→</span>
     </a>
 
-  </section>
+  </header>
 
 
-  <!-- FOOTER -->
-  <footer>
+  <!-- =====================================================
+       HERO
+       ===================================================== -->
 
-    <div class="footer-marca">
+  <main>
 
-      <div class="marca-footer">
-        TopoPro <span>FC</span>
+    <section
+      id="inicio"
+      class="hero"
+    >
+
+      <div class="hero-background"></div>
+
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+
+        <span class="hero-eyebrow">
+          TOPOGRAFÍA · TECNOLOGÍA · TERRITORIO
+        </span>
+
+        <h1>
+          Tecnología que transforma
+          <span>la topografía.</span>
+        </h1>
+
+        <p class="hero-description">
+          Gestiona tus proyectos, puntos topográficos,
+          mapas y documentación en un solo lugar.
+          Conecta con otros profesionales y lleva
+          tu trabajo al siguiente nivel.
+        </p>
+
+        <div class="hero-actions">
+
+          <a
+            routerLink="/registro"
+            class="btn btn-primary"
+          >
+            Comenzar ahora
+            <span>→</span>
+          </a>
+
+          <a
+            href="#caracteristicas"
+            class="btn btn-secondary"
+          >
+            Conocer TopoPro
+            <span>↓</span>
+          </a>
+
+        </div>
+
+        <div class="hero-trust">
+
+          <div>
+            <span class="trust-icon">✓</span>
+            <span>Seguro y confiable</span>
+          </div>
+
+          <div>
+            <span class="trust-icon">⌂</span>
+            <span>Desde cualquier lugar</span>
+          </div>
+
+          <div>
+            <span class="trust-icon">♧</span>
+            <span>Comunidad profesional</span>
+          </div>
+
+        </div>
+
       </div>
 
-      <p>
-        Tecnología que transforma la topografía.
-      </p>
+      <div class="hero-location">
+
+        <span class="location-dot"></span>
+
+        <div>
+          <strong>Medellín, Colombia</strong>
+          <small>6.2442° N, 75.5812° W</small>
+        </div>
+
+      </div>
+
+      <div class="hero-message">
+        Grandes proyectos<br>
+        comienzan con<br>
+        <strong>buenos datos.</strong>
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CARACTERÍSTICAS
+         ===================================================== -->
+
+    <section
+      id="caracteristicas"
+      class="features-section"
+    >
+
+      <div class="section-heading">
+
+        <span class="section-eyebrow">
+          TODO EN UN SOLO LUGAR
+        </span>
+
+        <h2>
+          Todo tu trabajo topográfico
+          <span>en un solo lugar.</span>
+        </h2>
+
+        <p>
+          Herramientas diseñadas para facilitar
+          tu trabajo en campo y en oficina.
+        </p>
+
+      </div>
+
+
+      <div class="features-grid">
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            <span>▣</span>
+          </div>
+
+          <h3>Proyectos</h3>
+
+          <p>
+            Organiza y gestiona
+            tus proyectos.
+          </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            <span>●</span>
+          </div>
+
+          <h3>Puntos</h3>
+
+          <p>
+            Registra y visualiza
+            puntos topográficos.
+          </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            <span>◫</span>
+          </div>
+
+          <h3>Mapas</h3>
+
+          <p>
+            Visualiza tu información
+            en mapas.
+          </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            <span>⌁</span>
+          </div>
+
+          <h3>Levantamientos</h3>
+
+          <p>
+            Gestiona datos
+            de campo.
+          </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            <span>⚙</span>
+          </div>
+
+          <h3>Equipos</h3>
+
+          <p>
+            Controla tu
+            equipamiento.
+          </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            <span>▥</span>
+          </div>
+
+          <h3>Reportes</h3>
+
+          <p>
+            Genera informes
+            profesionales.
+          </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            <span>▤</span>
+          </div>
+
+          <h3>Documentos</h3>
+
+          <p>
+            Centraliza tu
+            información.
+          </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            <span>♧</span>
+          </div>
+
+          <h3>Comunidad</h3>
+
+          <p>
+            Conecta con otros
+            profesionales.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PROCESO
+         ===================================================== -->
+
+    <section
+      id="proceso"
+      class="process-section"
+    >
+
+      <div class="process-copy">
+
+        <span class="section-eyebrow">
+          DEL TERRENO A LA GESTIÓN
+        </span>
+
+        <h2>
+          Del terreno a la
+          <span>gestión del proyecto.</span>
+        </h2>
+
+        <p>
+          Convierte los datos de campo en información
+          útil para tomar mejores decisiones.
+          <strong>TopoPro</strong> te acompaña
+          en cada etapa del proceso.
+        </p>
+
+      </div>
+
+
+      <div class="process-flow">
+
+        <div class="process-item">
+
+          <div class="process-image process-field">
+            📐
+          </div>
+
+          <h3>Datos de campo</h3>
+
+          <p>
+            Levanta, registra
+            y captura.
+          </p>
+
+        </div>
+
+
+        <div class="process-arrow">
+          →
+        </div>
+
+
+        <div class="process-item">
+
+          <div class="process-image process-topopro">
+            TP
+          </div>
+
+          <h3>TopoPro</h3>
+
+          <p>
+            Organiza, procesa
+            y visualiza.
+          </p>
+
+        </div>
+
+
+        <div class="process-arrow">
+          →
+        </div>
+
+
+        <div class="process-item">
+
+          <div class="process-image process-map">
+            🗺️
+          </div>
+
+          <h3>Información</h3>
+
+          <p>
+            Convierte datos
+            en conocimiento.
+          </p>
+
+        </div>
+
+
+        <div class="process-arrow">
+          →
+        </div>
+
+
+        <div class="process-item">
+
+          <div class="process-image process-results">
+            📊
+          </div>
+
+          <h3>Decisiones</h3>
+
+          <p>
+            Planifica, construye
+            y genera valor.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PROFESIONALES
+         ===================================================== -->
+
+    <section class="professionals-section">
+
+      <div class="professionals-title">
+
+        <span>
+          Para profesionales
+        </span>
+
+        <strong>
+          que construyen el territorio.
+        </strong>
+
+      </div>
+
+
+      <div class="professionals-list">
+
+        <div>
+          <span>◉</span>
+          <p>Topógrafos</p>
+        </div>
+
+        <div>
+          <span>▦</span>
+          <p>Ingenieros civiles</p>
+        </div>
+
+        <div>
+          <span>◎</span>
+          <p>Geomática y SIG</p>
+        </div>
+
+        <div>
+          <span>♧</span>
+          <p>Empresas de topografía</p>
+        </div>
+
+        <div>
+          <span>▦</span>
+          <p>Constructoras</p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         COMUNIDAD
+         ===================================================== -->
+
+    <section
+      id="comunidad"
+      class="community-section"
+    >
+
+      <div class="community-copy">
+
+        <span class="section-eyebrow">
+          COMUNIDAD TOPOPRO
+        </span>
+
+        <h2>
+          Una comunidad
+          <span>que crece.</span>
+        </h2>
+
+        <p>
+          Comparte experiencias, publica tus proyectos,
+          conecta con otros profesionales y sé parte
+          de una red que impulsa la topografía.
+        </p>
+
+        <a
+          routerLink="/publicaciones"
+          class="community-button"
+        >
+          Explorar comunidad
+          <span>→</span>
+        </a>
+
+      </div>
+
+
+      <div class="community-visual">
+
+        <div class="community-card">
+
+          <div class="community-photo photo-one"></div>
+
+          <span class="community-tag">
+            Proyecto
+          </span>
+
+          <h3>
+            Levantamiento de terreno
+          </h3>
+
+          <p>
+            Antioquia, Colombia
+          </p>
+
+        </div>
+
+
+        <div class="community-card">
+
+          <div class="community-photo photo-two"></div>
+
+          <span class="community-tag">
+            Topografía
+          </span>
+
+          <h3>
+            Control de obra
+          </h3>
+
+          <p>
+            Valle del Cauca, Colombia
+          </p>
+
+        </div>
+
+
+        <div class="community-card">
+
+          <div class="community-photo photo-three"></div>
+
+          <span class="community-tag">
+            Geomática
+          </span>
+
+          <h3>
+            Modelo del territorio
+          </h3>
+
+          <p>
+            Colombia
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         NOSOTROS / VISIÓN
+         ===================================================== -->
+
+    <section
+      id="nosotros"
+      class="vision-section"
+    >
+
+      <div class="vision-content">
+
+        <span class="section-eyebrow">
+          NUESTRA VISIÓN
+        </span>
+
+        <h2>
+          La tecnología también
+          transforma territorios.
+        </h2>
+
+        <p>
+          TopoPro nace para conectar la experiencia
+          de los profesionales de la topografía con
+          herramientas digitales que simplifican
+          la gestión, organización y visualización
+          de la información.
+        </p>
+
+        <p>
+          Queremos construir una plataforma que
+          acompañe a los profesionales del territorio
+          desde el dato de campo hasta la toma
+          de decisiones.
+        </p>
+
+      </div>
+
+      <div class="vision-stat">
+
+        <span>01</span>
+
+        <strong>
+          Tecnología para
+          el territorio.
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CTA FINAL
+         ===================================================== -->
+
+    <section class="final-cta">
+
+      <div class="final-cta-content">
+
+        <span class="section-eyebrow">
+          TOPOPRO FC
+        </span>
+
+        <h2>
+          El futuro de la gestión
+          topográfica comienza aquí.
+        </h2>
+
+        <p>
+          Únete a TopoPro FC y lleva
+          tu trabajo al siguiente nivel.
+        </p>
+
+        <a
+          routerLink="/registro"
+          class="final-button"
+        >
+          Crear mi cuenta
+          <span>→</span>
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer class="landing-footer">
+
+    <div class="footer-brand">
+
+      <div class="footer-logo-mark">
+        TP
+      </div>
+
+      <div>
+
+        <strong>
+          TopoPro <span>FC</span>
+        </strong>
+
+        <small>
+          TECNOLOGÍA QUE TRANSFORMA LA TOPOGRAFÍA
+        </small>
+
+      </div>
 
     </div>
 
-    <div class="footer-derechos">
-      <span>© 2026 TopoPro FC</span>
-      <span>·</span>
-      <span>Plataforma profesional de topografía</span>
+
+    <nav class="footer-links">
+
+      <a href="#inicio">Inicio</a>
+
+      <a href="#caracteristicas">
+        Características
+      </a>
+
+      <a href="#comunidad">
+        Comunidad
+      </a>
+
+      <a href="#nosotros">
+        Nosotros
+      </a>
+
+      <a routerLink="/contactos">
+        Contacto
+      </a>
+
+    </nav>
+
+
+    <div class="footer-social">
+
+      <span>in</span>
+      <span>◎</span>
+      <span>▶</span>
+
+    </div>
+
+
+    <div class="footer-copy">
+
+      <strong>
+        TopoPro FC
+      </strong>
+
+      <small>
+        Todos los derechos reservados © 2026
+      </small>
+
     </div>
 
   </footer>
 
-</main>
+</div>
