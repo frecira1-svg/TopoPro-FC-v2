@@ -1,88 +1,419 @@
 <main class="landing">
+
+  <!-- NAVBAR -->
   <nav class="navbar-publica">
     <a class="marca" routerLink="/">
       <span class="marca-icono">TP</span>
-      <span>TopoPro</span>
+
+      <span class="marca-texto">
+        <strong>TopoPro</strong>
+        <small>FC</small>
+      </span>
     </a>
+
     <div class="nav-acciones">
       <a routerLink="/login" class="btn-login">Iniciar sesión</a>
       <a routerLink="/registro" class="btn-registro">Crear cuenta</a>
     </div>
   </nav>
 
+
+  <!-- HERO -->
   <section class="hero">
+
     <div class="hero-contenido">
-      <span class="etiqueta">PLATAFORMA PROFESIONAL DE TOPOGRAFÍA</span>
-      <h1>Tu trabajo de topografía,<br><strong>en un solo lugar.</strong></h1>
+
+      <span class="etiqueta">
+        PLATAFORMA PROFESIONAL DE TOPOGRAFÍA
+      </span>
+
+      <h1>
+        La tecnología que
+        <span>transforma</span>
+        la topografía.
+      </h1>
+
       <p class="hero-texto">
-        Organiza tus proyectos, gestiona tus levantamientos, comparte tu trabajo
-        y conecta con otros profesionales del sector.
+        TopoPro reúne en un solo lugar las herramientas que necesitas
+        para organizar proyectos, gestionar puntos topográficos,
+        levantamientos, equipos, mapas y reportes.
       </p>
+
       <div class="hero-acciones">
-        <a routerLink="/registro" class="btn-principal">🚀 Comenzar ahora</a>
-        <a routerLink="/publicaciones" class="btn-secundario">🌎 Explorar trabajos</a>
-        <a routerLink="/directorio" class="btn-secundario">👥 Buscar profesionales</a>
+        <a routerLink="/registro" class="btn-principal">
+          🚀 Comenzar ahora
+        </a>
+
+        <a routerLink="/publicaciones" class="btn-secundario">
+          Explorar trabajos
+        </a>
       </div>
-      <p class="hero-login">¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión</a></p>
+
+      <p class="hero-login">
+        ¿Ya tienes una cuenta?
+        <a routerLink="/login">Inicia sesión</a>
+      </p>
+
+      <div class="hero-firma">
+        <span>Desarrollado por</span>
+        <strong>FC</strong>
+        <span>· Founder</span>
+      </div>
+
     </div>
 
+
+    <!-- VISUAL TOPOGRÁFICO -->
     <div class="hero-visual" aria-hidden="true">
+
       <div class="mapa-card">
+
         <div class="mapa-grid"></div>
+
+        <div class="curva curva-1"></div>
+        <div class="curva curva-2"></div>
+        <div class="curva curva-3"></div>
+
         <div class="punto punto-1"></div>
         <div class="punto punto-2"></div>
         <div class="punto punto-3"></div>
+        <div class="punto punto-4"></div>
+
         <div class="linea linea-1"></div>
         <div class="linea linea-2"></div>
-        <div class="coordenada coordenada-1">N 1.183.398 · E 836.373</div>
-        <div class="coordenada coordenada-2">COTA 1.550,949 m</div>
-        <div class="brujula">N</div>
+        <div class="linea linea-3"></div>
+
+        <div class="coordenada coordenada-1">
+          N 1.183.398
+          <span>·</span>
+          E 836.373
+        </div>
+
+        <div class="coordenada coordenada-2">
+          COTA 1.550,949 m
+        </div>
+
+        <div class="coordenada coordenada-3">
+          GPS-03
+        </div>
+
+        <div class="brujula">
+          <span>N</span>
+        </div>
+
+        <div class="mapa-label">
+          <strong>TOPOPRO</strong>
+          <span>CONTROL TOPOGRÁFICO</span>
+        </div>
+
       </div>
+
     </div>
+
   </section>
 
-  <section class="propuesta">
-    <div class="seccion-titulo">
-      <span class="etiqueta">TODO LO QUE NECESITAS</span>
-      <h2>Organiza · Trabaja · Comparte · Conecta</h2>
-      <p>Una plataforma pensada para el trabajo real de los profesionales de la topografía.</p>
+
+  <!-- ESTADÍSTICAS / CONCEPTO -->
+  <section class="confianza">
+
+    <div class="confianza-item">
+      <strong>01</strong>
+      <span>Organiza</span>
     </div>
+
+    <div class="confianza-item">
+      <strong>02</strong>
+      <span>Gestiona</span>
+    </div>
+
+    <div class="confianza-item">
+      <strong>03</strong>
+      <span>Visualiza</span>
+    </div>
+
+    <div class="confianza-item">
+      <strong>04</strong>
+      <span>Conecta</span>
+    </div>
+
+  </section>
+
+
+  <!-- PROPUESTA DE VALOR -->
+  <section class="propuesta">
+
+    <div class="seccion-titulo">
+
+      <span class="etiqueta">
+        TODO EN UN SOLO LUGAR
+      </span>
+
+      <h2>
+        Tu trabajo topográfico,
+        <span>más organizado.</span>
+      </h2>
+
+      <p>
+        Una plataforma pensada para profesionales que necesitan
+        tener el control de su información y sus proyectos.
+      </p>
+
+    </div>
+
 
     <div class="tarjetas">
+
       <article class="tarjeta">
+
+        <div class="tarjeta-numero">01</div>
+
         <div class="icono">📐</div>
-        <h3>Organiza</h3>
-        <p>Administra clientes, proyectos, puntos topográficos, equipos y levantamientos desde un mismo lugar.</p>
+
+        <h3>Proyectos</h3>
+
+        <p>
+          Administra tus proyectos, clientes y toda la información
+          relacionada con cada trabajo.
+        </p>
+
+        <a routerLink="/registro">Conocer más →</a>
+
       </article>
+
+
       <article class="tarjeta">
+
+        <div class="tarjeta-numero">02</div>
+
+        <div class="icono">📍</div>
+
+        <h3>Puntos topográficos</h3>
+
+        <p>
+          Gestiona coordenadas, elevaciones, descripciones y
+          referencias de tus puntos desde un solo lugar.
+        </p>
+
+        <a routerLink="/registro">Conocer más →</a>
+
+      </article>
+
+
+      <article class="tarjeta">
+
+        <div class="tarjeta-numero">03</div>
+
         <div class="icono">🗺️</div>
-        <h3>Trabaja</h3>
-        <p>Consulta tus coordenadas, ubicaciones, mapas y documentación para llevar un mejor control de cada proyecto.</p>
+
+        <h3>Mapas</h3>
+
+        <p>
+          Visualiza la información espacial de tus proyectos
+          y trabaja con una perspectiva geográfica.
+        </p>
+
+        <a routerLink="/registro">Conocer más →</a>
+
       </article>
+
+
       <article class="tarjeta">
+
+        <div class="tarjeta-numero">04</div>
+
+        <div class="icono">📊</div>
+
+        <h3>Levantamientos</h3>
+
+        <p>
+          Lleva el seguimiento de tus levantamientos y
+          mantén organizada la información de campo.
+        </p>
+
+        <a routerLink="/registro">Conocer más →</a>
+
+      </article>
+
+
+      <article class="tarjeta">
+
+        <div class="tarjeta-numero">05</div>
+
+        <div class="icono">🧰</div>
+
+        <h3>Equipos</h3>
+
+        <p>
+          Registra y organiza los equipos utilizados en
+          tus proyectos y trabajos topográficos.
+        </p>
+
+        <a routerLink="/registro">Conocer más →</a>
+
+      </article>
+
+
+      <article class="tarjeta">
+
+        <div class="tarjeta-numero">06</div>
+
+        <div class="icono">📄</div>
+
+        <h3>Reportes</h3>
+
+        <p>
+          Mantén centralizada la información necesaria para
+          consultar y documentar tus proyectos.
+        </p>
+
+        <a routerLink="/registro">Conocer más →</a>
+
+      </article>
+
+
+      <article class="tarjeta">
+
+        <div class="tarjeta-numero">07</div>
+
         <div class="icono">📸</div>
-        <h3>Comparte</h3>
-        <p>Publica tus trabajos, experiencias y conocimientos para mostrar lo que haces profesionalmente.</p>
+
+        <h3>Publicaciones</h3>
+
+        <p>
+          Comparte tus trabajos, experiencias y conocimientos
+          con otros profesionales.
+        </p>
+
+        <a routerLink="/publicaciones">Explorar →</a>
+
       </article>
+
+
       <article class="tarjeta">
+
+        <div class="tarjeta-numero">08</div>
+
         <div class="icono">🤝</div>
-        <h3>Conecta</h3>
-        <p>Descubre a otros profesionales y construye una comunidad alrededor de la topografía.</p>
+
+        <h3>Comunidad</h3>
+
+        <p>
+          Descubre profesionales y crea conexiones alrededor
+          del mundo de la topografía.
+        </p>
+
+        <a routerLink="/directorio">Conectar →</a>
+
       </article>
+
     </div>
+
   </section>
 
+
+  <!-- MENSAJE DE MARCA -->
+  <section class="vision">
+
+    <div class="vision-contenido">
+
+      <span class="etiqueta">
+        UNA NUEVA GENERACIÓN
+      </span>
+
+      <h2>
+        De los datos de campo
+        <span>a la gestión del proyecto.</span>
+      </h2>
+
+      <p>
+        TopoPro nace para ayudar a los profesionales de la topografía
+        a digitalizar, organizar y gestionar su trabajo de una manera
+        más sencilla, moderna y profesional.
+      </p>
+
+      <div class="vision-firma">
+        <strong>TopoPro FC</strong>
+        <span>Tecnología que transforma la topografía.</span>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- COMUNIDAD -->
   <section class="comunidad">
-    <div>
-      <span class="etiqueta">COMUNIDAD TOPOPRO</span>
-      <h2>Tu experiencia también puede ayudar a otros.</h2>
-      <p>Comparte levantamientos, proyectos, novedades, consejos y experiencias del mundo de la topografía.</p>
+
+    <div class="comunidad-texto">
+
+      <span class="etiqueta">
+        COMUNIDAD TOPOPRO
+      </span>
+
+      <h2>
+        Tu experiencia también puede
+        <span>ayudar a otros.</span>
+      </h2>
+
+      <p>
+        Comparte levantamientos, proyectos, conocimientos,
+        experiencias y novedades del mundo de la topografía.
+      </p>
+
     </div>
-    <a routerLink="/registro" class="btn-principal">Crear mi perfil profesional</a>
+
+    <a routerLink="/registro" class="btn-principal">
+      Crear mi perfil profesional
+    </a>
+
   </section>
 
+
+  <!-- CTA FINAL -->
+  <section class="cta-final">
+
+    <span class="etiqueta">
+      TOPOPRO FC
+    </span>
+
+    <h2>
+      El futuro de la gestión
+      <span>topográfica comienza aquí.</span>
+    </h2>
+
+    <p>
+      Empieza a organizar tu trabajo con una plataforma
+      creada para profesionales de la topografía.
+    </p>
+
+    <a routerLink="/registro" class="btn-principal">
+      🚀 Crear mi cuenta
+    </a>
+
+  </section>
+
+
+  <!-- FOOTER -->
   <footer>
-    <div class="marca-footer">TopoPro <span>FC</span></div>
-    <p>La plataforma para profesionales de la topografía.</p>
+
+    <div class="footer-marca">
+
+      <div class="marca-footer">
+        TopoPro <span>FC</span>
+      </div>
+
+      <p>
+        Tecnología que transforma la topografía.
+      </p>
+
+    </div>
+
+    <div class="footer-derechos">
+      <span>© 2026 TopoPro FC</span>
+      <span>·</span>
+      <span>Plataforma profesional de topografía</span>
+    </div>
+
   </footer>
+
 </main>

@@ -1,13 +1,21 @@
-<app-navbar></app-navbar>
+@if (mostrarLayout) {
 
-<div class="layout">
+  <app-navbar></app-navbar>
+
+  <div class="layout">
 
     <app-sidebar></app-sidebar>
 
     <main class="contenido">
 
-        <router-outlet></router-outlet>
+      <router-outlet></router-outlet>
 
     </main>
 
-</div>
+  </div>
+
+} @else {
+
+  <router-outlet></router-outlet>
+
+}
