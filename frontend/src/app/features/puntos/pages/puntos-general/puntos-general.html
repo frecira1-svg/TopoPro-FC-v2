@@ -1,0 +1,705 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="puntos-general">
+
+  <!-- ENCABEZADO -->
+  <div class="page-header">
+    <div>
+      <h1>
+        <i class="pi pi-map-marker"></i>
+        Puntos Topográficos
+      </h1>
+
+      <p>
+        Consulta y administra los puntos topográficos de tus proyectos.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button
+        pButton
+        type="button"
+        icon="pi pi-plus"
+        label="Nuevo punto"
+        (click)="abrirNuevo()">
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ESTADÍSTICAS -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="pi pi-map-marker"></i>
+      </div>
+
+      <div>
+        <span>Total de puntos</span>
+        <strong>{{ totalPuntos() }}</strong>
+      </div>
+    </div>
+
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="pi pi-globe"></i>
+      </div>
+
+      <div>
+        <span>Georreferenciados</span>
+        <strong>{{ totalGeorreferenciados() }}</strong>
+      </div>
+    </div>
+
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="pi pi-chart-line"></i>
+      </div>
+
+      <div>
+        <span>Elevación promedio</span>
+        <strong>{{ elevacionPromedio() }} m</strong>
+      </div>
+    </div>
+
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="pi pi-folder"></i>
+      </div>
+
+      <div>
+        <span>Proyectos</span>
+        <strong>{{ proyectos().length }}</strong>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- FILTROS -->
+  <div class="filters-card">
+
+    <div class="filter-field search-field">
+
+      <label for="busqueda">
+        Buscar
+      </label>
+
+      <input
+        id="busqueda"
+        pInputText
+        type="text"
+        placeholder="Código, tipo o descripción..."
+        [value]="busqueda()"
+        (input)="cambiarBusqueda($any($event.target).value)"
+      />
+
+    </div>
+
+
+    <div class="filter-field">
+
+      <label for="proyecto">
+        Proyecto
+      </label>
+
+      <p-select
+        id="proyecto"
+        [options]="proyectos()"
+        optionLabel="nombre"
+        optionValue="id"
+        placeholder="Todos los proyectos"
+        [showClear]="true"
+        [ngModel]="proyectoSeleccionado()"
+        (ngModelChange)="cambiarProyecto($event)">
+      </p-select>
+
+    </div>
+
+
+    <div class="filter-actions">
+
+      <button
+        pButton
+        type="button"
+        icon="pi pi-filter-slash"
+        label="Limpiar"
+        severity="secondary"
+        [outlined]="true"
+        (click)="limpiarFiltros()">
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- MAPA -->
+  <div class="content-card map-card">
+
+    <div class="card-header">
+
+      <div>
+        <h2>
+          <i class="pi pi-map"></i>
+          Ubicación de los puntos
+        </h2>
+
+        <p>
+          Visualización de los puntos georreferenciados.
+        </p>
+      </div>
+
+      <span class="points-count">
+        {{ totalGeorreferenciados() }} ubicados
+      </span>
+
+    </div>
+
+    <div
+      id="mapaPuntosGeneral"
+      class="map-container">
+    </div>
+
+  </div>
+
+
+  <!-- TABLA -->
+  <div class="content-card">
+
+    <div class="card-header">
+
+      <div>
+        <h2>
+          <i class="pi pi-list"></i>
+          Lista de puntos
+        </h2>
+
+        <p>
+          Información registrada de los puntos topográficos.
+        </p>
+      </div>
+
+      <span class="points-count">
+        {{ totalPuntos() }} registros
+      </span>
+
+    </div>
+
+
+    <div
+      class="loading-container"
+      *ngIf="cargando()">
+
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Cargando puntos...</span>
+
+    </div>
+
+
+    <p-table
+      *ngIf="!cargando()"
+      [value]="puntosFiltrados()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [responsiveLayout]="'scroll'"
+      styleClass="puntos-table">
+
+      <ng-template pTemplate="header">
+
+        <tr>
+
+          <th>Código</th>
+
+          <th>Proyecto</th>
+
+          <th>Norte</th>
+
+          <th>Este</th>
+
+          <th>Elevación</th>
+
+          <th>Tipo</th>
+
+          <th>Ubicación</th>
+
+          <th>Acciones</th>
+
+        </tr>
+
+      </ng-template>
+
+
+      <ng-template
+        pTemplate="body"
+        let-punto>
+
+        <tr>
+
+          <td>
+
+            <strong class="codigo-punto">
+              {{ punto.codigo }}
+            </strong>
+
+          </td>
+
+
+          <td>
+
+            <div class="project-cell">
+
+              <span>
+                {{ punto.proyecto?.nombre || 'Proyecto #' + punto.proyectoId }}
+              </span>
+
+              <button
+                pButton
+                type="button"
+                icon="pi pi-external-link"
+                class="p-button-text p-button-sm"
+                title="Ver puntos del proyecto"
+                (click)="verProyecto(punto.proyectoId)">
+              </button>
+
+            </div>
+
+          </td>
+
+
+          <td>
+            {{ punto.norte | number:'1.2-3' }}
+          </td>
+
+
+          <td>
+            {{ punto.este | number:'1.2-3' }}
+          </td>
+
+
+          <td>
+            {{ punto.elevacion | number:'1.2-3' }} m
+          </td>
+
+
+          <td>
+
+            <span
+              class="type-badge"
+              *ngIf="punto.tipo">
+
+              {{ punto.tipo }}
+
+            </span>
+
+            <span
+              class="empty-value"
+              *ngIf="!punto.tipo">
+
+              —
+
+            </span>
+
+          </td>
+
+
+          <td>
+
+            <span
+              class="geo-badge"
+              *ngIf="
+                punto.latitud != null &&
+                punto.longitud != null
+              ">
+
+              <i class="pi pi-map-marker"></i>
+              Sí
+
+            </span>
+
+            <span
+              class="empty-value"
+              *ngIf="
+                punto.latitud == null ||
+                punto.longitud == null
+              ">
+
+              Sin GPS
+
+            </span>
+
+          </td>
+
+
+          <td>
+
+            <div class="action-buttons">
+
+              <button
+                pButton
+                type="button"
+                icon="pi pi-map-marker"
+                class="p-button-rounded p-button-text"
+                title="Localizar"
+                [disabled]="
+                  punto.latitud == null ||
+                  punto.longitud == null
+                "
+                (click)="localizarPunto(punto)">
+              </button>
+
+
+              <button
+                pButton
+                type="button"
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-text"
+                title="Editar"
+                (click)="abrirEdicion(punto)">
+              </button>
+
+
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-text p-button-danger"
+                title="Eliminar"
+                (click)="confirmarEliminar(punto)">
+              </button>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </ng-template>
+
+
+      <ng-template pTemplate="emptymessage">
+
+        <tr>
+
+          <td colspan="8">
+
+            <div class="empty-state">
+
+              <i class="pi pi-map-marker"></i>
+
+              <h3>
+                No hay puntos topográficos
+              </h3>
+
+              <p>
+                No se encontraron puntos con los filtros seleccionados.
+              </p>
+
+              <button
+                pButton
+                type="button"
+                icon="pi pi-plus"
+                label="Crear primer punto"
+                (click)="abrirNuevo()">
+              </button>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </ng-template>
+
+    </p-table>
+
+  </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- DIÁLOGO CREAR / EDITAR -->
+<!-- ===================================================== -->
+
+<p-dialog
+  [header]="modoEdicion() ? 'Editar punto topográfico' : 'Nuevo punto topográfico'"
+  [visible]="dialogoVisible()"
+  (visibleChange)="dialogoVisible.set($event)"
+  [modal]="true"
+  [style]="{ width: '650px' }"
+  [draggable]="false"
+  [resizable]="false">
+
+  <div class="form-grid">
+
+
+    <!-- PROYECTO -->
+    <div class="form-field full-width">
+
+      <label for="formProyecto">
+        Proyecto <span>*</span>
+      </label>
+
+      <p-select
+        id="formProyecto"
+        [options]="proyectos()"
+        optionLabel="nombre"
+        optionValue="id"
+        placeholder="Selecciona un proyecto"
+        [filter]="true"
+        [ngModel]="puntoActual.proyectoId"
+        (ngModelChange)="puntoActual.proyectoId = $event">
+      </p-select>
+
+    </div>
+
+
+    <!-- CÓDIGO -->
+    <div class="form-field">
+
+      <label for="formCodigo">
+        Código <span>*</span>
+      </label>
+
+      <input
+        id="formCodigo"
+        pInputText
+        type="text"
+        [(ngModel)]="puntoActual.codigo"
+        placeholder="Ej. BM-001"
+      />
+
+    </div>
+
+
+    <!-- TIPO -->
+    <div class="form-field">
+
+      <label for="formTipo">
+        Tipo
+      </label>
+
+      <input
+        id="formTipo"
+        pInputText
+        type="text"
+        [(ngModel)]="puntoActual.tipo"
+        placeholder="Ej. BM, GPS, PR"
+      />
+
+    </div>
+
+
+    <!-- NORTE -->
+    <div class="form-field">
+
+      <label for="formNorte">
+        Norte <span>*</span>
+      </label>
+
+      <p-inputNumber
+        id="formNorte"
+        [(ngModel)]="puntoActual.norte"
+        [minFractionDigits]="3"
+        [maxFractionDigits]="3"
+        [useGrouping]="false">
+      </p-inputNumber>
+
+    </div>
+
+
+    <!-- ESTE -->
+    <div class="form-field">
+
+      <label for="formEste">
+        Este <span>*</span>
+      </label>
+
+      <p-inputNumber
+        id="formEste"
+        [(ngModel)]="puntoActual.este"
+        [minFractionDigits]="3"
+        [maxFractionDigits]="3"
+        [useGrouping]="false">
+      </p-inputNumber>
+
+    </div>
+
+
+    <!-- ELEVACIÓN -->
+    <div class="form-field">
+
+      <label for="formElevacion">
+        Elevación <span>*</span>
+      </label>
+
+      <p-inputNumber
+        id="formElevacion"
+        [(ngModel)]="puntoActual.elevacion"
+        [minFractionDigits]="3"
+        [maxFractionDigits]="3"
+        [useGrouping]="false">
+      </p-inputNumber>
+
+    </div>
+
+
+    <!-- PRECISIÓN -->
+    <div class="form-field">
+
+      <label for="formPrecision">
+        Precisión
+      </label>
+
+      <p-inputNumber
+        id="formPrecision"
+        [(ngModel)]="puntoActual.precision"
+        [minFractionDigits]="3"
+        [maxFractionDigits]="3"
+        [useGrouping]="false">
+      </p-inputNumber>
+
+    </div>
+
+
+    <!-- LATITUD -->
+    <div class="form-field">
+
+      <label for="formLatitud">
+        Latitud
+      </label>
+
+      <p-inputNumber
+        id="formLatitud"
+        [(ngModel)]="puntoActual.latitud"
+        [minFractionDigits]="6"
+        [maxFractionDigits]="8"
+        [useGrouping]="false">
+      </p-inputNumber>
+
+    </div>
+
+
+    <!-- LONGITUD -->
+    <div class="form-field">
+
+      <label for="formLongitud">
+        Longitud
+      </label>
+
+      <p-inputNumber
+        id="formLongitud"
+        [(ngModel)]="puntoActual.longitud"
+        [minFractionDigits]="6"
+        [maxFractionDigits]="8"
+        [useGrouping]="false">
+      </p-inputNumber>
+
+    </div>
+
+
+    <!-- EQUIPO -->
+    <div class="form-field">
+
+      <label for="formEquipo">
+        Equipo
+      </label>
+
+      <input
+        id="formEquipo"
+        pInputText
+        type="text"
+        [(ngModel)]="puntoActual.equipo"
+        placeholder="Equipo utilizado"
+      />
+
+    </div>
+
+
+    <!-- MÉTODO -->
+    <div class="form-field">
+
+      <label for="formMetodo">
+        Método
+      </label>
+
+      <input
+        id="formMetodo"
+        pInputText
+        type="text"
+        [(ngModel)]="puntoActual.metodo"
+        placeholder="Método de levantamiento"
+      />
+
+    </div>
+
+
+    <!-- DESCRIPCIÓN -->
+    <div class="form-field full-width">
+
+      <label for="formDescripcion">
+        Descripción
+      </label>
+
+      <textarea
+        id="formDescripcion"
+        rows="3"
+        [(ngModel)]="puntoActual.descripcion"
+        placeholder="Descripción del punto..."
+        class="form-textarea">
+      </textarea>
+
+    </div>
+
+
+    <!-- OBSERVACIONES -->
+    <div class="form-field full-width">
+
+      <label for="formObservaciones">
+        Observaciones
+      </label>
+
+      <textarea
+        id="formObservaciones"
+        rows="3"
+        [(ngModel)]="puntoActual.observaciones"
+        placeholder="Observaciones..."
+        class="form-textarea">
+      </textarea>
+
+    </div>
+
+  </div>
+
+
+  <!-- FOOTER -->
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      type="button"
+      label="Cancelar"
+      icon="pi pi-times"
+      severity="secondary"
+      [outlined]="true"
+      (click)="dialogoVisible.set(false)">
+    </button>
+
+    <button
+      pButton
+      type="button"
+      [label]="modoEdicion() ? 'Actualizar' : 'Crear punto'"
+      [icon]="modoEdicion() ? 'pi pi-check' : 'pi pi-plus'"
+      (click)="guardar()">
+    </button>
+
+  </ng-template>
+
+</p-dialog>

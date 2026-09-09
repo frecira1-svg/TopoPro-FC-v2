@@ -12,6 +12,7 @@ import { Perfil } from './features/perfil/pages/perfil/perfil';
 import { PerfilPublico } from './features/perfil-publico/pages/perfil-publico/perfil-publico';
 import { Directorio } from './features/directorio/pages/directorio/directorio';
 import { Puntos } from './features/puntos/pages/puntos/puntos';
+import { PuntosGeneral } from './features/puntos/pages/puntos-general/puntos-general';
 import { Levantamientos } from './features/levantamientos/pages/levantamientos/levantamientos';
 import { Mapas } from './features/mapas/pages/mapas/mapas';
 import { Equipos } from './features/equipos/pages/equipos/equipos';
@@ -83,6 +84,19 @@ export const routes: Routes = [
       permisoGuard('proyectosVer')
     ]
   },
+
+  // =====================================================
+// PUNTOS TOPOGRÁFICOS GENERALES
+// =====================================================
+
+{
+  path: 'puntos',
+  component: PuntosGeneral,
+  canActivate: [
+    authGuard,
+    permisoGuard('proyectosVer')
+  ]
+},
 
 
   // =====================================================

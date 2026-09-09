@@ -1,0 +1,531 @@
+.puntos-general {
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* =====================================================
+   ENCABEZADO
+   ===================================================== */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.page-header h1 i {
+  margin-right: 10px;
+}
+
+.page-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+
+/* =====================================================
+   ESTADÍSTICAS
+   ===================================================== */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 21px;
+}
+
+.stat-card span {
+  display: block;
+  margin-bottom: 5px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.stat-card strong {
+  display: block;
+  color: #111827;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   FILTROS
+   ===================================================== */
+
+.filters-card {
+  display: grid;
+  grid-template-columns: minmax(250px, 1fr) minmax(220px, 300px) auto;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.filter-field label {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.search-field input {
+  width: 100%;
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+}
+
+
+/* =====================================================
+   TARJETAS DE CONTENIDO
+   ===================================================== */
+
+.content-card {
+  margin-bottom: 24px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.card-header h2 {
+  margin: 0 0 5px;
+  color: #1f2937;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card-header h2 i {
+  margin-right: 8px;
+}
+
+.card-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.points-count {
+  white-space: nowrap;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* =====================================================
+   MAPA
+   ===================================================== */
+
+.map-card {
+  overflow: hidden;
+}
+
+.map-container {
+  width: 100%;
+  height: 500px;
+  min-height: 400px;
+  background: #f3f4f6;
+}
+
+:host ::ng-deep .leaflet-container {
+  width: 100%;
+  height: 100%;
+  font-family: inherit;
+}
+
+:host ::ng-deep .leaflet-popup-content {
+  margin: 13px 15px;
+}
+
+
+/* =====================================================
+   TABLA
+   ===================================================== */
+
+:host ::ng-deep .puntos-table {
+  border: 0;
+}
+
+:host ::ng-deep .puntos-table .p-datatable-thead > tr > th {
+  padding: 13px 14px;
+  background: #f9fafb;
+  color: #374151;
+  border-color: #e5e7eb;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .puntos-table .p-datatable-tbody > tr > td {
+  padding: 13px 14px;
+  border-color: #f0f1f3;
+  color: #4b5563;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+:host ::ng-deep .puntos-table .p-datatable-tbody > tr:hover {
+  background: #f9fafb;
+}
+
+.codigo-punto {
+  color: #111827;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   PROYECTO
+   ===================================================== */
+
+.project-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 170px;
+}
+
+.project-cell span {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-cell button {
+  flex-shrink: 0;
+}
+
+
+/* =====================================================
+   BADGES
+   ===================================================== */
+
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.geo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.empty-value {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+
+/* =====================================================
+   ACCIONES
+   ===================================================== */
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.action-buttons button {
+  width: 34px;
+  height: 34px;
+}
+
+
+/* =====================================================
+   LOADING
+   ===================================================== */
+
+.loading-container {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #6b7280;
+}
+
+.loading-container i {
+  font-size: 24px;
+}
+
+
+/* =====================================================
+   ESTADO VACÍO
+   ===================================================== */
+
+.empty-state {
+  min-height: 240px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.empty-state > i {
+  margin-bottom: 14px;
+  color: #9ca3af;
+  font-size: 42px;
+}
+
+.empty-state h3 {
+  margin: 0 0 6px;
+  color: #374151;
+  font-size: 18px;
+}
+
+.empty-state p {
+  margin: 0 0 18px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   FORMULARIO
+   ===================================================== */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+  padding-top: 5px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-field label {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-field label span {
+  color: #dc2626;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+}
+
+.form-field :host ::ng-deep .p-inputnumber {
+  width: 100%;
+}
+
+.form-field :host ::ng-deep .p-inputnumber-input {
+  width: 100%;
+}
+
+.form-field :host ::ng-deep .p-select {
+  width: 100%;
+}
+
+.form-textarea {
+  min-height: 85px;
+  padding: 10px 12px;
+  resize: vertical;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-textarea:focus {
+  border-color: #9ca3af;
+  box-shadow: 0 0 0 1px #9ca3af;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1100px) {
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filter-actions {
+    grid-column: 1 / -1;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .puntos-general {
+    padding: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions button {
+    width: 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-card {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-actions {
+    grid-column: auto;
+  }
+
+  .filter-actions button {
+    width: 100%;
+  }
+
+  .card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .map-container {
+    height: 400px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-field.full-width {
+    grid-column: auto;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .page-header h1 {
+    font-size: 23px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .map-container {
+    height: 350px;
+  }
+
+}

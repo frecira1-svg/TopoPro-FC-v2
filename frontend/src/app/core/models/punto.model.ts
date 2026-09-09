@@ -13,6 +13,16 @@ export interface PuntoTopografico {
   latitud?: number;
   longitud?: number;
   proyectoId: number;
+
+  proyecto?: {
+    id: number;
+    nombre: string;
+    descripcion?: string | null;
+    cliente?: string;
+    ubicacion?: string;
+    estado?: string;
+  };
+
   createdAt: string;
   updatedAt: string;
 }
