@@ -1,5 +1,10 @@
 /* =========================================================
    TOPOPRO FC — LOGIN
+   DISEÑO COMPLETO
+   ========================================================= */
+
+/* =========================================================
+   RESET LOCAL
    ========================================================= */
 
 :host {
@@ -8,82 +13,560 @@
   min-height: 100vh;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PÁGINA PRINCIPAL
+   ========================================================= */
+
 .login-page {
   width: 100%;
   min-height: 100vh;
 
   display: grid;
-  grid-template-columns: 58% 42%;
+  grid-template-columns: minmax(0, 58%) minmax(420px, 42%);
 
   overflow: hidden;
 
-  background: #f4f8f6;
+  background: #f3f8f5;
 }
 
 /* =========================================================
-   LADO IZQUIERDO
+   PANEL VISUAL IZQUIERDO
    ========================================================= */
 
 .login-visual {
   position: relative;
 
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 55px 7%;
 
   overflow: hidden;
 
-  background-color: #031812;
+  color: #ffffff;
 
-  background-image:
-    linear-gradient(
-      90deg,
-      rgba(2, 18, 14, 0.02),
-      rgba(2, 18, 14, 0.04)
+  background:
+    radial-gradient(
+      circle at 78% 18%,
+      rgba(36, 165, 103, 0.18),
+      transparent 30%
     ),
-    url('/assets/images/topopro-login-hero.png');
-
- background-size: auto 100%;
-background-position: left center;
-  background-repeat: no-repeat;
-}
-
-/* No duplicar elementos que ya están dentro de la imagen */
-
-.login-visual .visual-overlay,
-.login-visual .topo-lines,
-.login-visual .brand,
-.login-visual .visual-content,
-.login-visual .visual-footer {
-  display: none;
+    radial-gradient(
+      circle at 18% 82%,
+      rgba(28, 145, 91, 0.14),
+      transparent 34%
+    ),
+    linear-gradient(
+      145deg,
+      #021b13 0%,
+      #03291e 48%,
+      #06402e 100%
+    );
 }
 
 /* =========================================================
-   LADO DERECHO
+   RELIEVE / CURVAS TOPOGRÁFICAS
+   ========================================================= */
+
+.login-visual::before {
+  content: "";
+
+  position: absolute;
+
+  width: 850px;
+  height: 650px;
+
+  right: -300px;
+  top: -210px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(72, 225, 151, 0.16);
+
+  box-shadow:
+    0 0 0 35px rgba(72, 225, 151, 0.045),
+    0 0 0 70px rgba(72, 225, 151, 0.035),
+    0 0 0 105px rgba(72, 225, 151, 0.025),
+    0 0 0 140px rgba(72, 225, 151, 0.018),
+    0 0 0 175px rgba(72, 225, 151, 0.014);
+
+  transform: rotate(-15deg);
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+.login-visual::after {
+  content: "";
+
+  position: absolute;
+
+  width: 750px;
+  height: 450px;
+
+  left: -330px;
+  bottom: -210px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(72, 225, 151, 0.14);
+
+  box-shadow:
+    0 0 0 35px rgba(72, 225, 151, 0.035),
+    0 0 0 70px rgba(72, 225, 151, 0.025),
+    0 0 0 105px rgba(72, 225, 151, 0.018);
+
+  transform: rotate(12deg);
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+/* =========================================================
+   OVERLAY
+   ========================================================= */
+
+.visual-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 18, 12, 0.18),
+      transparent 50%,
+      rgba(0, 0, 0, 0.16)
+    );
+
+  pointer-events: none;
+
+  z-index: 1;
+}
+
+/* =========================================================
+   CURVAS DECORATIVAS
+   ========================================================= */
+
+.topo-lines {
+  position: absolute;
+
+  border: 1px solid rgba(83, 225, 157, 0.10);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  z-index: 1;
+}
+
+.topo-lines-1 {
+  width: 600px;
+  height: 480px;
+
+  right: -280px;
+  bottom: -180px;
+
+  transform: rotate(-20deg);
+}
+
+.topo-lines-2 {
+  width: 480px;
+  height: 390px;
+
+  right: -220px;
+  bottom: -145px;
+
+  transform: rotate(-20deg);
+}
+
+.topo-lines-3 {
+  width: 360px;
+  height: 300px;
+
+  right: -160px;
+  bottom: -110px;
+
+  transform: rotate(-20deg);
+}
+
+/* =========================================================
+   MARCA
+   ========================================================= */
+
+.brand {
+  position: relative;
+
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   SÍMBOLO DE MARCA
+   ========================================================= */
+
+.brand-symbol {
+  position: relative;
+
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+/* Montañas */
+
+.mountain {
+  position: absolute;
+
+  bottom: 8px;
+
+  width: 0;
+  height: 0;
+
+  border-left: 19px solid transparent;
+  border-right: 19px solid transparent;
+
+  border-bottom: 34px solid #22c77b;
+}
+
+.mountain-1 {
+  left: 4px;
+
+  opacity: 0.95;
+}
+
+.mountain-2 {
+  left: 19px;
+  bottom: 8px;
+
+  border-left-width: 16px;
+  border-right-width: 16px;
+
+  border-bottom-color: #b8efd1;
+
+  transform: scale(0.75);
+}
+
+/* Globo */
+
+.globe {
+  position: absolute;
+
+  right: 0;
+  top: 1px;
+
+  width: 25px;
+  height: 25px;
+
+  border: 2px solid #ffffff;
+
+  border-radius: 50%;
+
+  opacity: 0.85;
+}
+
+.globe::before {
+  content: "";
+
+  position: absolute;
+
+  left: 4px;
+  right: 4px;
+  top: 10px;
+
+  height: 1px;
+
+  background: #ffffff;
+}
+
+.globe::after {
+  content: "";
+
+  position: absolute;
+
+  top: 3px;
+  bottom: 3px;
+  left: 10px;
+
+  width: 3px;
+
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #ffffff;
+
+  border-radius: 50%;
+}
+
+/* =========================================================
+   NOMBRE DE MARCA
+   ========================================================= */
+
+.brand-name {
+  color: #ffffff;
+
+  font-size: 25px;
+
+  line-height: 1;
+
+  font-weight: 850;
+
+  letter-spacing: -1px;
+}
+
+.brand-name strong {
+  color: #31d084;
+}
+
+.brand-slogan {
+  margin-top: 7px;
+
+  color: rgba(255, 255, 255, 0.62);
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+}
+
+/* =========================================================
+   CONTENIDO PRINCIPAL IZQUIERDO
+   ========================================================= */
+
+.visual-content {
+  position: relative;
+
+  z-index: 5;
+
+  width: 100%;
+  max-width: 650px;
+
+  margin-top: auto;
+  margin-bottom: auto;
+
+  padding: 55px 0 45px;
+}
+
+/* =========================================================
+   ETIQUETA
+   ========================================================= */
+
+.visual-tag {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #39d98a;
+
+  font-size: 10px;
+
+  font-weight: 850;
+
+  letter-spacing: 3px;
+}
+
+.visual-tag::before {
+  content: "";
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #39d98a;
+
+  box-shadow:
+    0 0 0 5px rgba(57, 217, 138, 0.08);
+}
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.visual-content h1 {
+  margin: 22px 0 0;
+
+  color: #ffffff;
+
+  font-size: clamp(43px, 5vw, 72px);
+
+  line-height: 1.02;
+
+  font-weight: 300;
+
+  letter-spacing: -3px;
+}
+
+.visual-content h1 span {
+  display: block;
+
+  color: #35d486;
+
+  font-weight: 850;
+}
+
+/* =========================================================
+   DESCRIPCIÓN
+   ========================================================= */
+
+.visual-content > p {
+  max-width: 590px;
+
+  margin: 24px 0 0;
+
+  color: rgba(255, 255, 255, 0.74);
+
+  font-size: 15px;
+
+  line-height: 1.7;
+}
+
+/* =========================================================
+   CARACTERÍSTICAS
+   ========================================================= */
+
+.visual-features {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-top: 30px;
+}
+
+.visual-features > div {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 9px 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.13);
+
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.055);
+
+  color: rgba(255, 255, 255, 0.84);
+
+  font-size: 11px;
+
+  backdrop-filter: blur(5px);
+}
+
+.feature-icon {
+  font-size: 14px;
+}
+
+/* =========================================================
+   FIRMA
+   ========================================================= */
+
+.visual-footer {
+  position: relative;
+
+  z-index: 5;
+
+  flex-shrink: 0;
+
+  max-width: 500px;
+}
+
+.signature-line {
+  width: 45px;
+  height: 2px;
+
+  margin-bottom: 10px;
+
+  border-radius: 5px;
+
+  background: #31d084;
+}
+
+.visual-footer > div:not(.signature-line) {
+  color: rgba(255, 255, 255, 0.82);
+
+  font-size: 11px;
+}
+
+.visual-footer strong {
+  color: #ffffff;
+
+  font-size: 12px;
+}
+
+.visual-footer span {
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.visual-footer p {
+  margin: 8px 0 0;
+
+  color: rgba(255, 255, 255, 0.45);
+
+  font-size: 10px;
+
+  font-style: italic;
+}
+
+/* =========================================================
+   PANEL DERECHO
    ========================================================= */
 
 .login-panel {
   position: relative;
 
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
-  padding: 45px 55px;
+  padding: 45px 50px;
 
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   background:
     linear-gradient(
       135deg,
       #f8fbf9 0%,
       #f3f8f5 55%,
-      #eaf4ef 100%
+      #e8f3ed 100%
     );
+
+  border-left: 1px solid rgba(23, 90, 61, 0.08);
 }
 
 /* =========================================================
-   CURVAS TOPOGRÁFICAS
+   DECORACIÓN DEL PANEL DERECHO
    ========================================================= */
 
 .login-panel::before {
@@ -91,77 +574,70 @@ background-position: left center;
 
   position: absolute;
 
-  width: 900px;
-  height: 900px;
+  width: 850px;
+  height: 850px;
 
   right: -500px;
-  top: -280px;
+  top: -300px;
 
   border-radius: 50%;
 
-  border: 1px solid rgba(24, 128, 78, 0.08);
+  border: 1px solid rgba(24, 128, 78, 0.07);
 
   box-shadow:
-    0 0 0 35px rgba(24, 128, 78, 0.025),
-    0 0 0 70px rgba(24, 128, 78, 0.025),
-    0 0 0 105px rgba(24, 128, 78, 0.025),
-    0 0 0 140px rgba(24, 128, 78, 0.025),
-    0 0 0 175px rgba(24, 128, 78, 0.02),
-    0 0 0 210px rgba(24, 128, 78, 0.02);
+    0 0 0 40px rgba(24, 128, 78, 0.025),
+    0 0 0 80px rgba(24, 128, 78, 0.022),
+    0 0 0 120px rgba(24, 128, 78, 0.018),
+    0 0 0 160px rgba(24, 128, 78, 0.014),
+    0 0 0 200px rgba(24, 128, 78, 0.011);
 
   pointer-events: none;
-}
 
-/* =========================================================
-   SEGUNDO CONJUNTO DE CURVAS
-   ========================================================= */
+  z-index: 0;
+}
 
 .login-panel::after {
   content: "";
 
   position: absolute;
 
-  width: 620px;
-  height: 620px;
+  width: 600px;
+  height: 600px;
 
-  left: -460px;
-  bottom: -360px;
+  left: -450px;
+  bottom: -370px;
 
   border-radius: 50%;
 
-  border: 1px solid rgba(24, 128, 78, 0.09);
+  border: 1px solid rgba(24, 128, 78, 0.07);
 
   box-shadow:
-    0 0 0 30px rgba(24, 128, 78, 0.025),
-    0 0 0 60px rgba(24, 128, 78, 0.025),
-    0 0 0 90px rgba(24, 128, 78, 0.02);
+    0 0 0 35px rgba(24, 128, 78, 0.022),
+    0 0 0 70px rgba(24, 128, 78, 0.018),
+    0 0 0 105px rgba(24, 128, 78, 0.014);
 
   pointer-events: none;
+
+  z-index: 0;
 }
 
 /* =========================================================
-   DETALLE VERDE DE TRANSICIÓN
-   ========================================================= */
-
-.login-panel {
-  border-left: 1px solid rgba(23, 90, 61, 0.08);
-}
-
-.login-panel .login-card {
-  position: relative;
-  z-index: 5;
-}
-
-/* =========================================================
-   TARJETA
+   TARJETA LOGIN
    ========================================================= */
 
 .login-card {
-  width: min(100%, 530px);
+  position: relative;
 
-  padding: 48px 48px 38px;
+  z-index: 5;
 
-  background: rgba(255, 255, 255, 0.96);
+  width: 100%;
+  max-width: 510px;
+
+  margin: 0 auto;
+
+  padding: 46px 46px 36px;
+
+  background: rgba(255, 255, 255, 0.97);
 
   border: 1px solid rgba(23, 76, 54, 0.10);
 
@@ -173,14 +649,14 @@ background-position: left center;
 
   backdrop-filter: blur(10px);
 
-  animation: aparecerLogin 0.55s ease-out;
+  animation: aparecerLogin 0.5s ease-out;
 }
 
 @keyframes aparecerLogin {
 
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(12px);
   }
 
   to {
@@ -191,11 +667,19 @@ background-position: left center;
 }
 
 /* =========================================================
-   HEADER
+   MARCA MÓVIL
+   ========================================================= */
+
+.mobile-brand {
+  display: none;
+}
+
+/* =========================================================
+   CABECERA LOGIN
    ========================================================= */
 
 .login-header {
-  margin-bottom: 32px;
+  margin-bottom: 31px;
 }
 
 .login-tag {
@@ -207,13 +691,13 @@ background-position: left center;
 
   padding-left: 15px;
 
+  color: #087443;
+
   font-size: 10px;
 
-  font-weight: 800;
+  font-weight: 850;
 
   letter-spacing: 2.4px;
-
-  color: #087443;
 }
 
 .login-tag::before {
@@ -237,15 +721,15 @@ background-position: left center;
 .login-header h2 {
   margin: 0;
 
+  color: #10231d;
+
   font-size: clamp(30px, 3vw, 39px);
 
   line-height: 1.08;
 
-  font-weight: 800;
+  font-weight: 850;
 
   letter-spacing: -1.6px;
-
-  color: #10231d;
 }
 
 .login-header h2 span {
@@ -275,11 +759,11 @@ background-position: left center;
 .login-header p {
   margin: 14px 0 0;
 
+  color: #71807a;
+
   font-size: 13px;
 
   line-height: 1.6;
-
-  color: #71807a;
 }
 
 /* =========================================================
@@ -287,7 +771,9 @@ background-position: left center;
    ========================================================= */
 
 .campo {
-  margin-bottom: 22px;
+  width: 100%;
+
+  margin-bottom: 21px;
 }
 
 .campo label {
@@ -295,19 +781,21 @@ background-position: left center;
 
   margin-bottom: 9px;
 
+  color: #1b2b25;
+
   font-size: 13px;
 
   font-weight: 700;
-
-  color: #1b2b25;
 }
 
 /* =========================================================
-   INPUTS
+   INPUT
    ========================================================= */
 
 .input-wrapper {
   position: relative;
+
+  width: 100%;
 
   display: flex;
   align-items: center;
@@ -318,23 +806,24 @@ background-position: left center;
 
   left: 15px;
 
+  width: 18px;
+  height: 18px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-
-  width: 18px;
-  height: 18px;
 
   color: #16804e;
 
   font-size: 14px;
 
   pointer-events: none;
+
+  z-index: 2;
 }
 
 .input-wrapper input {
   width: 100%;
-
   height: 52px;
 
   padding: 0 16px 0 45px;
@@ -353,8 +842,7 @@ background-position: left center;
 
   transition:
     border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+    box-shadow 0.2s ease;
 }
 
 .input-wrapper input::placeholder {
@@ -379,19 +867,19 @@ background-position: left center;
 .error {
   margin: 7px 0 0;
 
-  font-size: 11px;
-
   color: #c43d3d;
+
+  font-size: 11px;
 }
 
 .error-general {
   padding: 11px 13px;
 
+  border: 1px solid #f0d2d2;
+
   border-radius: 9px;
 
   background: #fff4f4;
-
-  border: 1px solid #f0d2d2;
 
   font-size: 12px;
 
@@ -408,9 +896,12 @@ background-position: left center;
   width: 100%;
   height: 52px;
 
-  margin-top: 5px;
+  display: flex;
 
-  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 6px;
 
   border: 0;
 
@@ -460,11 +951,6 @@ background-position: left center;
   box-shadow: none;
 }
 
-.login-card form button span {
-  position: relative;
-  z-index: 2;
-}
-
 .button-arrow {
   display: inline-block;
 
@@ -486,16 +972,16 @@ background-position: left center;
 .registro-link {
   display: flex;
 
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
   gap: 6px;
 
   margin-top: 27px;
 
-  font-size: 12px;
-
   color: #7a8781;
+
+  font-size: 12px;
 }
 
 .registro-link a {
@@ -504,6 +990,8 @@ background-position: left center;
   font-weight: 800;
 
   text-decoration: none;
+
+  cursor: pointer;
 }
 
 .registro-link a:hover {
@@ -511,7 +999,7 @@ background-position: left center;
 }
 
 /* =========================================================
-   FOOTER
+   FOOTER LOGIN
    ========================================================= */
 
 .login-bottom {
@@ -537,152 +1025,474 @@ background-position: left center;
 
   white-space: nowrap;
 
+  color: #919e98;
+
   font-size: 8px;
 
   font-weight: 700;
 
   letter-spacing: 1.7px;
-
-  color: #919e98;
 }
 
 /* =========================================================
-   RESPONSIVE
+   ESCRITORIO MEDIANO
    ========================================================= */
 
-@media (max-width: 1100px) {
+@media (max-width: 1250px) {
 
   .login-page {
-    grid-template-columns: 55% 45%;
+    grid-template-columns: minmax(0, 56%) minmax(400px, 44%);
+  }
+
+  .login-visual {
+    padding-left: 6%;
+    padding-right: 6%;
   }
 
   .login-panel {
-    padding: 35px 30px;
+    padding-left: 35px;
+    padding-right: 35px;
   }
 
   .login-card {
-    padding: 42px 35px 34px;
+    max-width: 470px;
+
+    padding-left: 38px;
+    padding-right: 38px;
+  }
+
+  .visual-content h1 {
+    font-size: 54px;
   }
 
 }
+
+/* =========================================================
+   PORTÁTIL
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+  .login-page {
+    grid-template-columns: minmax(0, 53%) minmax(390px, 47%);
+  }
+
+  .login-visual {
+    padding: 45px 35px;
+  }
+
+  .login-panel {
+    padding: 30px 22px;
+  }
+
+  .login-card {
+    max-width: 440px;
+
+    padding: 36px 30px 30px;
+  }
+
+  .visual-content {
+    padding-top: 35px;
+    padding-bottom: 30px;
+  }
+
+  .visual-content h1 {
+    font-size: 45px;
+
+    letter-spacing: -2px;
+  }
+
+  .visual-content > p {
+    font-size: 13px;
+  }
+
+  .visual-features > div {
+    font-size: 10px;
+  }
+
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
 
 @media (max-width: 850px) {
 
   .login-page {
-    grid-template-columns: 1fr;
+    display: block;
+
+    width: 100%;
+    min-height: 100vh;
+
+    overflow: visible;
   }
+
+  /* -----------------------------------------
+     PANEL VISUAL
+     ----------------------------------------- */
 
   .login-visual {
-    min-height: 320px;
+    width: 100%;
+    min-height: 360px;
 
-    background-size: cover;
-    background-position: center 35%;
+    padding: 35px 30px;
+
+    overflow: hidden;
   }
 
+  .visual-content {
+    margin-top: 40px;
+    margin-bottom: 0;
+
+    padding: 0;
+  }
+
+  .visual-content h1 {
+    font-size: 43px;
+  }
+
+  .visual-footer {
+    display: none;
+  }
+
+  /* -----------------------------------------
+     PANEL LOGIN
+     ----------------------------------------- */
+
   .login-panel {
+    width: 100%;
     min-height: auto;
 
-    padding: 35px 24px 45px;
+    display: flex;
+
+    padding: 40px 25px 50px;
+
+    overflow: visible;
+
+    border-left: none;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 520px;
+
+    margin: 0 auto;
   }
 
 }
 
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
 @media (max-width: 600px) {
 
-  .login-visual {
-    min-height: 230px;
+  .login-page {
+    display: block;
 
-    background-size: cover;
-    background-position: center center;
+    overflow: visible;
   }
 
+  /* -----------------------------------------
+     VISUAL
+     ----------------------------------------- */
+
+  .login-visual {
+    min-height: 285px;
+
+    padding: 27px 20px;
+  }
+
+  .brand {
+    gap: 11px;
+  }
+
+  .brand-symbol {
+    width: 45px;
+    height: 45px;
+  }
+
+  .mountain {
+    border-left-width: 15px;
+    border-right-width: 15px;
+    border-bottom-width: 27px;
+  }
+
+  .mountain-2 {
+    left: 15px;
+
+    border-left-width: 13px;
+    border-right-width: 13px;
+  }
+
+  .globe {
+    width: 20px;
+    height: 20px;
+
+    font-size: 9px;
+  }
+
+  .globe::before {
+    top: 8px;
+  }
+
+  .globe::after {
+    left: 8px;
+  }
+
+  .brand-name {
+    font-size: 20px;
+  }
+
+  .brand-slogan {
+    margin-top: 5px;
+
+    font-size: 6px;
+
+    letter-spacing: 1.2px;
+  }
+
+  .visual-content {
+    margin-top: 32px;
+  }
+
+  .visual-tag {
+    font-size: 8px;
+
+    letter-spacing: 2px;
+  }
+
+  .visual-content h1 {
+    margin-top: 15px;
+
+    font-size: 34px;
+
+    letter-spacing: -1.4px;
+  }
+
+  .visual-content > p {
+    margin-top: 14px;
+
+    font-size: 12px;
+
+    line-height: 1.55;
+  }
+
+  .visual-features {
+    gap: 6px;
+
+    margin-top: 17px;
+  }
+
+  .visual-features > div {
+    padding: 6px 8px;
+
+    font-size: 9px;
+  }
+
+  .feature-icon {
+    font-size: 11px;
+  }
+
+  /* -----------------------------------------
+     PANEL LOGIN
+     ----------------------------------------- */
+
   .login-panel {
-    padding: 25px 16px 35px;
+    min-height: auto;
+
+    padding: 25px 15px 35px;
   }
 
   .login-card {
-    padding: 32px 24px 28px;
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+
+    padding: 30px 22px 27px;
 
     border-radius: 18px;
   }
 
+  /* -----------------------------------------
+     MARCA MÓVIL
+     ----------------------------------------- */
+
+  .mobile-brand {
+    display: flex !important;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 23px;
+  }
+
+  .mobile-logo {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    background: #17613f;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 900;
+  }
+
+  .mobile-brand strong {
+    display: block;
+
+    color: #163f2e;
+
+    font-size: 16px;
+  }
+
+  .mobile-brand strong span {
+    color: #17613f;
+  }
+
+  .mobile-brand small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #87968f;
+
+    font-size: 7px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.7px;
+  }
+
+  /* -----------------------------------------
+     HEADER
+     ----------------------------------------- */
+
+  .login-header {
+    margin-bottom: 25px;
+  }
+
+  .login-tag {
+    font-size: 9px;
+  }
+
   .login-header h2 {
     font-size: 30px;
+
+    letter-spacing: -1.2px;
   }
 
   .login-header p {
-    font-size: 13px;
+    font-size: 12px;
+  }
+
+  /* -----------------------------------------
+     CAMPOS
+     ----------------------------------------- */
+
+  .campo {
+    margin-bottom: 19px;
+  }
+
+  .campo label {
+    margin-bottom: 8px;
+
+    font-size: 12px;
   }
 
   .input-wrapper input {
     height: 50px;
+
+    font-size: 13px;
   }
 
   .login-card form button {
     height: 50px;
   }
 
+  /* -----------------------------------------
+     FOOTER
+     ----------------------------------------- */
+
+  .login-bottom {
+    margin-top: 27px;
+  }
+
 }
+
+/* =========================================================
+   MÓVIL PEQUEÑO
+   ========================================================= */
 
 @media (max-width: 400px) {
 
   .login-visual {
-    min-height: 205px;
+    min-height: 260px;
+
+    padding: 24px 17px;
+  }
+
+  .brand-name {
+    font-size: 18px;
+  }
+
+  .brand-slogan {
+    font-size: 5.5px;
+  }
+
+  .visual-content {
+    margin-top: 25px;
+  }
+
+  .visual-content h1 {
+    font-size: 30px;
+  }
+
+  .visual-content > p {
+    font-size: 11px;
+  }
+
+  .visual-features > div {
+    padding: 5px 7px;
+
+    font-size: 8px;
+  }
+
+  .login-panel {
+    padding: 20px 12px 30px;
   }
 
   .login-card {
-    padding: 28px 20px 25px;
+    padding: 27px 18px 24px;
   }
 
   .login-header h2 {
     font-size: 27px;
   }
 
-}
-
-
-/* =========================================================
-   AJUSTE FINAL — OCULTAR MARCA MOBILE EN ESCRITORIO
-   ========================================================= */
-
-.mobile-brand {
-  display: none !important;
-}
-
-/* La tarjeta queda centrada y limpia */
-
-.login-card {
-  margin: 0;
-}
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 600px) {
-
-  .mobile-brand {
-    display: flex !important;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+  .login-header p {
+    font-size: 11px;
   }
 
-}
-
-.mobile-brand {
-  display: none !important;
-}
-
-.login-card {
-  margin: 0;
-}
-
-@media (max-width: 600px) {
-  .mobile-brand {
-    display: flex !important;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+  .registro-link {
+    font-size: 11px;
   }
+
+  .login-bottom p {
+    font-size: 7px;
+  }
+
 }

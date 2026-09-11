@@ -229,6 +229,22 @@
     0 12px 28px rgba(29, 168, 102, 0.28);
 }
 
+/* Interacción del navbar */
+.landing-navbar,
+.landing-navbar a {
+  pointer-events: auto;
+}
+
+.landing-navbar {
+  isolation: isolate;
+}
+
+.nav-login {
+  position: relative;
+  z-index: 10;
+  cursor: pointer;
+}
+
 .nav-login span {
   font-size: 16px;
 }
