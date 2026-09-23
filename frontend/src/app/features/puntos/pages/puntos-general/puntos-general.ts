@@ -28,11 +28,14 @@ import {
 } from 'primeng/api';
 
 import { PuntoService } from '../../../../core/services/punto.service';
+import { ProyectoService } from '../../../../core/services/proyecto.service';
 
 import {
   PuntoTopografico,
   PuntoTopograficoRequest
 } from '../../../../core/models/punto.model';
+
+import { Proyecto } from '../../../../core/models/proyecto.model';
 
 
 @Component({
@@ -169,35 +172,9 @@ export class PuntosGeneral implements OnInit, OnDestroy {
   // PROYECTOS
   // =====================================================
 
-  proyectos = computed(() => {
+  proyectosDisponibles = signal<Proyecto[]>([]);
 
-    const mapa = new Map<number, any>();
-
-    this.puntos().forEach(punto => {
-
-      if (
-        punto.proyecto &&
-        !mapa.has(punto.proyecto.id)
-      ) {
-
-        mapa.set(
-          punto.proyecto.id,
-          punto.proyecto
-        );
-
-      }
-
-    });
-
-    return Array.from(mapa.values())
-      .sort((a, b) =>
-        String(a.nombre || '')
-          .localeCompare(
-            String(b.nombre || '')
-          )
-      );
-
-  });
+  proyectos = computed(() => this.proyectosDisponibles());
 
 
   // =====================================================
@@ -226,6 +203,8 @@ export class PuntosGeneral implements OnInit, OnDestroy {
   constructor(
     private puntoService: PuntoService,
 
+    private proyectoService: ProyectoService,
+
     private confirmationService:
       ConfirmationService,
 
@@ -242,6 +221,7 @@ export class PuntosGeneral implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    this.cargarProyectos();
     this.cargarPuntos();
 
   }
@@ -328,6 +308,48 @@ export class PuntosGeneral implements OnInit, OnDestroy {
 
     L.Marker.prototype.options.icon =
       iconDefault;
+
+  }
+
+
+  // =====================================================
+  // CARGAR PROYECTOS
+  // =====================================================
+
+  cargarProyectos(): void {
+
+    this.proyectoService
+      .obtenerTodos()
+      .subscribe({
+
+        next: (data) => {
+
+          this.proyectosDisponibles.set(data);
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Error cargando proyectos:',
+            error
+          );
+
+          this.messageService.add({
+
+            severity: 'error',
+
+            summary: 'Error',
+
+            detail:
+              error?.error?.error ||
+              'No se pudieron cargar los proyectos.'
+
+          });
+
+        }
+
+      });
 
   }
 

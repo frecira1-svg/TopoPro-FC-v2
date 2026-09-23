@@ -31,15 +31,20 @@ import { MensajeriaService } from '../../../core/services/mensajeria.service';
 })
 export class Sidebar implements OnInit {
 
-  private authService = inject(AuthService);
+  private authService =
+    inject(AuthService);
 
-  private permisoService = inject(PermisoService);
+  private permisoService =
+    inject(PermisoService);
 
-  private cdr = inject(ChangeDetectorRef);
+  private cdr =
+    inject(ChangeDetectorRef);
 
-  private contactoService = inject(ContactoProfesionalService);
+  private contactoService =
+    inject(ContactoProfesionalService);
 
-  private mensajeriaService = inject(MensajeriaService);
+  private mensajeriaService =
+    inject(MensajeriaService);
 
 
   contactosPendientes = 0;
@@ -51,7 +56,8 @@ export class Sidebar implements OnInit {
   // PERMISOS
   // =====================================================
 
-  permisos: PermisosUsuario | null = null;
+  permisos:
+    PermisosUsuario | null = null;
 
   cargandoPermisos = true;
 
@@ -73,28 +79,36 @@ export class Sidebar implements OnInit {
     this.cargarPermisos();
 
 
-    this.contactoService.pendientes$.subscribe(total => {
+    this.contactoService
+      .pendientes$
+      .subscribe(total => {
 
-      this.contactosPendientes = total;
+        this.contactosPendientes =
+          total;
 
-      this.cdr.detectChanges();
+        this.cdr.detectChanges();
 
-    });
-
-
-    this.contactoService.iniciarNotificaciones();
-
-
-    this.mensajeriaService.noLeidos$.subscribe(total => {
-
-      this.mensajesNoLeidos = total;
-
-      this.cdr.detectChanges();
-
-    });
+      });
 
 
-    this.mensajeriaService.iniciarNotificaciones();
+    this.contactoService
+      .iniciarNotificaciones();
+
+
+    this.mensajeriaService
+      .noLeidos$
+      .subscribe(total => {
+
+        this.mensajesNoLeidos =
+          total;
+
+        this.cdr.detectChanges();
+
+      });
+
+
+    this.mensajeriaService
+      .iniciarNotificaciones();
 
   }
 
@@ -115,7 +129,8 @@ export class Sidebar implements OnInit {
 
     if (!usuario) {
 
-      this.cargandoPermisos = false;
+      this.cargandoPermisos =
+        false;
 
       return;
 
@@ -128,15 +143,22 @@ export class Sidebar implements OnInit {
 
     if (usuario.rol === 'ADMIN') {
 
-      this.puedeVerProyectos = true;
+      this.permisos = null;
 
-      this.puedeVerLevantamientos = true;
+      this.puedeVerProyectos =
+        true;
 
-      this.puedeVerEquipos = true;
+      this.puedeVerLevantamientos =
+        true;
 
-      this.puedeVerReportes = true;
+      this.puedeVerEquipos =
+        true;
 
-      this.cargandoPermisos = false;
+      this.puedeVerReportes =
+        true;
+
+      this.cargandoPermisos =
+        false;
 
       this.cdr.detectChanges();
 
@@ -146,67 +168,125 @@ export class Sidebar implements OnInit {
 
 
     // =================================================
-    // USUARIO → SUS PERMISOS
+    // USUARIO
     // =================================================
 
     this.permisoService
       .obtenerMisPermisos()
       .subscribe({
 
+        // =============================================
+        // ONLINE
+        // =============================================
+
         next: (permisos) => {
 
-          this.permisos = permisos;
-
-
-          this.puedeVerProyectos =
-            permisos.proyectosVer;
-
-
-          this.puedeVerLevantamientos =
-            permisos.levantamientosVer;
-
-
-          this.puedeVerEquipos =
-            permisos.equiposVer;
-
-
-          this.puedeVerReportes =
-            permisos.reportesVer;
-
-
-          this.cargandoPermisos = false;
-
-
-          this.cdr.detectChanges();
+          this.aplicarPermisos(
+            permisos
+          );
 
         },
 
 
+        // =============================================
+        // OFFLINE
+        // =============================================
+
         error: (error: any) => {
 
-          console.error(
-            'Error cargando permisos del sidebar:',
+          console.warn(
+            'API de permisos no disponible. ' +
+            'Usando permisos guardados localmente.',
             error
           );
 
 
-          this.puedeVerProyectos = false;
-
-          this.puedeVerLevantamientos = false;
-
-          this.puedeVerEquipos = false;
-
-          this.puedeVerReportes = false;
+          const permisosLocales =
+            this.permisoService
+              .obtenerPermisosActuales();
 
 
-          this.cargandoPermisos = false;
+          if (permisosLocales) {
 
+            this.aplicarPermisos(
+              permisosLocales
+            );
+
+          } else {
+
+            // No tenemos permisos almacenados.
+            // Por seguridad no mostramos módulos
+            // protegidos.
+
+            this.permisos =
+              null;
+
+            this.puedeVerProyectos =
+              false;
+
+            this.puedeVerLevantamientos =
+              false;
+
+            this.puedeVerEquipos =
+              false;
+
+            this.puedeVerReportes =
+              false;
+
+          }
+
+
+          this.cargandoPermisos =
+            false;
 
           this.cdr.detectChanges();
 
         }
 
       });
+
+  }
+
+
+  // =====================================================
+  // APLICAR PERMISOS
+  // =====================================================
+
+  private aplicarPermisos(
+    permisos: PermisosUsuario
+  ): void {
+
+    this.permisos =
+      permisos;
+
+
+    this.permisoService
+      .establecerPermisos(
+        permisos
+      );
+
+
+    this.puedeVerProyectos =
+      permisos.proyectosVer;
+
+
+    this.puedeVerLevantamientos =
+      permisos.levantamientosVer;
+
+
+    this.puedeVerEquipos =
+      permisos.equiposVer;
+
+
+    this.puedeVerReportes =
+      permisos.reportesVer;
+
+
+    this.cargandoPermisos =
+      false;
+
+
+    this.cdr.detectChanges();
 
   }
 

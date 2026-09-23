@@ -83,6 +83,10 @@ export class PermisoService {
     `${environment.apiUrl}/permisos`;
 
 
+  private readonly PERMISOS_KEY =
+    'topopro_permisos';
+
+
   private readonly headersNoCache =
     new HttpHeaders({
 
@@ -96,6 +100,53 @@ export class PermisoService {
         '0'
 
     });
+
+
+  // ===================================================
+  // PERMISOS EN MEMORIA
+  // ===================================================
+
+  private permisos:
+    PermisosUsuario | null =
+      this.obtenerPermisosGuardados();
+
+
+  // ===================================================
+  // OBTENER PERMISOS GUARDADOS LOCALMENTE
+  // ===================================================
+
+  private obtenerPermisosGuardados():
+    PermisosUsuario | null {
+
+    try {
+
+      const datos =
+        localStorage.getItem(
+          this.PERMISOS_KEY
+        );
+
+
+      if (!datos) {
+        return null;
+      }
+
+
+      return JSON.parse(
+        datos
+      ) as PermisosUsuario;
+
+    } catch (error) {
+
+      console.error(
+        'Error leyendo permisos guardados:',
+        error
+      );
+
+      return null;
+
+    }
+
+  }
 
 
   // ===================================================
@@ -173,6 +224,51 @@ export class PermisoService {
 
 
   // ===================================================
+  // GUARDAR PERMISOS
+  // ===================================================
+
+  establecerPermisos(
+    permisos: PermisosUsuario
+  ): void {
+
+    this.permisos =
+      permisos;
+
+
+    try {
+
+      localStorage.setItem(
+        this.PERMISOS_KEY,
+        JSON.stringify(
+          permisos
+        )
+      );
+
+    } catch (error) {
+
+      console.error(
+        'Error guardando permisos localmente:',
+        error
+      );
+
+    }
+
+  }
+
+
+  // ===================================================
+  // OBTENER PERMISOS ACTUALES
+  // ===================================================
+
+  obtenerPermisosActuales():
+    PermisosUsuario | null {
+
+    return this.permisos;
+
+  }
+
+
+  // ===================================================
   // VERIFICAR PERMISO
   // ===================================================
 
@@ -185,7 +281,26 @@ export class PermisoService {
       return false;
     }
 
+
     return permisos[permiso] === true;
+
+  }
+
+
+  // ===================================================
+  // VERIFICAR PERMISO DESDE EL SERVICIO
+  // ===================================================
+
+  tienePermisoActual(
+    permiso: keyof PermisosUsuario
+  ): boolean {
+
+    if (!this.permisos) {
+      return false;
+    }
+
+
+    return this.permisos[permiso] === true;
 
   }
 
@@ -196,12 +311,14 @@ export class PermisoService {
 
   tieneAlgunPermiso(
     permisos: PermisosUsuario | null,
-    permisosRequeridos: (keyof PermisosUsuario)[]
+    permisosRequeridos:
+      (keyof PermisosUsuario)[]
   ): boolean {
 
     if (!permisos) {
       return false;
     }
+
 
     return permisosRequeridos.some(
       permiso =>
@@ -217,17 +334,47 @@ export class PermisoService {
 
   tieneTodosLosPermisos(
     permisos: PermisosUsuario | null,
-    permisosRequeridos: (keyof PermisosUsuario)[]
+    permisosRequeridos:
+      (keyof PermisosUsuario)[]
   ): boolean {
 
     if (!permisos) {
       return false;
     }
 
+
     return permisosRequeridos.every(
       permiso =>
         permisos[permiso] === true
     );
+
+  }
+
+
+  // ===================================================
+  // LIMPIAR PERMISOS
+  // ===================================================
+
+  limpiar(): void {
+
+    this.permisos =
+      null;
+
+
+    try {
+
+      localStorage.removeItem(
+        this.PERMISOS_KEY
+      );
+
+    } catch (error) {
+
+      console.error(
+        'Error limpiando permisos locales:',
+        error
+      );
+
+    }
 
   }
 

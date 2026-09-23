@@ -110,8 +110,6 @@ import {
 
   styleUrl: './proyectos.css'
 })
-
-
 export class Proyectos implements OnInit {
 
 
@@ -263,6 +261,7 @@ export class Proyectos implements OnInit {
       this.puedeEliminar.set(false);
 
       return;
+
     }
 
 
@@ -285,6 +284,7 @@ export class Proyectos implements OnInit {
       this.cargarProyectos();
 
       return;
+
     }
 
 
@@ -296,52 +296,64 @@ export class Proyectos implements OnInit {
       .obtenerMisPermisos()
       .subscribe({
 
+        // ===============================================
+        // ONLINE
+        // ===============================================
+
         next: (permisos: PermisosUsuario) => {
 
-          this.permisos = permisos;
-
-
-          this.puedeVer.set(
-            permisos.proyectosVer
+          this.aplicarPermisos(
+            permisos
           );
-
-
-          this.puedeCrear.set(
-            permisos.proyectosCrear
-          );
-
-
-          this.puedeEditar.set(
-            permisos.proyectosEditar
-          );
-
-
-          this.puedeEliminar.set(
-            permisos.proyectosEliminar
-          );
-
-
-          this.cargandoPermisos.set(false);
-
-
-          if (
-            permisos.proyectosVer
-          ) {
-
-            this.cargarProyectos();
-
-          }
 
         },
 
 
+        // ===============================================
+        // OFFLINE
+        // ===============================================
+
         error: (error: any) => {
 
-          console.error(
-            'ERROR CARGANDO PERMISOS:',
+          console.warn(
+            'API de permisos no disponible. ' +
+            'Usando permisos guardados localmente.',
             error
           );
 
+
+          const permisosLocales =
+            this.permisoService
+              .obtenerPermisosActuales();
+
+
+          if (permisosLocales) {
+
+            console.log(
+              'Permisos offline encontrados:',
+              permisosLocales
+            );
+
+
+            this.aplicarPermisos(
+              permisosLocales
+            );
+
+            return;
+
+          }
+
+
+          // =============================================
+          // SIN PERMISOS LOCALES
+          // =============================================
+
+          console.error(
+            'No existen permisos guardados localmente.'
+          );
+
+
+          this.permisos = null;
 
           this.cargandoPermisos.set(false);
 
@@ -358,17 +370,76 @@ export class Proyectos implements OnInit {
 
             severity: 'error',
 
-            summary: 'Error',
+            summary: 'Acceso restringido',
 
             detail:
-              error?.error?.error ||
-              'No se pudieron cargar los permisos.'
+              'No hay permisos disponibles para trabajar sin conexión.'
 
           });
 
         }
 
       });
+
+  }
+
+
+  // =====================================================
+  // APLICAR PERMISOS
+  // =====================================================
+
+  private aplicarPermisos(
+    permisos: PermisosUsuario
+  ): void {
+
+    this.permisos =
+      permisos;
+
+
+    // Mantener actualizados los permisos
+    // en memoria y localStorage.
+
+    this.permisoService
+      .establecerPermisos(
+        permisos
+      );
+
+
+    this.puedeVer.set(
+      permisos.proyectosVer
+    );
+
+
+    this.puedeCrear.set(
+      permisos.proyectosCrear
+    );
+
+
+    this.puedeEditar.set(
+      permisos.proyectosEditar
+    );
+
+
+    this.puedeEliminar.set(
+      permisos.proyectosEliminar
+    );
+
+
+    this.cargandoPermisos.set(
+      false
+    );
+
+
+    // Solo cargar proyectos si el usuario
+    // tiene permiso para consultarlos.
+
+    if (
+      permisos.proyectosVer
+    ) {
+
+      this.cargarProyectos();
+
+    }
 
   }
 
@@ -392,7 +463,6 @@ export class Proyectos implements OnInit {
           this.cargandoClientes.set(false);
 
         },
-
 
         error: (error: any) => {
 
@@ -449,7 +519,6 @@ export class Proyectos implements OnInit {
           this.cargando.set(false);
 
         },
-
 
         error: (error: any) => {
 
@@ -794,7 +863,6 @@ export class Proyectos implements OnInit {
 
       },
 
-
       error: (error: any) => {
 
         console.error(
@@ -903,7 +971,6 @@ export class Proyectos implements OnInit {
           this.cargarProyectos();
 
         },
-
 
         error: (error: any) => {
 

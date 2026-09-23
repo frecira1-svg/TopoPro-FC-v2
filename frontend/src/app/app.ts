@@ -5,6 +5,8 @@ import { filter } from 'rxjs/operators';
 import { Navbar } from './layout/components/navbar/navbar';
 import { Sidebar } from './layout/components/sidebar/sidebar';
 import { ThemeService } from './core/services/theme.service';
+import { OfflineDbService } from './core/services/offline/offline-db.service';
+import { OfflineSyncService } from './core/services/offline/offline-sync.service';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +25,8 @@ export class App {
 
   private themeService = inject(ThemeService);
   private router = inject(Router);
+  private offlineDbService = inject(OfflineDbService);
+  private offlineSyncService = inject(OfflineSyncService);
 
   mostrarLayout = false;
 
@@ -31,14 +35,61 @@ export class App {
     '/login',
     '/registro',
     '/correo-verificado',
-    '/publicaciones',
     '/directorio',
     '/perfil-publico'
   ];
 
   constructor() {
 
-    this.actualizarLayout(this.router.url);
+    // =====================================================
+    // INICIALIZAR BASE DE DATOS OFFLINE
+    // =====================================================
+
+    this.offlineDbService
+      .inicializar()
+      .then(() => {
+
+        if (navigator.onLine) {
+          this.sincronizarPendientes();
+        }
+
+      })
+      .catch(error => {
+
+        console.error(
+          'Error al inicializar la base de datos offline:',
+          error
+        );
+
+      });
+
+
+    // =====================================================
+    // DETECTAR CUANDO VUELVE INTERNET
+    // =====================================================
+
+    window.addEventListener(
+      'online',
+      () => {
+
+        console.log(
+          'Conexión restablecida. Iniciando sincronización...'
+        );
+
+        this.sincronizarPendientes();
+
+      }
+    );
+
+
+    // =====================================================
+    // LAYOUT
+    // =====================================================
+
+    this.actualizarLayout(
+      this.router.url
+    );
+
 
     this.router.events
       .pipe(
@@ -48,25 +99,96 @@ export class App {
         )
       )
       .subscribe(event => {
-        this.actualizarLayout(event.urlAfterRedirects);
+
+        this.actualizarLayout(
+          event.urlAfterRedirects
+        );
+
       });
 
   }
 
-  private actualizarLayout(url: string): void {
 
-    const ruta = url.split('?')[0].split('#')[0];
+  // =====================================================
+  // SINCRONIZAR PENDIENTES
+  // =====================================================
 
-    this.mostrarLayout = !this.rutasPublicas.some(rutaPublica => {
+  private sincronizarPendientes(): void {
 
-      if (rutaPublica === '/') {
-        return ruta === '/';
-      }
+    this.offlineSyncService
+      .sincronizar()
+      .catch(error => {
 
-      return ruta === rutaPublica ||
-             ruta.startsWith(`${rutaPublica}/`);
+        console.error(
+          'Error durante la sincronización offline:',
+          error
+        );
 
-    });
+      });
+
+  }
+
+
+  // =====================================================
+  // ACTUALIZAR LAYOUT
+  // =====================================================
+
+  private actualizarLayout(
+    url: string
+  ): void {
+
+    const ruta =
+      url
+        .split('?')[0]
+        .split('#')[0];
+
+
+    // =====================================================
+    // PUBLICACIONES
+    // =====================================================
+    //
+    // Publicaciones tiene doble comportamiento:
+    //
+    // 1. Usuario autenticado:
+    //    Navbar + Sidebar visibles.
+    //
+    // 2. Usuario no autenticado:
+    //    Página pública sin Sidebar.
+    //
+    // =====================================================
+
+    if (ruta === '/publicaciones') {
+
+      const usuarioAutenticado =
+        localStorage.getItem('topopro_token') !== null;
+
+      this.mostrarLayout = usuarioAutenticado;
+
+      return;
+    }
+
+
+    // =====================================================
+    // RESTO DE RUTAS
+    // =====================================================
+
+    this.mostrarLayout =
+      !this.rutasPublicas.some(
+        rutaPublica => {
+
+          if (rutaPublica === '/') {
+
+            return ruta === '/';
+
+          }
+
+          return ruta === rutaPublica ||
+                 ruta.startsWith(
+                   `${rutaPublica}/`
+                 );
+
+        }
+      );
 
   }
 

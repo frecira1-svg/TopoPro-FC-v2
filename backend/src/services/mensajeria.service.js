@@ -4,8 +4,38 @@ function error(message, status = 400) { const e = new Error(message); e.status =
 function texto(v) { return String(v ?? '').trim().slice(0, 5000); }
 function par(a,b){ return Number(a) < Number(b) ? [Number(a),Number(b)] : [Number(b),Number(a)]; }
 
-async function usuarioValido(id) {
-  return prisma.usuario.findUnique({ where:{id:Number(id)}, select:{id:true,nombre:true,apellido:true,foto:true,profesion:true,empresa:true,activo:true} });
+async function contarNoLeidos(usuarioId) {
+  const uid = Number(usuarioId);
+
+  const conversaciones = await prisma.conversacion.findMany({
+    where: {
+      OR: [
+        { usuario1Id: uid },
+        { usuario2Id: uid }
+      ]
+    },
+    select: {
+      id: true
+    }
+  });
+
+  if (!conversaciones.length) {
+    return 0;
+  }
+
+  const ids = conversaciones.map(c => c.id);
+
+  return prisma.mensajeInterno.count({
+    where: {
+      conversacionId: {
+        in: ids
+      },
+      leido: false,
+      remitenteId: {
+        not: uid
+      }
+    }
+  });
 }
 
 async function obtenerConversacion(id, usuarioId) {

@@ -3,11 +3,11 @@
   <!-- =====================================================
        NAVBAR
        ===================================================== -->
-
   <header class="landing-navbar">
 
-    <a class="landing-logo" routerLink="/">
+    <a routerLink="/" class="landing-logo">
       <span class="logo-mark">
+        <span></span>
         <span></span>
         <span></span>
       </span>
@@ -19,13 +19,11 @@
     </a>
 
     <nav class="landing-nav">
-
       <a href="#inicio">Inicio</a>
       <a href="#caracteristicas">Características</a>
       <a href="#proceso">Cómo funciona</a>
       <a href="#comunidad">Comunidad</a>
       <a href="#nosotros">Nosotros</a>
-
     </nav>
 
     <a
@@ -42,7 +40,6 @@
   <!-- =====================================================
        HERO
        ===================================================== -->
-
   <main>
 
     <section
@@ -51,7 +48,6 @@
     >
 
       <div class="hero-background"></div>
-
       <div class="hero-overlay"></div>
 
       <div class="hero-content">
@@ -72,6 +68,16 @@
           tu trabajo al siguiente nivel.
         </p>
 
+        <!-- MODO CAMPO -->
+        <div class="hero-field-badge">
+          <span class="hero-field-icon">⌁</span>
+
+          <div>
+            <strong>MODO CAMPO</strong>
+            <small>Trabaja incluso sin conexión.</small>
+          </div>
+        </div>
+
         <div class="hero-actions">
 
           <a
@@ -90,6 +96,17 @@
             <span>↓</span>
           </a>
 
+          @if (mostrarInstalar) {
+            <button
+              type="button"
+              class="btn btn-install"
+              (click)="instalarTopoPro()"
+            >
+              Instalar TopoPro
+              <span>↓</span>
+            </button>
+          }
+
         </div>
 
         <div class="hero-trust">
@@ -100,7 +117,7 @@
           </div>
 
           <div>
-            <span class="trust-icon">⌂</span>
+            <span class="trust-icon">⌁</span>
             <span>Desde cualquier lugar</span>
           </div>
 
@@ -136,7 +153,6 @@
     <!-- =====================================================
          CARACTERÍSTICAS
          ===================================================== -->
-
     <section
       id="caracteristicas"
       class="features-section"
@@ -166,7 +182,7 @@
         <article class="feature-card">
 
           <div class="feature-icon">
-            <span>▣</span>
+            <span>□</span>
           </div>
 
           <h3>Proyectos</h3>
@@ -198,7 +214,7 @@
         <article class="feature-card">
 
           <div class="feature-icon">
-            <span>◫</span>
+            <span>◉</span>
           </div>
 
           <h3>Mapas</h3>
@@ -214,7 +230,7 @@
         <article class="feature-card">
 
           <div class="feature-icon">
-            <span>⌁</span>
+            <span>⌖</span>
           </div>
 
           <h3>Levantamientos</h3>
@@ -290,6 +306,98 @@
 
         </article>
 
+
+        <!-- MODO CAMPO -->
+        <article class="feature-card feature-field-mode">
+
+          <div class="feature-icon">
+            <span>⌁</span>
+          </div>
+
+          <h3>Modo Campo</h3>
+
+          <p>
+            Consulta tus puntos
+            incluso sin Internet.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+        <!-- =====================================================
+         MODO CAMPO
+         ===================================================== -->
+    <section class="field-mode-section">
+
+      <div class="field-mode-content">
+
+        <span class="section-eyebrow">
+          TOPOPRO · MODO CAMPO
+        </span>
+
+        <h2>
+          Tu trabajo no se detiene
+          <span>cuando no hay Internet.</span>
+        </h2>
+
+        <p>
+          Lleva la información de tus proyectos directamente
+          al campo. TopoPro puede conservar tus puntos
+          topográficos en el dispositivo para que puedas
+          consultarlos aun cuando la conexión no esté disponible.
+        </p>
+
+        <div class="field-mode-features">
+
+          <div>
+            <span>✓</span>
+            <strong>Consulta tus puntos offline</strong>
+          </div>
+
+          <div>
+            <span>✓</span>
+            <strong>Información disponible en campo</strong>
+          </div>
+
+          <div>
+            <span>✓</span>
+            <strong>Sin depender permanentemente de Internet</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="field-mode-card">
+
+        <div class="field-mode-card-top">
+          <span class="field-mode-status"></span>
+          <span>MODO CAMPO</span>
+        </div>
+
+        <div class="field-mode-card-icon">
+          ⌁
+        </div>
+
+        <strong>
+          Datos disponibles
+        </strong>
+
+        <small>
+          Información de tu proyecto
+          almacenada localmente.
+        </small>
+
+        <div class="field-mode-card-line"></div>
+
+        <div class="field-mode-card-data">
+          <span>Puntos topográficos</span>
+          <strong>Offline</strong>
+        </div>
+
       </div>
 
     </section>
@@ -298,7 +406,6 @@
     <!-- =====================================================
          PROCESO
          ===================================================== -->
-
     <section
       id="proceso"
       class="process-section"
@@ -330,7 +437,7 @@
         <div class="process-item">
 
           <div class="process-image process-field">
-            📐
+            📍
           </div>
 
           <h3>Datos de campo</h3>
@@ -413,7 +520,6 @@
     <!-- =====================================================
          PROFESIONALES
          ===================================================== -->
-
     <section class="professionals-section">
 
       <div class="professionals-title">
@@ -432,17 +538,17 @@
       <div class="professionals-list">
 
         <div>
-          <span>◉</span>
+          <span>◎</span>
           <p>Topógrafos</p>
         </div>
 
         <div>
-          <span>▦</span>
+          <span>▪</span>
           <p>Ingenieros civiles</p>
         </div>
 
         <div>
-          <span>◎</span>
+          <span>◉</span>
           <p>Geomática y SIG</p>
         </div>
 
@@ -452,19 +558,16 @@
         </div>
 
         <div>
-          <span>▦</span>
+          <span>▪</span>
           <p>Constructoras</p>
         </div>
 
       </div>
 
     </section>
-
-
-    <!-- =====================================================
+        <!-- =====================================================
          COMUNIDAD
          ===================================================== -->
-
     <section
       id="comunidad"
       class="community-section"
@@ -564,7 +667,6 @@
     <!-- =====================================================
          NOSOTROS / VISIÓN
          ===================================================== -->
-
     <section
       id="nosotros"
       class="vision-section"
@@ -598,6 +700,7 @@
 
       </div>
 
+
       <div class="vision-stat">
 
         <span>01</span>
@@ -610,12 +713,9 @@
       </div>
 
     </section>
-
-
-    <!-- =====================================================
+        <!-- =====================================================
          CTA FINAL
          ===================================================== -->
-
     <section class="final-cta">
 
       <div class="final-cta-content">
@@ -652,7 +752,6 @@
   <!-- =====================================================
        FOOTER
        ===================================================== -->
-
   <footer class="landing-footer">
 
     <div class="footer-brand">
@@ -678,7 +777,9 @@
 
     <nav class="footer-links">
 
-      <a href="#inicio">Inicio</a>
+      <a href="#inicio">
+        Inicio
+      </a>
 
       <a href="#caracteristicas">
         Características
@@ -700,11 +801,9 @@
 
 
     <div class="footer-social">
-
       <span>in</span>
-      <span>◎</span>
+      <span>◉</span>
       <span>▶</span>
-
     </div>
 
 

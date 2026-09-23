@@ -12,12 +12,13 @@ import {
 import { environment } from '../../environments/environment';
 
 import {
-  PermisoService,
-  PermisosUsuario
-} from './permiso';
+  PermisoService
+} from './permiso.service';
 
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
 
   private readonly API_URL =
@@ -59,7 +60,9 @@ export class AuthService {
 
         tap(respuesta => {
 
-          this.guardarSesion(respuesta);
+          this.guardarSesion(
+            respuesta
+          );
 
           this.cargarPermisos();
 
@@ -88,7 +91,9 @@ export class AuthService {
         tap(respuesta => {
 
           // Guardar sesión
-          this.guardarSesion(respuesta);
+          this.guardarSesion(
+            respuesta
+          );
 
           // Cargar permisos
           this.cargarPermisos();
@@ -118,7 +123,9 @@ export class AuthService {
           );
 
           this.permisoService
-            .establecerPermisos(permisos);
+            .establecerPermisos(
+              permisos
+            );
 
         },
 
@@ -143,7 +150,9 @@ export class AuthService {
   obtenerPerfil():
     Observable<{ usuario: Usuario }> {
 
-    return this.http.get<{ usuario: Usuario }>(
+    return this.http.get<{
+      usuario: Usuario
+    }>(
       `${this.API_URL}/perfil`
     );
 
@@ -156,10 +165,13 @@ export class AuthService {
 
   actualizarPerfil(
     datos: Partial<Usuario>
-  ): Observable<{ usuario: Usuario }> {
+  ):
+    Observable<{ usuario: Usuario }> {
 
     return this.http
-      .put<{ usuario: Usuario }>(
+      .put<{
+        usuario: Usuario
+      }>(
         `${this.API_URL}/perfil`,
         datos
       )
@@ -184,9 +196,11 @@ export class AuthService {
 
   subirFoto(
     archivo: File
-  ): Observable<{ usuario: Usuario }> {
+  ):
+    Observable<{ usuario: Usuario }> {
 
-    const formData = new FormData();
+    const formData =
+      new FormData();
 
     formData.append(
       'foto',
@@ -195,7 +209,9 @@ export class AuthService {
 
 
     return this.http
-      .put<{ usuario: Usuario }>(
+      .put<{
+        usuario: Usuario
+      }>(
         `${this.API_URL}/perfil/foto`,
         formData
       )
@@ -223,9 +239,12 @@ export class AuthService {
       passwordActual: string;
       passwordNueva: string;
     }
-  ): Observable<{ mensaje: string }> {
+  ):
+    Observable<{ mensaje: string }> {
 
-    return this.http.put<{ mensaje: string }>(
+    return this.http.put<{
+      mensaje: string
+    }>(
       `${this.API_URL}/perfil/password`,
       datos
     );
@@ -249,7 +268,9 @@ export class AuthService {
 
     this.permisoService.limpiar();
 
-    this.usuarioActual.set(null);
+    this.usuarioActual.set(
+      null
+    );
 
   }
 
@@ -315,7 +336,9 @@ export class AuthService {
 
     localStorage.setItem(
       this.USUARIO_KEY,
-      JSON.stringify(usuario)
+      JSON.stringify(
+        usuario
+      )
     );
 
     this.usuarioActual.set(

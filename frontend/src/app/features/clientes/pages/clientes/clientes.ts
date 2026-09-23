@@ -142,9 +142,15 @@ export class Clientes implements OnInit {
       this.authService.usuarioActual();
 
 
+    // =================================================
+    // SIN USUARIO
+    // =================================================
+
     if (!usuario) {
 
       this.cargandoPermisos = false;
+
+      this.cargando = false;
 
       this.puedeVer = false;
       this.puedeCrear = false;
@@ -184,54 +190,62 @@ export class Clientes implements OnInit {
       .obtenerMisPermisos()
       .subscribe({
 
-        next: (permisos) => {
+        // =============================================
+        // ONLINE
+        // =============================================
 
-          this.permisos = permisos;
+        next: (permisos: PermisosUsuario) => {
 
-
-          this.puedeVer =
-            permisos.clientesVer ?? false;
-
-
-          this.puedeCrear =
-            permisos.clientesCrear ?? false;
-
-
-          this.puedeEditar =
-            permisos.clientesEditar ?? false;
-
-
-          this.puedeEliminar =
-            permisos.clientesEliminar ?? false;
-
-
-          this.cargandoPermisos = false;
-
-
-          // -------------------------------------------
-          // SOLAMENTE CARGAR SI PUEDE VER
-          // -------------------------------------------
-
-          if (this.puedeVer) {
-
-            this.cargarClientes();
-
-          } else {
-
-            this.cargando = false;
-
-          }
+          this.aplicarPermisos(permisos);
 
         },
 
 
+        // =============================================
+        // OFFLINE
+        // =============================================
+
         error: (error: any) => {
 
-          console.error(
-            'ERROR CARGANDO PERMISOS:',
+          console.warn(
+            'API de permisos no disponible. ' +
+            'Usando permisos guardados localmente.',
             error
           );
 
+
+          const permisosLocales =
+            this.permisoService
+              .obtenerPermisosActuales();
+
+
+          if (permisosLocales) {
+
+            console.log(
+              'Permisos offline encontrados:',
+              permisosLocales
+            );
+
+
+            this.aplicarPermisos(
+              permisosLocales
+            );
+
+            return;
+
+          }
+
+
+          // ===========================================
+          // SIN PERMISOS LOCALES
+          // ===========================================
+
+          console.error(
+            'No existen permisos guardados localmente.'
+          );
+
+
+          this.permisos = null;
 
           this.cargandoPermisos = false;
 
@@ -250,14 +264,72 @@ export class Clientes implements OnInit {
             summary: 'Error',
 
             detail:
-              error?.error?.error ||
-              'No se pudieron cargar los permisos.'
+              'No hay permisos disponibles para trabajar sin conexión.'
 
           });
 
         }
 
       });
+
+  }
+
+
+  // =====================================================
+  // APLICAR PERMISOS
+  // =====================================================
+
+  private aplicarPermisos(
+    permisos: PermisosUsuario
+  ): void {
+
+    this.permisos =
+      permisos;
+
+
+    // ---------------------------------------------------
+    // Mantener permisos en memoria y localStorage
+    // ---------------------------------------------------
+
+    this.permisoService
+      .establecerPermisos(
+        permisos
+      );
+
+
+    this.puedeVer =
+      permisos.clientesVer ?? false;
+
+
+    this.puedeCrear =
+      permisos.clientesCrear ?? false;
+
+
+    this.puedeEditar =
+      permisos.clientesEditar ?? false;
+
+
+    this.puedeEliminar =
+      permisos.clientesEliminar ?? false;
+
+
+    this.cargandoPermisos =
+      false;
+
+
+    // ---------------------------------------------------
+    // Cargar clientes solamente si tiene permiso
+    // ---------------------------------------------------
+
+    if (this.puedeVer) {
+
+      this.cargarClientes();
+
+    } else {
+
+      this.cargando = false;
+
+    }
 
   }
 
@@ -295,7 +367,10 @@ export class Clientes implements OnInit {
 
         error: (error: any) => {
 
-          console.error(error);
+          console.error(
+            'ERROR CARGANDO CLIENTES:',
+            error
+          );
 
           this.cargando = false;
 
