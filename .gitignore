@@ -60,3 +60,9 @@ datos_andes.csv
 importar_reales.js
 reporte_andes.pdf
 reporte_andes.xlsx
+# =====================================================
+# CONFIGURACIÓN LOCAL / CREDENCIALES
+# =====================================================
+w-config.json
+
+/w-config.json
