@@ -4,6 +4,11 @@
     padding: 2rem;
 }
 
+
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
+
 .encabezado {
     display: flex;
     justify-content: space-between;
@@ -22,7 +27,17 @@
 .encabezado p {
     margin: .4rem 0 0;
     color: #6b7280;
+    max-width: 760px;
 }
+
+
+.acciones-encabezado {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+}
+
 
 .btn-nueva {
     border: none;
@@ -40,12 +55,195 @@
     transform: translateY(-2px);
 }
 
+
+.btn-nueva.btn-bloqueado {
+    background: #64748b;
+}
+
+.btn-nueva.btn-bloqueado:hover {
+    background: #475569;
+}
+
+
+/* =========================================================
+   DIRECTORIO
+   ========================================================= */
+
+.btn-directorio {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background: #2563eb;
+    color: white;
+    padding: .8rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: .25s;
+}
+
+.btn-directorio:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   PLAN COMERCIAL
+   ========================================================= */
+
+.comercial-publicaciones {
+    margin-bottom: 24px;
+    padding: 22px 24px;
+    background: #ffffff;
+    border: 1px solid #e7ecf2;
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, .05);
+}
+
+
+.comercial-publicaciones-principal {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+
+.comercial-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #667085;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+
+.comercial-publicaciones-principal h2 {
+    margin: 0;
+    color: #172033;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+
+.comercial-publicaciones-principal p {
+    margin: 6px 0 0;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+.plan-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .05em;
+    white-space: nowrap;
+}
+
+
+.plan-badge.admin {
+    background: #ede9fe;
+    color: #7c3aed;
+}
+
+
+.plan-badge.free {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+
+.plan-badge.professional {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+
+.plan-badge.company {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+
+.aviso-publicaciones {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 12px;
+}
+
+
+.aviso-publicaciones.publicaciones-activa {
+    background: #ecfdf3;
+    border: 1px solid #bbf7d0;
+}
+
+
+.aviso-publicaciones.publicaciones-bloqueada {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+}
+
+
+.aviso-icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-weight: 800;
+}
+
+
+.publicaciones-activa .aviso-icono {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+
+.publicaciones-bloqueada .aviso-icono {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+
+.aviso-publicaciones strong {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 13px;
+}
+
+
+.aviso-publicaciones p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   FILTROS
+   ========================================================= */
+
 .barra-filtros {
     display: flex;
     gap: .75rem;
     margin-bottom: 2rem;
     flex-wrap: wrap;
 }
+
 
 .barra-filtros button {
     border: 1px solid #d1d5db;
@@ -57,15 +255,22 @@
     font-weight: 500;
 }
 
+
 .barra-filtros button:hover {
     background: #f3f4f6;
 }
+
 
 .barra-filtros button.activo {
     background: #2563eb;
     border-color: #2563eb;
     color: white;
 }
+
+
+/* =========================================================
+   ESTADOS
+   ========================================================= */
 
 .estado {
     text-align: center;
@@ -74,10 +279,20 @@
     font-size: 1rem;
 }
 
+
+/* =========================================================
+   TARJETAS
+   ========================================================= */
+
 app-publicacion-card {
     display: block;
     margin-bottom: 1.5rem;
 }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 768px) {
 
@@ -85,27 +300,66 @@ app-publicacion-card {
         padding: 1rem;
     }
 
+
     .encabezado {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .btn-nueva {
+
+    .acciones-encabezado {
         width: 100%;
+        flex-direction: column;
+        align-items: stretch;
     }
+
+
+    .btn-nueva,
+    .btn-directorio {
+        width: 100%;
+        text-align: center;
+    }
+
 
     .barra-filtros {
         width: 100%;
     }
+
 
     .barra-filtros button {
         flex: 1;
         text-align: center;
     }
 
+
+    .comercial-publicaciones {
+        padding: 18px;
+    }
+
+
+    .comercial-publicaciones-principal {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+
+    .plan-badge {
+        align-self: flex-start;
+    }
+
 }
 
 
-/* Vitrina pública */
-.publicaciones-container .encabezado p { max-width: 760px; }
-.publicaciones-container .estado { padding: 2rem; text-align: center; opacity: .75; }
+/* =========================================================
+   VITRINA PÚBLICA
+   ========================================================= */
+
+.publicaciones-container .encabezado p {
+    max-width: 760px;
+}
+
+.publicaciones-container .estado {
+    padding: 2rem;
+    text-align: center;
+    opacity: .75;
+}

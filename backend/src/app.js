@@ -4,7 +4,9 @@ require('./config/env');
 // NO muestra la contraseña ni la URL completa.
 console.log(
   'DATABASE_URL válida:',
-  /^(postgresql|postgres):\/\//.test(process.env.DATABASE_URL || '')
+  /^(postgresql|postgres):\/\//.test(
+    process.env.DATABASE_URL || ''
+  )
 );
 
 const express = require('express');
@@ -27,6 +29,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const equipoRoutes = require('./routes/equipoRoutes');
 const reporteRoutes = require('./routes/reporteRoutes');
 const permisoRoutes = require('./routes/permiso.routes');
+const comercialRoutes = require('./routes/comercialRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -49,50 +52,142 @@ app.use(cors({
 
 app.use(express.json());
 
-// Limita intentos de login/registro/recuperación para evitar fuerza bruta
+// Limita intentos de login/registro/recuperación
+// para evitar fuerza bruta.
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 20, // máximo 20 intentos por IP en la ventana
+  windowMs: 15 * 60 * 1000,
+  max: 20,
   message: {
-    error: 'Demasiados intentos. Intenta de nuevo en unos minutos.'
+    error:
+      'Demasiados intentos. Intenta de nuevo en unos minutos.'
   },
   standardHeaders: true,
   legacyHeaders: false
 });
 
-app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/proyectos', proyectoRoutes);
-app.use('/api/clientes', clienteRoutes);
-app.use('/api/puntos', puntoTopograficoRoutes);
-app.use('/api/levantamientos', levantamientoRoutes);
-app.use('/api/archivos', archivoRoutes);
-app.use('/api/publicaciones', publicacionRoutes);
-app.use('/api/perfiles-publicos', perfilPublicoRoutes);
-app.use('/api/directorio', directorioRoutes);
-app.use('/api/contactos-profesionales', contactoProfesionalRoutes);
-app.use('/api/mensajes', mensajeriaRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/equipos', equipoRoutes);
-app.use('/api/reportes', reporteRoutes);
-app.use('/api/permisos', permisoRoutes);
+
+app.use(
+  '/api/auth',
+  authLimiter,
+  authRoutes
+);
+
+app.use(
+  '/api/proyectos',
+  proyectoRoutes
+);
+
+app.use(
+  '/api/clientes',
+  clienteRoutes
+);
+
+app.use(
+  '/api/puntos',
+  puntoTopograficoRoutes
+);
+
+app.use(
+  '/api/levantamientos',
+  levantamientoRoutes
+);
+
+app.use(
+  '/api/archivos',
+  archivoRoutes
+);
+
+app.use(
+  '/api/publicaciones',
+  publicacionRoutes
+);
+
+app.use(
+  '/api/perfiles-publicos',
+  perfilPublicoRoutes
+);
+
+app.use(
+  '/api/directorio',
+  directorioRoutes
+);
+
+app.use(
+  '/api/contactos-profesionales',
+  contactoProfesionalRoutes
+);
+
+app.use(
+  '/api/mensajes',
+  mensajeriaRoutes
+);
+
+app.use(
+  '/api/dashboard',
+  dashboardRoutes
+);
+
+app.use(
+  '/api/equipos',
+  equipoRoutes
+);
+
+app.use(
+  '/api/reportes',
+  reporteRoutes
+);
+
+app.use(
+  '/api/permisos',
+  permisoRoutes
+);
+
+// ==========================================
+// SISTEMA COMERCIAL
+// ==========================================
+
+app.use(
+  '/api/comercial',
+  comercialRoutes
+);
+
 
 app.get('/', (req, res) => {
+
   res.json({
-    mensaje: 'API de TopoPro funcionando'
+    mensaje:
+      'API de TopoPro funcionando'
   });
+
 });
+
 
 // Ruta no encontrada
 app.use((req, res) => {
+
   res.status(404).json({
-    error: 'Ruta no encontrada'
+    error:
+      'Ruta no encontrada'
   });
+
 });
+
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 [TopoPro Backend] Servidor corriendo en el puerto ${PORT}`);
-});
+const PORT =
+  process.env.PORT || 3000;
+
+
+app.listen(
+  PORT,
+  '0.0.0.0',
+  () => {
+
+    console.log(
+      `🚀 [TopoPro Backend] Servidor corriendo en el puerto ${PORT}`
+    );
+
+  }
+);

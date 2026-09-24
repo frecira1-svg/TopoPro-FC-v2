@@ -15,7 +15,7 @@
     <div>
 
       <h1>
-        📁 Proyectos
+        📋 Proyectos
       </h1>
 
       <p class="subtitulo">
@@ -30,11 +30,171 @@
       *ngIf="puedeCrear()"
       label="Nuevo Proyecto"
       icon="pi pi-plus"
+      [disabled]="!puedeCrearPorPlan()"
+      [attr.title]="
+        !puedeCrearPorPlan()
+          ? mensajeLimiteProyecto()
+          : 'Crear nuevo proyecto'
+      "
       (onClick)="abrirNuevo()">
     </p-button>
 
   </section>
 
+
+  <!-- =====================================================
+       RESUMEN COMERCIAL
+  ====================================================== -->
+
+  <section
+    class="comercial-proyectos"
+    *ngIf="authService.comercialActual() as comercial"
+  >
+
+    <div class="comercial-principal">
+
+      <div>
+
+        <span class="comercial-label">
+          PLAN ACTUAL
+        </span>
+
+        <h2>
+          {{ nombrePlanActual() }}
+        </h2>
+
+        <p>
+          {{
+            comercial.esAdmin
+              ? 'Acceso administrativo a TopoPro.'
+              : 'Consulta aquí el uso de tu capacidad de proyectos.'
+          }}
+        </p>
+
+      </div>
+
+
+      <span
+        class="comercial-badge admin"
+        *ngIf="comercial.esAdmin"
+      >
+        ADMIN
+      </span>
+
+
+      <span
+        class="comercial-badge free"
+        *ngIf="
+          !comercial.esAdmin &&
+          comercial.esFree
+        "
+      >
+        GRATIS
+      </span>
+
+
+      <span
+        class="comercial-badge professional"
+        *ngIf="
+          !comercial.esAdmin &&
+          comercial.plan?.codigo === 'PROFESSIONAL'
+        "
+      >
+        PROFESIONAL
+      </span>
+
+
+      <span
+        class="comercial-badge company"
+        *ngIf="
+          !comercial.esAdmin &&
+          comercial.plan?.codigo === 'COMPANY'
+        "
+      >
+        EMPRESA
+      </span>
+
+    </div>
+
+
+    <div class="comercial-metricas">
+
+      <div class="comercial-metrica">
+
+        <span>
+          Proyectos
+        </span>
+
+        <strong>
+          {{ textoLimiteProyectos() }}
+        </strong>
+
+      </div>
+
+
+      <div class="comercial-metrica">
+
+        <span>
+          Puntos por proyecto
+        </span>
+
+        <strong>
+          {{ textoLimitePuntos() }}
+        </strong>
+
+      </div>
+
+
+      <div
+        class="comercial-metrica"
+        *ngIf="!comercial.esAdmin"
+      >
+
+        <span>
+          Exportación
+        </span>
+
+        <strong
+          [class.disponible]="comercial.puedeExportar"
+          [class.restringido]="!comercial.puedeExportar"
+        >
+          {{
+            comercial.puedeExportar
+              ? 'Disponible'
+              : 'Requiere plan'
+          }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="aviso-limite"
+      *ngIf="
+        !comercial.esAdmin &&
+        !puedeCrearPorPlan()
+      "
+    >
+
+      <i class="pi pi-lock"></i>
+
+      <div>
+
+        <strong>
+          Límite de proyectos alcanzado
+        </strong>
+
+        <p>
+          {{ mensajeLimiteProyecto() }}
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
 
 
   <!-- =====================================================
@@ -531,42 +691,42 @@
 
 
   <!-- ===================================================
-     CLIENTE
-==================================================== -->
+       CLIENTE
+  ==================================================== -->
 
-<div class="form-campo">
+  <div class="form-campo">
 
-  <label>
-    Cliente *
-  </label>
+    <label>
+      Cliente *
+    </label>
 
-  <p-select
+    <p-select
 
-    [options]="clientes"
+      [options]="clientes"
 
-    [(ngModel)]="proyectoActual.clienteId"
+      [(ngModel)]="proyectoActual.clienteId"
 
-    optionLabel="nombre"
+      optionLabel="nombre"
 
-    optionValue="id"
+      optionValue="id"
 
-    placeholder="Selecciona un cliente"
+      placeholder="Selecciona un cliente"
 
-    [loading]="cargandoClientes()"
+      [loading]="cargandoClientes()"
 
-    [filter]="true"
+      [filter]="true"
 
-    filterBy="nombre"
+      filterBy="nombre"
 
-    [showClear]="true"
+      [showClear]="true"
 
-    [style]="{
-      width: '100%'
-    }">
+      [style]="{
+        width: '100%'
+      }">
 
-  </p-select>
+    </p-select>
 
-</div>
+  </div>
 
 
 

@@ -1,4 +1,10 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    computed,
+    signal
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -8,6 +14,7 @@ import { MessageService } from 'primeng/api';
 import { PublicacionCard } from '../../components/publicacion-card/publicacion-card';
 import { PublicacionDialog } from '../../components/publicacion-dialog/publicacion-dialog';
 import { PublicacionDetalle } from '../../components/publicacion-detalle/publicacion-detalle';
+
 import { PublicacionService } from '../../../../core/services/publicacion.service';
 import { AuthService } from '../../../../core/services/auth.service';
 
@@ -18,6 +25,7 @@ import {
     ComentarioRequest
 } from '../../../../core/models/publicacion.model';
 
+
 @Component({
 
     selector: 'app-publicaciones',
@@ -26,19 +34,19 @@ import {
 
     imports: [
 
-    CommonModule,
+        CommonModule,
 
-    RouterLink,
+        RouterLink,
 
-    ToastModule,
+        ToastModule,
 
-    PublicacionCard,
+        PublicacionCard,
 
-    PublicacionDialog,
+        PublicacionDialog,
 
-    PublicacionDetalle
+        PublicacionDetalle
 
-],
+    ],
 
     providers: [MessageService],
 
@@ -48,7 +56,9 @@ import {
 
 })
 
+
 export class Publicaciones implements OnInit {
+
 
     publicaciones = signal<Publicacion[]>([]);
 
@@ -58,17 +68,31 @@ export class Publicaciones implements OnInit {
 
     detalleVisible = signal(false);
 
-publicacionDetalle = signal<Publicacion | null>(null);
+    publicacionDetalle =
+        signal<Publicacion | null>(null);
 
     modoEdicion = signal(false);
 
-    filtro = signal<'TODAS' | 'NOTICIA' | 'COMUNIDAD'>('TODAS');
+    filtro =
+        signal<'TODAS' | 'NOTICIA' | 'COMUNIDAD'>(
+            'TODAS'
+        );
 
-    publicacionActual: PublicacionRequest = this.formularioVacio();
+    publicacionActual: PublicacionRequest =
+        this.formularioVacio();
 
     idEnEdicion: number | null = null;
 
-    usuario = computed(() => this.authService.usuarioActual());
+
+    usuario = computed(() =>
+        this.authService.usuarioActual()
+    );
+
+
+    comercial = computed(() =>
+        this.authService.comercialActual()
+    );
+
 
     publicacionesFiltradas = computed(() => {
 
@@ -83,12 +107,11 @@ publicacionDetalle = signal<Publicacion | null>(null);
         }
 
         return lista.filter(
-
             p => p.tipo === tipo
-
         );
 
     });
+
 
     constructor(
 
@@ -100,58 +123,191 @@ publicacionDetalle = signal<Publicacion | null>(null);
 
     ) {}
 
+
     ngOnInit(): void {
+
+        if (!this.authService.comercialActual()) {
+
+            this.authService.cargarContextoComercial();
+
+        }
 
         this.cargarPublicaciones();
 
     }
 
+
+    // =====================================================
+    // COMERCIAL
+    // =====================================================
+
+    esAdminComercial(): boolean {
+
+        return this.authService
+            .comercialActual()
+            ?.esAdmin ?? false;
+
+    }
+
+
+    puedePublicar(): boolean {
+
+        const comercial =
+            this.authService.comercialActual();
+
+        // Mientras carga el contexto comercial
+        // no bloqueamos accidentalmente la interfaz.
+        if (!comercial) {
+
+            return true;
+
+        }
+
+        // ADMIN
+        if (comercial.esAdmin) {
+
+            return true;
+
+        }
+
+        // Profesional / Empresa
+        return !comercial.esFree;
+
+    }
+
+
+    nombrePlanActual(): string {
+
+        const comercial =
+            this.authService.comercialActual();
+
+        if (!comercial) {
+
+            return 'Cargando...';
+
+        }
+
+        if (comercial.esAdmin) {
+
+            return 'Administrador';
+
+        }
+
+        return comercial.plan?.nombre
+            || 'Primer proyecto gratis';
+
+    }
+
+
+    mensajePublicacion(): string {
+
+        const comercial =
+            this.authService.comercialActual();
+
+        if (
+            comercial &&
+            comercial.esFree
+        ) {
+
+            return (
+                'La publicación de trabajos ' +
+                'está disponible en los planes ' +
+                'Profesional y Empresa.'
+            );
+
+        }
+
+        return (
+            'Necesitas un plan activo ' +
+            'con esta función para publicar trabajos.'
+        );
+
+    }
+
+
+    mostrarBloqueoPublicacion(): void {
+
+        this.messageService.add({
+
+            severity: 'info',
+
+            summary: 'Función del plan',
+
+            detail: this.mensajePublicacion()
+
+        });
+
+    }
+
+
+    // =====================================================
+    // PUBLICACIONES
+    // =====================================================
+
     cargarPublicaciones(): void {
 
     this.cargando.set(true);
 
+    const filtroActual = this.filtro();
+
     const tipo: TipoPublicacion | undefined =
-        this.filtro() === 'TODAS'
+        filtroActual === 'TODAS'
             ? undefined
-            : this.filtro() as TipoPublicacion;
+            : filtroActual;
 
 
     this.publicacionService
+
         .obtenerPublicaciones(tipo)
+
         .subscribe({
 
-            next: (publicaciones: Publicacion[]) => {
+            next:
+                (publicaciones: Publicacion[]) => {
 
-                this.publicaciones.set(publicaciones);
+                    this.publicaciones
+                        .set(publicaciones);
 
-                this.cargando.set(false);
+                    this.cargando.set(false);
 
-            },
+                },
 
-            error: (error: any) => {
+            error:
+                (error: any) => {
 
-                console.error(
-                    'Error cargando publicaciones:',
-                    error
-                );
+                    console.error(
+                        'Error cargando publicaciones:',
+                        error
+                    );
 
-                this.cargando.set(false);
+                    this.cargando.set(false);
 
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: error?.error?.error || 'No se pudieron cargar las publicaciones.'
-                });
+                    this.messageService.add({
 
-            }
+                        severity: 'error',
+
+                        summary: 'Error',
+
+                        detail:
+                            error?.error?.error
+                            ||
+                            'No se pudieron cargar las publicaciones.'
+
+                    });
+
+                }
 
         });
 
 }
 
+
     cambiarFiltro(
 
-        tipo: 'TODAS' | 'NOTICIA' | 'COMUNIDAD'
+        tipo:
+            'TODAS'
+            | 'NOTICIA'
+            | 'COMUNIDAD'
 
     ): void {
 
@@ -161,17 +317,37 @@ publicacionDetalle = signal<Publicacion | null>(null);
 
     }
 
+
+    // =====================================================
+    // CREAR
+    // =====================================================
+
     abrirNuevaPublicacion(): void {
+
+        if (!this.puedePublicar()) {
+
+            this.mostrarBloqueoPublicacion();
+
+            return;
+
+        }
+
 
         this.modoEdicion.set(false);
 
         this.idEnEdicion = null;
 
-        this.publicacionActual = this.formularioVacio();
+        this.publicacionActual =
+            this.formularioVacio();
 
         this.dialogoVisible.set(true);
 
     }
+
+
+    // =====================================================
+    // EDITAR
+    // =====================================================
 
     editarPublicacion(
 
@@ -179,63 +355,125 @@ publicacionDetalle = signal<Publicacion | null>(null);
 
     ): void {
 
+        if (!this.puedePublicar()) {
+
+            this.mostrarBloqueoPublicacion();
+
+            return;
+
+        }
+
+
         this.modoEdicion.set(true);
 
-        this.idEnEdicion = publicacion.id;
+        this.idEnEdicion =
+            publicacion.id;
 
         this.publicacionActual = {
 
-            titulo: publicacion.titulo,
+            titulo:
+                publicacion.titulo,
 
-            contenido: publicacion.contenido,
+            contenido:
+                publicacion.contenido,
 
-            tipo: publicacion.tipo,
+            tipo:
+                publicacion.tipo,
 
-            imagen: publicacion.imagen,
-            tipoTrabajo: publicacion.tipoTrabajo ?? '',
-            ubicacion: publicacion.ubicacion ?? '',
-            etiquetas: publicacion.etiquetas ?? ''
+            imagen:
+                publicacion.imagen,
+
+            tipoTrabajo:
+                publicacion.tipoTrabajo
+                ?? '',
+
+            ubicacion:
+                publicacion.ubicacion
+                ?? '',
+
+            etiquetas:
+                publicacion.etiquetas
+                ?? ''
 
         };
+
 
         this.dialogoVisible.set(true);
 
     }
 
-   cerrarDialogo(): void {
 
-    this.idEnEdicion = null;
+    // =====================================================
+    // CERRAR
+    // =====================================================
 
-    this.dialogoVisible.set(false);
+    cerrarDialogo(): void {
 
-}
+        this.idEnEdicion = null;
 
-cerrarDetalle(): void {
+        this.dialogoVisible.set(false);
 
-    this.detalleVisible.set(false);
+    }
 
-    this.publicacionDetalle.set(null);
 
-}
+    cerrarDetalle(): void {
 
-guardarPublicacion(
-    datos: PublicacionRequest
-): void {
+        this.detalleVisible.set(false);
 
-        const esEdicion = this.modoEdicion() && this.idEnEdicion;
+        this.publicacionDetalle.set(null);
+
+    }
+
+
+    // =====================================================
+    // GUARDAR
+    // =====================================================
+
+    guardarPublicacion(
+
+        datos: PublicacionRequest
+
+    ): void {
+
+        if (!this.puedePublicar()) {
+
+            this.mostrarBloqueoPublicacion();
+
+            return;
+
+        }
+
+
+        const esEdicion =
+            this.modoEdicion()
+            &&
+            this.idEnEdicion;
+
 
         const peticion =
 
             esEdicion
 
-                ? this.publicacionService.actualizarPublicacion(
-                    this.idEnEdicion!,
-                    datos
-                )
+                ?
 
-                : this.publicacionService.crearPublicacion(
-                    datos
-                );
+                this.publicacionService
+                    .actualizarPublicacion(
+
+                        this.idEnEdicion!,
+
+                        datos
+
+                    )
+
+                :
+
+                this.publicacionService
+                    .crearPublicacion(
+
+                        datos
+
+                    );
+
 
         peticion.subscribe({
 
@@ -244,11 +482,22 @@ guardarPublicacion(
                 this.dialogoVisible.set(false);
 
                 this.messageService.add({
+
                     severity: 'success',
+
                     summary: 'Éxito',
-                    detail: esEdicion
-                        ? 'Publicación actualizada correctamente.'
-                        : 'Publicación creada correctamente.'
+
+                    detail:
+                        esEdicion
+
+                            ?
+
+                            'Publicación actualizada correctamente.'
+
+                            :
+
+                            'Publicación creada correctamente.'
+
                 });
 
                 this.cargarPublicaciones();
@@ -260,9 +509,16 @@ guardarPublicacion(
                 console.error(error);
 
                 this.messageService.add({
+
                     severity: 'error',
+
                     summary: 'Error',
-                    detail: error?.error?.error || 'No se pudo guardar la publicación.'
+
+                    detail:
+                        error?.error?.error
+                        ||
+                        'No se pudo guardar la publicación.'
+
                 });
 
             }
@@ -272,10 +528,24 @@ guardarPublicacion(
     }
 
 
+    // =====================================================
+    // ELIMINAR
+    // =====================================================
 
     eliminarPublicacion(
+
         publicacion: Publicacion
+
     ): void {
+
+        if (!this.puedePublicar()) {
+
+            this.mostrarBloqueoPublicacion();
+
+            return;
+
+        }
+
 
         if (
 
@@ -291,18 +561,26 @@ guardarPublicacion(
 
         }
 
+
         this.publicacionService
 
-            .eliminarPublicacion(publicacion.id)
+            .eliminarPublicacion(
+                publicacion.id
+            )
 
             .subscribe({
 
                 next: () => {
 
                     this.messageService.add({
+
                         severity: 'success',
+
                         summary: 'Eliminada',
-                        detail: 'Publicación eliminada correctamente.'
+
+                        detail:
+                            'Publicación eliminada correctamente.'
+
                     });
 
                     this.cargarPublicaciones();
@@ -314,9 +592,16 @@ guardarPublicacion(
                     console.error(error);
 
                     this.messageService.add({
+
                         severity: 'error',
+
                         summary: 'Error',
-                        detail: error?.error?.error || 'No se pudo eliminar la publicación.'
+
+                        detail:
+                            error?.error?.error
+                            ||
+                            'No se pudo eliminar la publicación.'
+
                     });
 
                 }
@@ -326,122 +611,191 @@ guardarPublicacion(
     }
 
 
+    // =====================================================
+    // DETALLE
+    // =====================================================
 
-   abrirDetalle(
-    publicacion: Publicacion
-): void {
+    abrirDetalle(
 
-    this.publicacionService
-        .obtenerPublicacion(publicacion.id)
-        .subscribe({
+        publicacion: Publicacion
 
-            next: (respuesta: Publicacion) => {
+    ): void {
 
-                this.publicacionDetalle.set(respuesta);
+        this.publicacionService
 
-                this.detalleVisible.set(true);
+            .obtenerPublicacion(
+                publicacion.id
+            )
 
-            },
+            .subscribe({
 
-            error: (error: any) => {
+                next:
+                    (respuesta: Publicacion) => {
 
-                console.error(error);
+                        this.publicacionDetalle
+                            .set(respuesta);
 
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: error?.error?.error || 'No se pudo abrir la publicación.'
-                });
+                        this.detalleVisible
+                            .set(true);
 
-            }
+                    },
 
-        });
+                error:
+                    (error: any) => {
 
-}
+                        console.error(error);
 
-crearComentario(
-    datos: ComentarioRequest
-): void {
+                        this.messageService.add({
 
-    const publicacion = this.publicacionDetalle();
+                            severity: 'error',
 
-    if (!publicacion) {
+                            summary: 'Error',
 
-        return;
+                            detail:
+                                error?.error?.error
+                                ||
+                                'No se pudo abrir la publicación.'
 
-    }
+                        });
 
-    this.publicacionService
-        .crearComentario(
-            publicacion.id,
-            datos
-        )
-        .subscribe({
+                    }
 
-            next: () => {
-
-                this.abrirDetalle(publicacion);
-
-                this.cargarPublicaciones();
-
-            },
-
-            error: (error: any) => {
-
-                console.error(error);
-
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: error?.error?.error || 'No se pudo publicar el comentario.'
-                });
-
-            }
-
-        });
-
-}
-
-eliminarComentario(
-    comentarioId: number
-): void {
-
-    const publicacion = this.publicacionDetalle();
-
-    if (!publicacion) {
-
-        return;
+            });
 
     }
 
-    this.publicacionService
-        .eliminarComentario(comentarioId)
-        .subscribe({
 
-            next: () => {
+    // =====================================================
+    // COMENTARIOS
+    // =====================================================
 
-                this.abrirDetalle(publicacion);
+    crearComentario(
 
-                this.cargarPublicaciones();
+        datos: ComentarioRequest
 
-            },
+    ): void {
 
-            error: (error: any) => {
+        const publicacion =
+            this.publicacionDetalle();
 
-                console.error(error);
 
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: error?.error?.error || 'No se pudo eliminar el comentario.'
-                });
+        if (!publicacion) {
 
-            }
+            return;
 
-        });
+        }
 
-}
 
+        this.publicacionService
+
+            .crearComentario(
+
+                publicacion.id,
+
+                datos
+
+            )
+
+            .subscribe({
+
+                next: () => {
+
+                    this.abrirDetalle(
+                        publicacion
+                    );
+
+                    this.cargarPublicaciones();
+
+                },
+
+                error:
+                    (error: any) => {
+
+                        console.error(error);
+
+                        this.messageService.add({
+
+                            severity: 'error',
+
+                            summary: 'Error',
+
+                            detail:
+                                error?.error?.error
+                                ||
+                                'No se pudo publicar el comentario.'
+
+                        });
+
+                    }
+
+            });
+
+    }
+
+
+    eliminarComentario(
+
+        comentarioId: number
+
+    ): void {
+
+        const publicacion =
+            this.publicacionDetalle();
+
+
+        if (!publicacion) {
+
+            return;
+
+        }
+
+
+        this.publicacionService
+
+            .eliminarComentario(
+                comentarioId
+            )
+
+            .subscribe({
+
+                next: () => {
+
+                    this.abrirDetalle(
+                        publicacion
+                    );
+
+                    this.cargarPublicaciones();
+
+                },
+
+                error:
+                    (error: any) => {
+
+                        console.error(error);
+
+                        this.messageService.add({
+
+                            severity: 'error',
+
+                            summary: 'Error',
+
+                            detail:
+                                error?.error?.error
+                                ||
+                                'No se pudo eliminar el comentario.'
+
+                        });
+
+                    }
+
+            });
+
+    }
+
+
+    // =====================================================
+    // FORMULARIO VACÍO
+    // =====================================================
 
     private formularioVacio():
 
@@ -456,8 +810,11 @@ eliminarComentario(
             tipo: 'COMUNIDAD',
 
             imagen: '',
+
             tipoTrabajo: '',
+
             ubicacion: '',
+
             etiquetas: ''
 
         };

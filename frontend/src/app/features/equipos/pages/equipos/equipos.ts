@@ -82,6 +82,138 @@ export class Equipos implements OnInit {
 
   puedeEliminar = false;
 
+    // =====================================================
+  // COMERCIAL
+  // =====================================================
+
+  esAdminComercial(): boolean {
+
+    return this.authService
+      .comercialActual()
+      ?.esAdmin ?? false;
+
+  }
+
+
+  nombrePlanActual(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return 'Cargando...';
+    }
+
+    if (comercial.esAdmin) {
+      return 'Administrador';
+    }
+
+    return comercial.plan?.nombre
+      || 'Primer proyecto gratis';
+
+  }
+
+
+  puedeAdministrarComercial(): boolean {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return false;
+    }
+
+    return (
+      comercial.esAdmin ||
+      !comercial.esFree
+    );
+
+  }
+
+
+  puedeCrearComercial(): boolean {
+
+    return (
+      this.puedeCrear &&
+      this.puedeAdministrarComercial()
+    );
+
+  }
+
+
+  puedeEditarComercial(): boolean {
+
+    return (
+      this.puedeEditar &&
+      this.puedeAdministrarComercial()
+    );
+
+  }
+
+
+  puedeEliminarComercial(): boolean {
+
+    return (
+      this.puedeEliminar &&
+      this.puedeAdministrarComercial()
+    );
+
+  }
+
+
+  puedeGuardarComercial(): boolean {
+
+    if (this.editando) {
+
+      return this.puedeEditarComercial();
+
+    }
+
+    return this.puedeCrearComercial();
+
+  }
+
+
+  mensajeEquiposComercial(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (
+      comercial &&
+      comercial.esFree
+    ) {
+
+      return (
+        'La administración de equipos ' +
+        'requiere un plan Profesional o Empresa.'
+      );
+
+    }
+
+    return (
+      'Necesitas un plan activo ' +
+      'con esta función para administrar equipos.'
+    );
+
+  }
+
+
+  mostrarBloqueoComercial(): void {
+
+    this.messageService.add({
+
+      severity: 'info',
+
+      summary: 'Función del plan',
+
+      detail:
+        this.mensajeEquiposComercial()
+
+    });
+
+  }
+
 
   // =====================================================
   // OPCIONES
@@ -151,9 +283,13 @@ export class Equipos implements OnInit {
 
   ngOnInit(): void {
 
-    this.cargarPermisos();
-
+  if (!this.authService.comercialActual()) {
+    this.authService.cargarContextoComercial();
   }
+
+  this.cargarPermisos();
+
+}
 
 
   // =====================================================
@@ -329,36 +465,35 @@ export class Equipos implements OnInit {
   // =====================================================
 
   nuevoEquipo(): void {
-
-    if (!this.puedeCrear) {
-
-      this.messageService.add({
-
-        severity: 'warn',
-
-        summary: 'Acceso restringido',
-
-        detail:
-          'No tienes permiso para crear equipos.'
-
-      });
-
-      return;
-
-    }
-
-
-    this.editando = false;
-
-    this.equipoId = null;
-
-    this.formulario.reset({
-      estado: 'DISPONIBLE'
+  if (!this.puedeCrear) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Sin permiso',
+      detail: 'No tienes permiso para crear equipos.'
     });
-
-    this.mostrarFormulario = true;
-
+    return;
   }
+
+  if (!this.puedeAdministrarComercial()) {
+    this.mostrarBloqueoComercial();
+    return;
+  }
+
+  this.editando = false;
+  this.equipoId = null;
+
+  this.formulario.reset({
+    nombre: '',
+    tipo: '',
+    marca: '',
+    modelo: '',
+    numeroSerie: '',
+    fechaCompra: '',
+    estado: 'DISPONIBLE'
+  });
+
+  this.mostrarFormulario = true;
+}
 
 
   // =====================================================
@@ -386,6 +521,10 @@ export class Equipos implements OnInit {
 
     }
 
+ if (!this.puedeAdministrarComercial()) {
+    this.mostrarBloqueoComercial();
+    return;
+  }
 
     this.editando = true;
 
@@ -439,6 +578,10 @@ export class Equipos implements OnInit {
       return;
 
     }
+    if (!this.puedeAdministrarComercial()) {
+  this.mostrarBloqueoComercial();
+  return;
+}
 
 
     // ---------------------------------------------------
@@ -629,6 +772,10 @@ export class Equipos implements OnInit {
       return;
 
     }
+     if (!this.puedeAdministrarComercial()) {
+    this.mostrarBloqueoComercial();
+    return;
+  }
 
 
     if (!equipo.id) {

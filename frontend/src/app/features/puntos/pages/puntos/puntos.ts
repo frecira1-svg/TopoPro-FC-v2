@@ -33,6 +33,8 @@ import {
   PuntoTopograficoRequest
 } from '../../../../core/models/punto.model';
 
+import { AuthService } from '../../../../core/services/auth.service';
+
 
 @Component({
   selector: 'app-puntos',
@@ -60,7 +62,6 @@ import {
 })
 export class Puntos
   implements OnInit, AfterViewInit, OnDestroy {
-
 
   // =====================================================
   // PROYECTO
@@ -134,6 +135,26 @@ export class Puntos
 
 
   // =====================================================
+  // CONTEXTO COMERCIAL
+  // =====================================================
+
+  constructor(
+    private route: ActivatedRoute,
+
+    private puntoService: PuntoService,
+
+    private confirmationService:
+      ConfirmationService,
+
+    private messageService:
+      MessageService,
+
+    public authService:
+      AuthService
+  ) {}
+
+
+  // =====================================================
   // FORMULARIO
   // =====================================================
 
@@ -154,23 +175,6 @@ export class Puntos
 
 
   // =====================================================
-  // CONSTRUCTOR
-  // =====================================================
-
-  constructor(
-    private route: ActivatedRoute,
-
-    private puntoService: PuntoService,
-
-    private confirmationService:
-      ConfirmationService,
-
-    private messageService:
-      MessageService
-  ) {}
-
-
-  // =====================================================
   // CICLO DE VIDA
   // =====================================================
 
@@ -184,6 +188,10 @@ export class Puntos
 
     this.puntoActual.proyectoId =
       this.proyectoId;
+
+    if (!this.authService.comercialActual()) {
+      this.authService.cargarContextoComercial();
+    }
 
     this.cargarPuntos();
 
@@ -213,10 +221,176 @@ export class Puntos
 
 
   // =====================================================
+  // COMERCIAL
+  // =====================================================
+
+  esAdminComercial(): boolean {
+
+    return this.authService
+      .comercialActual()
+      ?.esAdmin ?? false;
+
+  }
+
+
+  nombrePlanActual(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return 'Cargando...';
+    }
+
+    if (comercial.esAdmin) {
+      return 'Administrador';
+    }
+
+    return comercial.plan?.nombre ||
+      'Primer proyecto gratis';
+
+  }
+
+
+  limitePuntos(): number | null {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (
+      !comercial ||
+      comercial.esAdmin
+    ) {
+      return null;
+    }
+
+    return comercial.plan?.maxPuntosProyecto ?? null;
+
+  }
+
+
+  puntosRestantes(): number | null {
+
+    const limite =
+      this.limitePuntos();
+
+    if (limite === null) {
+      return null;
+    }
+
+    return Math.max(
+      0,
+      limite - this.totalPuntos()
+    );
+
+  }
+
+
+  puedeCrearPuntoPorPlan(): boolean {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return true;
+    }
+
+    if (comercial.esAdmin) {
+      return true;
+    }
+
+    const limite =
+      comercial.plan?.maxPuntosProyecto;
+
+    if (
+      limite === null ||
+      limite === undefined
+    ) {
+      return true;
+    }
+
+    return this.totalPuntos() < limite;
+
+  }
+
+
+  puedeImportarCSV(): boolean {
+
+    return this.puedeCrearPuntoPorPlan();
+
+  }
+
+
+  textoLimitePuntos(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return 'Cargando límite...';
+    }
+
+    if (comercial.esAdmin) {
+      return 'Acceso administrativo';
+    }
+
+    const limite =
+      comercial.plan?.maxPuntosProyecto;
+
+    if (
+      limite === null ||
+      limite === undefined
+    ) {
+      return 'Mayor capacidad';
+    }
+
+    return `${this.totalPuntos()} / ${limite}`;
+
+  }
+
+porcentajeUsoPuntos(): number {
+
+  const limite = this.limitePuntos();
+
+  if (limite === null || limite <= 0) {
+    return 0;
+  }
+
+  return Math.min(
+    100,
+    (this.totalPuntos() / limite) * 100
+  );
+
+}
+
+  mensajeLimitePuntos(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (
+      comercial &&
+      comercial.esFree
+    ) {
+
+      return (
+        `El proyecto gratuito permite máximo ` +
+        `${comercial.plan?.maxPuntosProyecto ?? 500} ` +
+        `puntos. Activa un plan para continuar.`
+      );
+
+    }
+
+    return 'Has alcanzado el límite de puntos permitido por tu plan.';
+
+  }
+
+
+  // =====================================================
   // ICONOS LEAFLET
   // =====================================================
 
-private configurarIconosLeaflet(): void {
+  private configurarIconosLeaflet(): void {
 
     const iconDefault = L.icon({
 
@@ -270,12 +444,6 @@ private configurarIconosLeaflet(): void {
     ).addTo(this.mapa);
 
 
-    /*
-     * Si los puntos terminaron de cargar
-     * antes de que Leaflet estuviera listo,
-     * los pintamos nuevamente.
-     */
-
     if (this.puntos().length > 0) {
 
       this.pintarMarcadores(
@@ -295,7 +463,6 @@ private configurarIconosLeaflet(): void {
 
     this.cargando.set(true);
 
-
     this.puntoService
       .obtenerPorProyecto(
         this.proyectoId
@@ -312,7 +479,7 @@ private configurarIconosLeaflet(): void {
 
         },
 
-               error: (error) => {
+        error: (error) => {
 
           console.error(
             'Error cargando puntos:',
@@ -353,10 +520,6 @@ private configurarIconosLeaflet(): void {
     }
 
 
-    // -----------------------------------------------
-    // ELIMINAR MARCADORES ANTERIORES
-    // -----------------------------------------------
-
     this.marcadores.forEach(
       marcador =>
         marcador.remove()
@@ -364,10 +527,6 @@ private configurarIconosLeaflet(): void {
 
     this.marcadores = [];
 
-
-    // -----------------------------------------------
-    // FILTRAR GEORREFERENCIADOS
-    // -----------------------------------------------
 
     const georreferenciados =
       puntos.filter(
@@ -378,10 +537,6 @@ private configurarIconosLeaflet(): void {
 
       );
 
-
-    // -----------------------------------------------
-    // CREAR MARCADORES
-    // -----------------------------------------------
 
     georreferenciados.forEach(
       punto => {
@@ -398,10 +553,6 @@ private configurarIconosLeaflet(): void {
               this.crearPopup(punto)
             );
 
-
-        // -----------------------------------------
-        // TOOLTIP
-        // -----------------------------------------
 
         marcador.bindTooltip(
 
@@ -422,10 +573,6 @@ private configurarIconosLeaflet(): void {
         );
 
 
-        // -----------------------------------------
-        // CLICK
-        // -----------------------------------------
-
         marcador.on(
           'click',
           () => {
@@ -445,10 +592,6 @@ private configurarIconosLeaflet(): void {
       }
     );
 
-
-    // -----------------------------------------------
-    // AJUSTAR MAPA
-    // -----------------------------------------------
 
     if (this.marcadores.length > 0) {
 
@@ -678,12 +821,6 @@ private configurarIconosLeaflet(): void {
     punto: PuntoTopografico
   ): void {
 
-    /*
-     * Actualmente centramos el punto.
-     * La función queda separada para poder
-     * agregar estilos de selección después.
-     */
-
     this.localizarPunto(
       punto
     );
@@ -696,6 +833,24 @@ private configurarIconosLeaflet(): void {
   // =====================================================
 
   abrirNuevo(): void {
+
+    if (!this.puedeCrearPuntoPorPlan()) {
+
+      this.messageService.add({
+
+        severity: 'warn',
+
+        summary: 'Límite del plan',
+
+        detail:
+          this.mensajeLimitePuntos()
+
+      });
+
+      return;
+
+    }
+
 
     this.modoEdicion.set(false);
 
@@ -777,6 +932,27 @@ private configurarIconosLeaflet(): void {
   // =====================================================
 
   guardar(): void {
+
+    if (
+      !this.modoEdicion() &&
+      !this.puedeCrearPuntoPorPlan()
+    ) {
+
+      this.messageService.add({
+
+        severity: 'warn',
+
+        summary: 'Límite del plan',
+
+        detail:
+          this.mensajeLimitePuntos()
+
+      });
+
+      return;
+
+    }
+
 
     if (
 
@@ -953,7 +1129,8 @@ private configurarIconosLeaflet(): void {
 
           this.messageService.add({
 
-            severity: 'error',
+            severity:
+              'error',
 
             summary:
               'Error',
@@ -975,9 +1152,9 @@ private configurarIconosLeaflet(): void {
   // IMPORTAR CSV
   // =====================================================
 
-  seleccionarArchivo(
+  async seleccionarArchivo(
     event: Event
-  ): void {
+  ): Promise<void> {
 
     const input =
       event.target as HTMLInputElement;
@@ -1014,6 +1191,73 @@ private configurarIconosLeaflet(): void {
       input.value = '';
 
       return;
+
+    }
+
+
+    if (!this.puedeImportarCSV()) {
+
+      this.messageService.add({
+
+        severity: 'warn',
+
+        summary: 'Límite del plan',
+
+        detail:
+          this.mensajeLimitePuntos()
+
+      });
+
+      input.value = '';
+
+      return;
+
+    }
+
+
+    const limite =
+      this.limitePuntos();
+
+    const disponibles =
+      this.puntosRestantes();
+
+
+    if (
+      limite !== null &&
+      disponibles !== null
+    ) {
+
+      const cantidadCSV =
+        await this.contarRegistrosCSV(
+          archivo
+        );
+
+
+      if (
+        cantidadCSV >
+        disponibles
+      ) {
+
+        this.messageService.add({
+
+          severity: 'warn',
+
+          summary:
+            'Límite del plan',
+
+          detail:
+            `El archivo contiene ${cantidadCSV} puntos y ` +
+            `solo quedan ${disponibles} disponibles ` +
+            `en este proyecto.`
+
+        });
+
+
+        input.value = '';
+
+        return;
+
+      }
 
     }
 
@@ -1070,7 +1314,8 @@ private configurarIconosLeaflet(): void {
 
           this.messageService.add({
 
-            severity: 'error',
+            severity:
+              'error',
 
             summary:
               'Error al importar',
@@ -1088,6 +1333,112 @@ private configurarIconosLeaflet(): void {
         }
 
       });
+
+  }
+
+
+  // =====================================================
+  // CONTAR REGISTROS CSV
+  // =====================================================
+
+  private async contarRegistrosCSV(
+    archivo: File
+  ): Promise<number> {
+
+    const texto =
+      await archivo.text();
+
+    if (!texto.trim()) {
+      return 0;
+    }
+
+
+    let registros = 0;
+
+    let dentroDeComillas = false;
+
+
+    for (
+      let i = 0;
+      i < texto.length;
+      i++
+    ) {
+
+      const caracter =
+        texto[i];
+
+
+      if (
+        caracter === '"'
+      ) {
+
+        if (
+          dentroDeComillas &&
+          texto[i + 1] === '"'
+        ) {
+
+          i++;
+
+          continue;
+
+        }
+
+        dentroDeComillas =
+          !dentroDeComillas;
+
+        continue;
+
+      }
+
+
+      if (
+        (caracter === '\n' ||
+         caracter === '\r') &&
+        !dentroDeComillas
+      ) {
+
+        if (
+          caracter === '\r' &&
+          texto[i + 1] === '\n'
+        ) {
+
+          i++;
+
+        }
+
+        registros++;
+
+      }
+
+    }
+
+
+    const ultimaLineaTieneDatos =
+      texto
+        .trim()
+        .length > 0;
+
+
+    if (
+      ultimaLineaTieneDatos &&
+      !texto.endsWith('\n') &&
+      !texto.endsWith('\r')
+    ) {
+
+      registros++;
+
+    }
+
+
+    /*
+     * Los CSV de TopoPro utilizan una fila
+     * de encabezados. La excluimos del total.
+     */
+
+    return Math.max(
+      0,
+      registros - 1
+    );
 
   }
 

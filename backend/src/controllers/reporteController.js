@@ -10,6 +10,10 @@ const {
   generarReporteExcel
 } = require('../services/reporteExcelService');
 
+const {
+  verificarPuedeExportar
+} = require('../services/comercial.service');
+
 
 // ==========================================
 // REPORTE TÉCNICO JSON
@@ -32,8 +36,14 @@ async function obtenerReporteProyecto(req, res) {
 
     console.error('ERROR REPORTE PROYECTO:', error);
 
-    return res.status(error.status || 500).json({
-      error: error.message || 'Error al generar el reporte'
+    return res.status(
+      error.estadoHttp ||
+      error.status ||
+      500
+    ).json({
+      error:
+        error.message ||
+        'Error al generar el reporte'
     });
 
   }
@@ -50,6 +60,14 @@ async function obtenerReporteProyectoPDF(req, res) {
   try {
 
     const { id } = req.params;
+
+    // ------------------------------------------
+    // VALIDAR PLAN COMERCIAL
+    // ------------------------------------------
+
+    await verificarPuedeExportar(
+      req.usuario.id
+    );
 
     const reporte = await generarReporteProyecto(
       Number(id),
@@ -81,7 +99,9 @@ async function obtenerReporteProyectoPDF(req, res) {
     if (!res.headersSent) {
 
       return res.status(
-        error.status || 500
+        error.estadoHttp ||
+        error.status ||
+        500
       ).json({
         error:
           error.message ||
@@ -94,11 +114,24 @@ async function obtenerReporteProyectoPDF(req, res) {
 
 }
 
+
+// ==========================================
+// REPORTE TÉCNICO EXCEL
+// ==========================================
+
 async function obtenerReporteProyectoExcel(req, res) {
 
   try {
 
     const { id } = req.params;
+
+    // ------------------------------------------
+    // VALIDAR PLAN COMERCIAL
+    // ------------------------------------------
+
+    await verificarPuedeExportar(
+      req.usuario.id
+    );
 
     const reporte = await generarReporteProyecto(
       Number(id),
@@ -120,7 +153,9 @@ async function obtenerReporteProyectoExcel(req, res) {
     if (!res.headersSent) {
 
       return res.status(
-        error.status || 500
+        error.estadoHttp ||
+        error.status ||
+        500
       ).json({
         error:
           error.message ||

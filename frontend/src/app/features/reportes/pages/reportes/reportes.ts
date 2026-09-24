@@ -162,7 +162,7 @@ export class Reportes implements OnInit {
   private http =
     inject(HttpClient);
 
-  private authService =
+  public authService =
     inject(AuthService);
 
   private permisoService =
@@ -216,6 +216,10 @@ export class Reportes implements OnInit {
 
   ngOnInit(): void {
 
+    if (!this.authService.comercialActual()) {
+      this.authService.cargarContextoComercial();
+    }
+
     this.cargarPermisos();
 
   }
@@ -241,7 +245,7 @@ export class Reportes implements OnInit {
 
 
     // -------------------------------------------------
-    // ADMIN → ACCESO TOTAL
+    // ADMIN â†’ ACCESO TOTAL
     // -------------------------------------------------
 
     if (usuario.rol === 'ADMIN') {
@@ -257,7 +261,7 @@ export class Reportes implements OnInit {
 
 
     // -------------------------------------------------
-    // USUARIO → SUS PROPIOS PERMISOS
+    // USUARIO â†’ SUS PROPIOS PERMISOS
     // -------------------------------------------------
 
     this.permisoService
@@ -310,7 +314,7 @@ export class Reportes implements OnInit {
 
 
   // =====================================================
-  // CARGAR INFORMACIÓN GENERAL
+  // CARGAR INFORMACIÃ“N GENERAL
   // =====================================================
 
   cargarDatos(): void {
@@ -502,7 +506,7 @@ export class Reportes implements OnInit {
 
 
   // =====================================================
-  // CARGAR REPORTE TÉCNICO
+  // CARGAR REPORTE TÃ‰CNICO
   // =====================================================
 
   cargarReporteProyecto(
@@ -573,7 +577,7 @@ export class Reportes implements OnInit {
           }
 
           console.error(
-            'Error cargando reporte técnico:',
+            'Error cargando reporte tÃ©cnico:',
             error
           );
 
@@ -581,7 +585,7 @@ export class Reportes implements OnInit {
 
           this.error =
             error?.error?.error ||
-            'No se pudo cargar el reporte técnico';
+            'No se pudo cargar el reporte tÃ©cnico';
 
           this.cargandoReporte =
             false;
@@ -596,7 +600,75 @@ export class Reportes implements OnInit {
 
 
   // =====================================================
-  // ESTADÍSTICAS
+  // CONTEXTO COMERCIAL
+  // =====================================================
+
+  esAdminComercial(): boolean {
+
+    return this.authService
+      .comercialActual()
+      ?.esAdmin ?? false;
+
+  }
+
+
+  puedeExportar(): boolean {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return true;
+    }
+
+    return comercial.esAdmin ||
+      comercial.puedeExportar;
+
+  }
+
+
+  nombrePlanActual(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return 'Cargando...';
+    }
+
+    if (comercial.esAdmin) {
+      return 'Administrador';
+    }
+
+    return comercial.plan?.nombre ||
+      'Primer proyecto gratis';
+
+  }
+
+
+  mensajeExportacion(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (
+      comercial &&
+      comercial.esFree
+    ) {
+
+      return (
+        'La exportación y entrega final requieren un plan Profesional o Empresa.'
+      );
+
+    }
+
+    return 'La exportación requiere un plan activo con esta función.';
+
+  }
+
+
+  // =====================================================
+  // ESTADÃSTICAS
   // =====================================================
 
   get totalProyectos(): number {
@@ -738,6 +810,15 @@ export class Reportes implements OnInit {
 
     }
 
+    if (!this.puedeExportar()) {
+
+      this.error =
+        this.mensajeExportacion();
+
+      return;
+
+    }
+
 
     this.descargarArchivo(
 
@@ -772,6 +853,15 @@ export class Reportes implements OnInit {
 
     }
 
+    if (!this.puedeExportar()) {
+
+      this.error =
+        this.mensajeExportacion();
+
+      return;
+
+    }
+
 
     this.descargarArchivo(
 
@@ -797,6 +887,15 @@ export class Reportes implements OnInit {
   ): void {
 
     if (!this.puedeVer) {
+
+      return;
+
+    }
+
+    if (!this.puedeExportar()) {
+
+      this.error =
+        this.mensajeExportacion();
 
       return;
 

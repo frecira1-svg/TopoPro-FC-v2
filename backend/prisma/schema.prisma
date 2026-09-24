@@ -29,18 +29,18 @@ model Usuario {
   emailVerificationToken   String?               @unique(map: "usuarios_emailverificationtoken_key")
   clientes                 Cliente[]
   comentarios              Comentario[]
-  contactosEnviados        ContactoProfesional[] @relation("ContactosEnviados")
   contactosRecibidos       ContactoProfesional[] @relation("ContactosRecibidos")
-
-  conversacionesUno   Conversacion[]       @relation("ConversacionesUno")
-  conversacionesDos   Conversacion[]       @relation("ConversacionesDos")
-  equipos             Equipo[]
-  levantamientos      Levantamiento[]
-  mensajesEnviados    MensajeInterno[]     @relation("MensajesEnviados")
-  passwordResetTokens PasswordResetToken[]
-  permisos            PermisoUsuario?
-  proyectos           Proyecto[]
-  publicaciones       Publicacion[]
+  contactosEnviados        ContactoProfesional[] @relation("ContactosEnviados")
+  conversacionesUno        Conversacion[]        @relation("ConversacionesUno")
+  conversacionesDos        Conversacion[]        @relation("ConversacionesDos")
+  equipos                  Equipo[]
+  levantamientos           Levantamiento[]
+  mensajesEnviados         MensajeInterno[]      @relation("MensajesEnviados")
+  passwordResetTokens      PasswordResetToken[]
+  permisos                 PermisoUsuario?
+  proyectos                Proyecto[]
+  publicaciones            Publicacion[]
+  suscripcion              Suscripcion?
 
   @@map("usuarios")
 }
@@ -259,8 +259,8 @@ model ContactoProfesional {
   createdAt      DateTime       @default(now())
   remitenteId    Int
   destinatarioId Int
-  remitente      Usuario        @relation("ContactosEnviados", fields: [remitenteId], references: [id], onDelete: Cascade)
   destinatario   Usuario        @relation("ContactosRecibidos", fields: [destinatarioId], references: [id], onDelete: Cascade)
+  remitente      Usuario        @relation("ContactosEnviados", fields: [remitenteId], references: [id], onDelete: Cascade)
 
   @@index([destinatarioId, createdAt])
   @@index([remitenteId, createdAt])
@@ -312,6 +312,46 @@ model PublicacionImagen {
   @@map("publicacion_imagenes")
 }
 
+model Plan {
+  id                 Int           @id @default(autoincrement())
+  codigo             CodigoPlan    @unique
+  nombre             String
+  descripcion        String?
+  precioMensual      Int           @default(0)
+  maxProyectos       Int?
+  maxPuntosProyecto  Int?
+  maxUsuarios        Int           @default(1)
+  permiteExportacion Boolean       @default(false)
+  permiteOffline     Boolean       @default(true)
+  activo             Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  suscripciones      Suscripcion[]
+
+  @@map("planes")
+}
+
+model Suscripcion {
+  id                     Int               @id @default(autoincrement())
+  usuarioId              Int               @unique
+  planId                 Int
+  estado                 EstadoSuscripcion @default(ACTIVA)
+  fechaInicio            DateTime          @default(now())
+  fechaFin               DateTime?
+  proyectoGratisUsado    Boolean           @default(false)
+  proveedor              String?
+  proveedorClienteId     String?
+  proveedorSuscripcionId String?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+  plan                   Plan              @relation(fields: [planId], references: [id])
+  usuario                Usuario           @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([estado])
+  @@map("suscripciones")
+}
+
 enum TipoPublicacion {
   NOTICIA
   COMUNIDAD
@@ -326,4 +366,17 @@ enum EstadoContacto {
   PENDIENTE
   LEIDO
   RESPONDIDO
+}
+
+enum CodigoPlan {
+  FREE
+  PROFESSIONAL
+  COMPANY
+}
+
+enum EstadoSuscripcion {
+  ACTIVA
+  VENCIDA
+  CANCELADA
+  PENDIENTE
 }

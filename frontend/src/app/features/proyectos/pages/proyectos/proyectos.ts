@@ -112,7 +112,6 @@ import {
 })
 export class Proyectos implements OnInit {
 
-
   // =====================================================
   // PROYECTOS
   // =====================================================
@@ -212,7 +211,7 @@ export class Proyectos implements OnInit {
 
     private router: Router,
 
-    private authService: AuthService,
+    public authService: AuthService,
 
     private permisoService: PermisoService,
 
@@ -230,6 +229,186 @@ export class Proyectos implements OnInit {
     this.cargarPermisos();
 
     this.cargarClientes();
+
+    if (!this.authService.comercialActual()) {
+      this.authService.cargarContextoComercial();
+    }
+
+  }
+
+
+  // =====================================================
+  // CONTEXTO COMERCIAL
+  // =====================================================
+
+  esAdminComercial(): boolean {
+
+    return this.authService
+      .comercialActual()
+      ?.esAdmin ?? false;
+
+  }
+
+
+  tienePlanComercial(): boolean {
+
+    return !!this.authService
+      .comercialActual()
+      ?.plan;
+
+  }
+
+
+  nombrePlanActual(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return 'Cargando...';
+    }
+
+    if (comercial.esAdmin) {
+      return 'Administrador';
+    }
+
+    return comercial.plan?.nombre ||
+      'Primer proyecto gratis';
+
+  }
+
+
+  codigoPlanActual(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return '';
+    }
+
+    if (comercial.esAdmin) {
+      return 'ADMIN';
+    }
+
+    return comercial.plan?.codigo || 'FREE';
+
+  }
+
+
+  limiteProyectos(): number | null {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial || comercial.esAdmin) {
+      return null;
+    }
+
+    return comercial.plan?.maxProyectos ?? null;
+
+  }
+
+
+  proyectosUsados(): number {
+
+    return this.proyectos().length;
+
+  }
+
+
+  puedeCrearPorPlan(): boolean {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return true;
+    }
+
+    if (comercial.esAdmin) {
+      return true;
+    }
+
+    const limite =
+      comercial.plan?.maxProyectos;
+
+    if (limite === null || limite === undefined) {
+      return true;
+    }
+
+    return this.proyectosUsados() < limite;
+
+  }
+
+
+  textoLimiteProyectos(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return '';
+    }
+
+    if (comercial.esAdmin) {
+      return 'Acceso administrativo';
+    }
+
+    const limite =
+      comercial.plan?.maxProyectos;
+
+    if (limite === null || limite === undefined) {
+      return 'Mayor capacidad de proyectos';
+    }
+
+    return `${this.proyectosUsados()} de ${limite} proyecto${limite === 1 ? '' : 's'}`;
+
+  }
+
+
+  textoLimitePuntos(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return '';
+    }
+
+    if (comercial.esAdmin) {
+      return 'Acceso administrativo';
+    }
+
+    const limite =
+      comercial.plan?.maxPuntosProyecto;
+
+    if (limite === null || limite === undefined) {
+      return 'Mayor capacidad';
+    }
+
+    return `${limite} puntos por proyecto`;
+
+  }
+
+
+  mensajeLimiteProyecto(): string {
+
+    const comercial =
+      this.authService.comercialActual();
+
+    if (!comercial) {
+      return '';
+    }
+
+    if (
+      !comercial.esAdmin &&
+      comercial.esFree
+    ) {
+      return 'Tu primer proyecto gratuito ya fue utilizado. Activa un plan para crear nuevos proyectos.';
+    }
+
+    return 'Has alcanzado el límite de proyectos de tu plan.';
 
   }
 
@@ -574,6 +753,24 @@ export class Proyectos implements OnInit {
     }
 
 
+    if (!this.puedeCrearPorPlan()) {
+
+      this.messageService.add({
+
+        severity: 'warn',
+
+        summary: 'Límite del plan',
+
+        detail:
+          this.mensajeLimiteProyecto()
+
+      });
+
+      return;
+
+    }
+
+
     this.modoEdicion.set(false);
 
     this.proyectoActual =
@@ -706,6 +903,34 @@ export class Proyectos implements OnInit {
 
         detail:
           'No tienes permiso para crear proyectos.'
+
+      });
+
+      return;
+
+    }
+
+
+    // ---------------------------------------------------
+    // VALIDAR LÍMITE COMERCIAL
+    // ---------------------------------------------------
+
+    if (
+
+      !this.modoEdicion() &&
+
+      !this.puedeCrearPorPlan()
+
+    ) {
+
+      this.messageService.add({
+
+        severity: 'warn',
+
+        summary: 'Límite del plan',
+
+        detail:
+          this.mensajeLimiteProyecto()
 
       });
 

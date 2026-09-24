@@ -1,5 +1,9 @@
 const prisma = require('../lib/prisma');
 
+const {
+  verificarPuedeCrearProyecto
+} = require('../services/comercial.service');
+
 
 // =====================================================
 // OBTENER TODOS LOS PROYECTOS
@@ -259,6 +263,8 @@ console.log('====================================');
     // Crear proyecto
     // -------------------------------------------------
 
+    await verificarPuedeCrearProyecto(req.usuario.id);
+
     const proyecto = await prisma.proyecto.create({
 
       data: {
@@ -459,6 +465,12 @@ const actualizarProyecto = async (req, res) => {
         });
 
       }
+
+      // -------------------------------------------------
+// Validar límites comerciales
+// -------------------------------------------------
+
+await verificarPuedeCrearProyecto(usuarioId);
 
 
       // Normalizar ID

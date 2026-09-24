@@ -16,12 +16,16 @@
             </div>
 
             <div>
-                <h1>Puntos Topográficos</h1>
+
+                <h1>
+                    Puntos Topográficos
+                </h1>
 
                 <p>
                     Administra, consulta y visualiza los puntos
                     topográficos registrados en el proyecto.
                 </p>
+
             </div>
 
         </div>
@@ -42,12 +46,24 @@
                 icon="pi pi-upload"
                 severity="secondary"
                 [loading]="importando()"
+                [disabled]="!puedeImportarCSV()"
+                [attr.title]="
+                    !puedeImportarCSV()
+                        ? mensajeLimitePuntos()
+                        : 'Importar puntos desde CSV'
+                "
                 (onClick)="inputArchivo.click()"
             />
 
             <p-button
                 label="Nuevo Punto"
                 icon="pi pi-plus"
+                [disabled]="!puedeCrearPuntoPorPlan()"
+                [attr.title]="
+                    !puedeCrearPuntoPorPlan()
+                        ? mensajeLimitePuntos()
+                        : 'Crear nuevo punto'
+                "
                 (onClick)="abrirNuevo()"
             />
 
@@ -55,6 +71,196 @@
 
     </section>
 
+
+    <!-- ==========================================
+         PANEL COMERCIAL
+    =========================================== -->
+
+    <section
+        class="limite-comercial"
+        *ngIf="authService.comercialActual() as comercial"
+    >
+
+        <div class="limite-principal">
+
+            <div>
+
+                <span class="limite-label">
+                    PLAN ACTUAL
+                </span>
+
+                <h2>
+                    {{ nombrePlanActual() }}
+                </h2>
+
+                <p>
+                    {{
+                        comercial.esAdmin
+                            ? 'Acceso administrativo a los puntos topográficos.'
+                            : 'Capacidad de puntos para este proyecto.'
+                    }}
+                </p>
+
+            </div>
+
+
+            <span
+                class="plan-badge admin"
+                *ngIf="comercial.esAdmin"
+            >
+                ADMIN
+            </span>
+
+
+            <span
+                class="plan-badge free"
+                *ngIf="
+                    !comercial.esAdmin &&
+                    comercial.esFree
+                "
+            >
+                GRATIS
+            </span>
+
+
+            <span
+                class="plan-badge professional"
+                *ngIf="
+                    !comercial.esAdmin &&
+                    comercial.plan?.codigo === 'PROFESSIONAL'
+                "
+            >
+                PROFESIONAL
+            </span>
+
+
+            <span
+                class="plan-badge company"
+                *ngIf="
+                    !comercial.esAdmin &&
+                    comercial.plan?.codigo === 'COMPANY'
+                "
+            >
+                EMPRESA
+            </span>
+
+        </div>
+
+
+        <div class="limite-contenido">
+
+            <div class="limite-indicador">
+
+                <div>
+
+                    <span>
+                        Uso de puntos
+                    </span>
+
+                    <strong>
+                        {{ textoLimitePuntos() }}
+                    </strong>
+
+                </div>
+
+                <i
+                    class="pi pi-map-marker"
+                ></i>
+
+            </div>
+
+
+            <div
+                class="barra-limite"
+                *ngIf="
+                    !comercial.esAdmin &&
+                    limitePuntos() !== null
+                "
+            >
+
+                <div
+                    class="barra-progreso"
+                    [class.cerca]="
+                        puntosRestantes() !== null &&
+                        puntosRestantes()! <= 50 &&
+                        puntosRestantes()! > 0
+                    "
+                    [class.completa]="
+                        puntosRestantes() === 0
+                    "
+                    [style.width.%]="porcentajeUsoPuntos()"
+                ></div>
+
+            </div>
+
+
+            <div
+                class="limite-restante"
+                *ngIf="
+                    !comercial.esAdmin &&
+                    limitePuntos() !== null
+                "
+            >
+
+                <span>
+                    Disponibles:
+                </span>
+
+                <strong>
+                    {{ puntosRestantes() }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="aviso-limite"
+            *ngIf="
+                !comercial.esAdmin &&
+                puntosRestantes() !== null &&
+                puntosRestantes()! <= 50
+            "
+        >
+
+            <i
+                class="pi pi-info-circle"
+            ></i>
+
+            <div>
+
+                <strong
+                    *ngIf="puntosRestantes()! > 0"
+                >
+                    Te estás acercando al límite
+                </strong>
+
+                <strong
+                    *ngIf="puntosRestantes() === 0"
+                >
+                    Límite alcanzado
+                </strong>
+
+                <p
+                    *ngIf="puntosRestantes()! > 0"
+                >
+                    Te quedan
+                    {{ puntosRestantes() }}
+                    puntos disponibles para este proyecto.
+                </p>
+
+                <p
+                    *ngIf="puntosRestantes() === 0"
+                >
+                    {{ mensajeLimitePuntos() }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
 
 
     <!-- ==========================================
@@ -73,7 +279,9 @@
 
             <div class="stat-info">
 
-                <span>Total de puntos</span>
+                <span>
+                    Total de puntos
+                </span>
 
                 <strong>
                     {{ puntos().length }}
@@ -82,7 +290,6 @@
             </div>
 
         </article>
-
 
 
         <!-- GEORREFERENCIADOS -->
@@ -95,7 +302,9 @@
 
             <div class="stat-info">
 
-                <span>Georreferenciados</span>
+                <span>
+                    Georreferenciados
+                </span>
 
                 <strong>
                     {{ totalGeorreferenciados() }}
@@ -104,7 +313,6 @@
             </div>
 
         </article>
-
 
 
         <!-- ELEVACIÓN -->
@@ -117,7 +325,9 @@
 
             <div class="stat-info">
 
-                <span>Elevación promedio</span>
+                <span>
+                    Elevación promedio
+                </span>
 
                 <strong>
                     {{ elevacionPromedio() }} m
@@ -128,7 +338,6 @@
         </article>
 
     </section>
-
 
 
     <!-- ==========================================
@@ -147,7 +356,9 @@
 
                 <div>
 
-                    <h2>Mapa del Proyecto</h2>
+                    <h2>
+                        Mapa del Proyecto
+                    </h2>
 
                     <span>
                         Ubicación de los puntos georreferenciados
@@ -168,7 +379,6 @@
     </section>
 
 
-
     <!-- ==========================================
          TABLA
     =========================================== -->
@@ -185,7 +395,9 @@
 
                 <div>
 
-                    <h2>Lista de Puntos</h2>
+                    <h2>
+                        Lista de Puntos
+                    </h2>
 
                     <span>
                         Información registrada de los puntos topográficos
@@ -196,7 +408,6 @@
             </div>
 
         </div>
-
 
 
         <div class="tabla-wrapper">
@@ -221,15 +432,25 @@
 
                     <tr>
 
-                        <th>Código</th>
+                        <th>
+                            Código
+                        </th>
 
-                        <th>Norte</th>
+                        <th>
+                            Norte
+                        </th>
 
-                        <th>Este</th>
+                        <th>
+                            Este
+                        </th>
 
-                        <th>Elevación</th>
+                        <th>
+                            Elevación
+                        </th>
 
-                        <th>Tipo</th>
+                        <th>
+                            Tipo
+                        </th>
 
                         <th class="columna-acciones">
                             Acciones
@@ -240,8 +461,10 @@
                 </ng-template>
 
 
-
-                <ng-template #body let-punto>
+                <ng-template
+                    #body
+                    let-punto
+                >
 
                     <tr>
 
@@ -383,7 +606,6 @@
                 </ng-template>
 
 
-
                 <!-- SIN DATOS -->
 
                 <ng-template #emptymessage>
@@ -426,22 +648,30 @@
 </div>
 
 
-
 <!-- ==========================================
      DIALOGO NUEVO / EDITAR
 =========================================== -->
 
 <p-dialog
 
-    [header]="modoEdicion() ? 'Editar Punto' : 'Nuevo Punto'"
+    [header]="
+        modoEdicion()
+            ? 'Editar Punto'
+            : 'Nuevo Punto'
+    "
 
     [(visible)]="dialogoVisible"
 
     [modal]="true"
 
-    [style]="{ width:'560px', 'max-width':'95vw' }"
+    [style]="{
+        width:'560px',
+        'max-width':'95vw'
+    }"
 
-    [contentStyle]="{ 'overflow-y':'auto' }"
+    [contentStyle]="{
+        'overflow-y':'auto'
+    }"
 
 >
 
@@ -454,7 +684,6 @@
         </span>
 
     </div>
-
 
 
     <div class="form-grid">
@@ -476,7 +705,6 @@
         </div>
 
 
-
         <!-- NORTE -->
 
         <div class="form-campo">
@@ -495,12 +723,13 @@
 
                 placeholder="Coordenada Norte"
 
-                [style]="{width:'100%'}"
+                [style]="{
+                    width:'100%'
+                }"
 
             />
 
         </div>
-
 
 
         <!-- ESTE -->
@@ -521,12 +750,13 @@
 
                 placeholder="Coordenada Este"
 
-                [style]="{width:'100%'}"
+                [style]="{
+                    width:'100%'
+                }"
 
             />
 
         </div>
-
 
 
         <!-- ELEVACIÓN -->
@@ -547,12 +777,13 @@
 
                 placeholder="Metros"
 
-                [style]="{width:'100%'}"
+                [style]="{
+                    width:'100%'
+                }"
 
             />
 
         </div>
-
 
 
         <!-- TIPO -->
@@ -570,7 +801,6 @@
             />
 
         </div>
-
 
 
         <!-- LATITUD -->
@@ -591,12 +821,13 @@
 
                 placeholder="6.244200"
 
-                [style]="{width:'100%'}"
+                [style]="{
+                    width:'100%'
+                }"
 
             />
 
         </div>
-
 
 
         <!-- LONGITUD -->
@@ -617,12 +848,13 @@
 
                 placeholder="-75.581200"
 
-                [style]="{width:'100%'}"
+                [style]="{
+                    width:'100%'
+                }"
 
             />
 
         </div>
-
 
 
         <!-- DESCRIPCIÓN -->
@@ -644,7 +876,6 @@
     </div>
 
 
-
     <!-- FOOTER -->
 
     <ng-template #footer>
@@ -663,11 +894,17 @@
 
         />
 
+
         <p-button
 
             label="Guardar"
 
             icon="pi pi-check"
+
+            [disabled]="
+                !modoEdicion() &&
+                !puedeCrearPuntoPorPlan()
+            "
 
             (onClick)="guardar()"
 

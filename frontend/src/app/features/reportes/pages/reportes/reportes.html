@@ -32,6 +32,114 @@
 
 
     <!-- ===================================================== -->
+    <!-- PLAN COMERCIAL -->
+    <!-- ===================================================== -->
+
+    <section
+        class="comercial-reportes"
+        *ngIf="authService.comercialActual() as comercial"
+    >
+
+        <div class="comercial-reportes-principal">
+
+            <div>
+
+                <span class="comercial-label">
+                    PLAN ACTUAL
+                </span>
+
+                <h2>
+                    {{ nombrePlanActual() }}
+                </h2>
+
+                <p>
+                    {{
+                        comercial.esAdmin
+                            ? 'Acceso administrativo completo a los reportes.'
+                            : 'Consulta reportes y conoce las opciones de exportación disponibles.'
+                    }}
+                </p>
+
+            </div>
+
+
+            <span
+                class="plan-badge admin"
+                *ngIf="comercial.esAdmin"
+            >
+                ADMIN
+            </span>
+
+
+            <span
+                class="plan-badge free"
+                *ngIf="
+                    !comercial.esAdmin &&
+                    comercial.esFree
+                "
+            >
+                GRATIS
+            </span>
+
+
+            <span
+                class="plan-badge professional"
+                *ngIf="
+                    !comercial.esAdmin &&
+                    comercial.plan?.codigo === 'PROFESSIONAL'
+                "
+            >
+                PROFESIONAL
+            </span>
+
+
+            <span
+                class="plan-badge company"
+                *ngIf="
+                    !comercial.esAdmin &&
+                    comercial.plan?.codigo === 'COMPANY'
+                "
+            >
+                EMPRESA
+            </span>
+
+        </div>
+
+
+        <div
+            class="aviso-exportacion"
+            [class.exportacion-activa]="puedeExportar()"
+            [class.exportacion-bloqueada]="!puedeExportar()"
+        >
+
+            <i
+                class="pi"
+                [class.pi-check-circle]="puedeExportar()"
+                [class.pi-lock]="!puedeExportar()"
+            ></i>
+
+            <div>
+
+                <strong>
+                    Exportación
+                </strong>
+
+                <p>
+                    {{
+                        puedeExportar()
+                            ? 'PDF y Excel disponibles.'
+                            : mensajeExportacion()
+                    }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================================================== -->
     <!-- CARGANDO PERMISOS -->
     <!-- ===================================================== -->
 
@@ -375,9 +483,16 @@
 
                                     <button
                                         class="btn-reporte"
+                                        [class.btn-bloqueado]="!puedeExportar()"
                                         type="button"
                                         [disabled]="
-                                            descargando === proyecto.id
+                                            descargando === proyecto.id ||
+                                            !puedeExportar()
+                                        "
+                                        [attr.title]="
+                                            !puedeExportar()
+                                                ? mensajeExportacion()
+                                                : 'Descargar PDF'
                                         "
                                         (click)="
                                             descargarMemoriaPDF(
@@ -387,9 +502,13 @@
                                     >
 
                                         {{
-                                            descargando === proyecto.id
-                                                ? '...'
-                                                : '📄 PDF'
+                                            !puedeExportar()
+                                                ? '🔒 PDF'
+                                                : (
+                                                    descargando === proyecto.id
+                                                        ? '...'
+                                                        : '📄 PDF'
+                                                )
                                         }}
 
                                     </button>
@@ -399,9 +518,16 @@
 
                                     <button
                                         class="btn-reporte"
+                                        [class.btn-bloqueado]="!puedeExportar()"
                                         type="button"
                                         [disabled]="
-                                            descargando === proyecto.id
+                                            descargando === proyecto.id ||
+                                            !puedeExportar()
+                                        "
+                                        [attr.title]="
+                                            !puedeExportar()
+                                                ? mensajeExportacion()
+                                                : 'Descargar Excel'
                                         "
                                         (click)="
                                             descargarMemoriaExcel(
@@ -411,9 +537,13 @@
                                     >
 
                                         {{
-                                            descargando === proyecto.id
-                                                ? '...'
-                                                : '📊 Excel'
+                                            !puedeExportar()
+                                                ? '🔒 Excel'
+                                                : (
+                                                    descargando === proyecto.id
+                                                        ? '...'
+                                                        : '📊 Excel'
+                                                )
                                         }}
 
                                     </button>
@@ -462,7 +592,6 @@
                 cargandoReporte
             "
         >
-
 
             <div class="reporte-titulo">
 
@@ -518,7 +647,7 @@
                     <div class="reporte-card">
 
                         <h3>
-                            📁 Proyecto
+                            📋 Proyecto
                         </h3>
 
 
@@ -896,9 +1025,7 @@
                     </div>
 
                 </div>
-
-
-                <!-- ========================================= -->
+                                <!-- ========================================= -->
                 <!-- PUNTOS TOPOGRÁFICOS -->
                 <!-- ========================================= -->
 
@@ -964,43 +1091,53 @@
                                 >
 
                                     <td>
+
                                         <strong>
                                             {{ punto.codigo }}
                                         </strong>
+
                                     </td>
 
 
                                     <td>
+
                                         {{
                                             formatearNumero(
                                                 punto.norte
                                             )
                                         }}
+
                                     </td>
 
 
                                     <td>
+
                                         {{
                                             formatearNumero(
                                                 punto.este
                                             )
                                         }}
+
                                     </td>
 
 
                                     <td>
+
                                         {{
                                             formatearNumero(
                                                 punto.elevacion
                                             )
                                         }}
+
                                     </td>
 
 
                                     <td>
+
                                         {{
                                             punto.tipo || '-'
                                         }}
+
                                     </td>
 
 
@@ -1018,16 +1155,20 @@
 
 
                                     <td>
+
                                         {{
                                             punto.equipo || '-'
                                         }}
+
                                     </td>
 
 
                                     <td>
+
                                         {{
                                             punto.metodo || '-'
                                         }}
+
                                     </td>
 
                                 </tr>
@@ -1125,18 +1266,22 @@
 
 
                                     <td>
+
                                         {{
                                             levantamiento.descripcion
                                             || '-'
                                         }}
+
                                     </td>
 
 
                                     <td>
+
                                         {{
                                             levantamiento.equipo?.nombre
                                             || '-'
                                         }}
+
                                     </td>
 
 
@@ -1252,9 +1397,11 @@
                                 >
 
                                     <td>
+
                                         <strong>
                                             {{ equipo.nombre }}
                                         </strong>
+
                                     </td>
 
 
@@ -1264,23 +1411,29 @@
 
 
                                     <td>
+
                                         {{
                                             equipo.marca || '-'
                                         }}
+
                                     </td>
 
 
                                     <td>
+
                                         {{
                                             equipo.modelo || '-'
                                         }}
+
                                     </td>
 
 
                                     <td>
+
                                         {{
                                             equipo.numeroSerie || '-'
                                         }}
+
                                     </td>
 
 
@@ -1416,23 +1569,27 @@
                     </div>
 
                 </div>
-
-
-                <!-- ========================================= -->
+                                <!-- ========================================= -->
                 <!-- EXPORTACIONES -->
                 <!-- ========================================= -->
 
                 <div class="reporte-exportaciones">
 
-
                     <!-- PDF -->
 
                     <button
                         class="btn-reporte"
+                        [class.btn-bloqueado]="!puedeExportar()"
                         type="button"
                         [disabled]="
                             descargando ===
-                            reporteProyecto.proyecto.id
+                            reporteProyecto.proyecto.id ||
+                            !puedeExportar()
+                        "
+                        [attr.title]="
+                            !puedeExportar()
+                                ? mensajeExportacion()
+                                : 'Descargar PDF'
                         "
                         (click)="
                             descargarMemoriaPDF(
@@ -1441,7 +1598,16 @@
                         "
                     >
 
-                        📄 Descargar PDF
+                        {{
+                            !puedeExportar()
+                                ? '🔒 Descargar PDF'
+                                : (
+                                    descargando ===
+                                    reporteProyecto.proyecto.id
+                                        ? '...'
+                                        : '📄 Descargar PDF'
+                                )
+                        }}
 
                     </button>
 
@@ -1450,10 +1616,17 @@
 
                     <button
                         class="btn-reporte"
+                        [class.btn-bloqueado]="!puedeExportar()"
                         type="button"
                         [disabled]="
                             descargando ===
-                            reporteProyecto.proyecto.id
+                            reporteProyecto.proyecto.id ||
+                            !puedeExportar()
+                        "
+                        [attr.title]="
+                            !puedeExportar()
+                                ? mensajeExportacion()
+                                : 'Descargar Excel'
                         "
                         (click)="
                             descargarMemoriaExcel(
@@ -1462,7 +1635,16 @@
                         "
                     >
 
-                        📊 Descargar Excel
+                        {{
+                            !puedeExportar()
+                                ? '🔒 Descargar Excel'
+                                : (
+                                    descargando ===
+                                    reporteProyecto.proyecto.id
+                                        ? '...'
+                                        : '📊 Descargar Excel'
+                                )
+                        }}
 
                     </button>
 
@@ -1688,23 +1870,29 @@
 
 
                             <td>
+
                                 {{
                                     equipo.marca || '-'
                                 }}
+
                             </td>
 
 
                             <td>
+
                                 {{
                                     equipo.modelo || '-'
                                 }}
+
                             </td>
 
 
                             <td>
+
                                 {{
                                     equipo.numeroSerie || '-'
                                 }}
+
                             </td>
 
 

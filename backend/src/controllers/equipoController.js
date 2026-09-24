@@ -1,5 +1,9 @@
 const prisma = require('../lib/prisma');
 
+const {
+  verificarPuedeAdministrarEquipos
+} = require('../services/comercial.service');
+
 const obtenerEquipos = async (req, res) => {
   try {
 
@@ -16,7 +20,9 @@ const obtenerEquipos = async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error al obtener los equipos' });
+    res.status(500).json({
+      error: 'Error al obtener los equipos'
+    });
   }
 };
 
@@ -28,7 +34,9 @@ const obtenerEquipo = async (req, res) => {
     const rol = req.usuario.rol;
 
     if (Number.isNaN(id)) {
-      return res.status(400).json({ error: 'ID de equipo inválido' });
+      return res.status(400).json({
+        error: 'ID de equipo inválido'
+      });
     }
 
     const equipo = await prisma.equipo.findFirst({
@@ -40,32 +48,60 @@ const obtenerEquipo = async (req, res) => {
     });
 
     if (!equipo) {
-      return res.status(404).json({ error: 'Equipo no encontrado o no tienes permisos para acceder a él' });
+      return res.status(404).json({
+        error:
+          'Equipo no encontrado o no tienes permisos para acceder a él'
+      });
     }
 
     res.json(equipo);
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error del servidor' });
+
+    res.status(500).json({
+      error: 'Error del servidor'
+    });
   }
 };
 
 const crearEquipo = async (req, res) => {
   try {
 
-    const { nombre, tipo, marca, modelo, numeroSerie, fechaCompra, estado, proyectoId } = req.body;
+    const {
+      nombre,
+      tipo,
+      marca,
+      modelo,
+      numeroSerie,
+      fechaCompra,
+      estado,
+      proyectoId
+    } = req.body;
 
     if (!nombre || !tipo) {
-      return res.status(400).json({ error: 'Nombre y tipo son obligatorios' });
+      return res.status(400).json({
+        error: 'Nombre y tipo son obligatorios'
+      });
     }
 
     const usuarioId = Number(req.usuario.id);
     const rol = req.usuario.rol;
 
+    // =====================================================
+    // VALIDACIÓN COMERCIAL
+    // =====================================================
+
+    await verificarPuedeAdministrarEquipos(usuarioId);
+
+    // =====================================================
+    // PROPIETARIO DEL EQUIPO
+    // =====================================================
+
     let usuarioIdFinal = usuarioId;
 
-    // Si se asigna a un proyecto, el equipo hereda el dueño de ese proyecto
+    // Si se asigna a un proyecto,
+    // el equipo hereda el dueño de ese proyecto.
     if (proyectoId) {
 
       const proyecto = await prisma.proyecto.findFirst({
@@ -76,12 +112,18 @@ const crearEquipo = async (req, res) => {
       });
 
       if (!proyecto) {
-        return res.status(404).json({ error: 'Proyecto no encontrado o no tienes permisos sobre él' });
+        return res.status(404).json({
+          error:
+            'Proyecto no encontrado o no tienes permisos sobre él'
+        });
       }
 
       usuarioIdFinal = proyecto.usuarioId;
-
     }
+
+    // =====================================================
+    // CREAR EQUIPO
+    // =====================================================
 
     const equipo = await prisma.equipo.create({
       data: {
@@ -90,9 +132,13 @@ const crearEquipo = async (req, res) => {
         marca,
         modelo,
         numeroSerie,
-        fechaCompra: fechaCompra ? new Date(fechaCompra) : null,
+        fechaCompra: fechaCompra
+          ? new Date(fechaCompra)
+          : null,
         estado: estado || 'DISPONIBLE',
-        proyectoId: proyectoId ? Number(proyectoId) : null,
+        proyectoId: proyectoId
+          ? Number(proyectoId)
+          : null,
         usuarioId: usuarioIdFinal
       }
     });
@@ -101,10 +147,34 @@ const crearEquipo = async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    if (error.code === 'P2002') {
-      return res.status(409).json({ error: 'Ya existe un equipo con ese número de serie' });
+
+    // -----------------------------------------------------
+    // BLOQUEO COMERCIAL
+    // -----------------------------------------------------
+
+    if (error.codigo === 'EQUIPOS_REQUIEREN_PLAN') {
+      return res.status(
+        error.estadoHttp || 403
+      ).json({
+        error: error.message,
+        codigo: error.codigo
+      });
     }
-    res.status(500).json({ error: 'Error al crear el equipo' });
+
+    // -----------------------------------------------------
+    // NÚMERO DE SERIE DUPLICADO
+    // -----------------------------------------------------
+
+    if (error.code === 'P2002') {
+      return res.status(409).json({
+        error:
+          'Ya existe un equipo con ese número de serie'
+      });
+    }
+
+    res.status(500).json({
+      error: 'Error al crear el equipo'
+    });
   }
 };
 
@@ -116,8 +186,20 @@ const actualizarEquipo = async (req, res) => {
     const rol = req.usuario.rol;
 
     if (Number.isNaN(id)) {
-      return res.status(400).json({ error: 'ID de equipo inválido' });
+      return res.status(400).json({
+        error: 'ID de equipo inválido'
+      });
     }
+
+    // =====================================================
+    // VALIDACIÓN COMERCIAL
+    // =====================================================
+
+    await verificarPuedeAdministrarEquipos(usuarioId);
+
+    // =====================================================
+    // BUSCAR EQUIPO
+    // =====================================================
 
     const equipoExistente = await prisma.equipo.findFirst({
       where: {
@@ -127,15 +209,34 @@ const actualizarEquipo = async (req, res) => {
     });
 
     if (!equipoExistente) {
-      return res.status(404).json({ error: 'Equipo no encontrado o no tienes permisos para modificarlo' });
+      return res.status(404).json({
+        error:
+          'Equipo no encontrado o no tienes permisos para modificarlo'
+      });
     }
 
-    const { nombre, tipo, marca, modelo, numeroSerie, fechaCompra, estado, proyectoId } = req.body;
+    const {
+      nombre,
+      tipo,
+      marca,
+      modelo,
+      numeroSerie,
+      fechaCompra,
+      estado,
+      proyectoId
+    } = req.body;
 
-    let usuarioIdFinal = equipoExistente.usuarioId;
+    let usuarioIdFinal =
+      equipoExistente.usuarioId;
 
-    // Si se cambia de proyecto, hereda el dueño del nuevo proyecto
-    if (proyectoId !== undefined && proyectoId !== null) {
+    // =====================================================
+    // CAMBIO DE PROYECTO
+    // =====================================================
+
+    if (
+      proyectoId !== undefined &&
+      proyectoId !== null
+    ) {
 
       const proyecto = await prisma.proyecto.findFirst({
         where: {
@@ -145,24 +246,37 @@ const actualizarEquipo = async (req, res) => {
       });
 
       if (!proyecto) {
-        return res.status(404).json({ error: 'Proyecto no encontrado o no tienes permisos sobre él' });
+        return res.status(404).json({
+          error:
+            'Proyecto no encontrado o no tienes permisos sobre él'
+        });
       }
 
       usuarioIdFinal = proyecto.usuarioId;
-
     }
 
+    // =====================================================
+    // ACTUALIZAR EQUIPO
+    // =====================================================
+
     const equipo = await prisma.equipo.update({
-      where: { id },
+      where: {
+        id
+      },
+
       data: {
         nombre,
         tipo,
         marca,
         modelo,
         numeroSerie,
-        fechaCompra: fechaCompra ? new Date(fechaCompra) : null,
+        fechaCompra: fechaCompra
+          ? new Date(fechaCompra)
+          : null,
         estado,
-        proyectoId: proyectoId ? Number(proyectoId) : null,
+        proyectoId: proyectoId
+          ? Number(proyectoId)
+          : null,
         usuarioId: usuarioIdFinal
       }
     });
@@ -171,10 +285,34 @@ const actualizarEquipo = async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    if (error.code === 'P2002') {
-      return res.status(409).json({ error: 'Ya existe un equipo con ese número de serie' });
+
+    // -----------------------------------------------------
+    // BLOQUEO COMERCIAL
+    // -----------------------------------------------------
+
+    if (error.codigo === 'EQUIPOS_REQUIEREN_PLAN') {
+      return res.status(
+        error.estadoHttp || 403
+      ).json({
+        error: error.message,
+        codigo: error.codigo
+      });
     }
-    res.status(500).json({ error: 'Error al actualizar' });
+
+    // -----------------------------------------------------
+    // NÚMERO DE SERIE DUPLICADO
+    // -----------------------------------------------------
+
+    if (error.code === 'P2002') {
+      return res.status(409).json({
+        error:
+          'Ya existe un equipo con ese número de serie'
+      });
+    }
+
+    res.status(500).json({
+      error: 'Error al actualizar'
+    });
   }
 };
 
@@ -186,8 +324,20 @@ const eliminarEquipo = async (req, res) => {
     const rol = req.usuario.rol;
 
     if (Number.isNaN(id)) {
-      return res.status(400).json({ error: 'ID de equipo inválido' });
+      return res.status(400).json({
+        error: 'ID de equipo inválido'
+      });
     }
+
+    // =====================================================
+    // VALIDACIÓN COMERCIAL
+    // =====================================================
+
+    await verificarPuedeAdministrarEquipos(usuarioId);
+
+    // =====================================================
+    // BUSCAR EQUIPO
+    // =====================================================
 
     const equipo = await prisma.equipo.findFirst({
       where: {
@@ -197,16 +347,45 @@ const eliminarEquipo = async (req, res) => {
     });
 
     if (!equipo) {
-      return res.status(404).json({ error: 'Equipo no encontrado o no tienes permisos para eliminarlo' });
+      return res.status(404).json({
+        error:
+          'Equipo no encontrado o no tienes permisos para eliminarlo'
+      });
     }
 
-    await prisma.equipo.delete({ where: { id } });
+    // =====================================================
+    // ELIMINAR EQUIPO
+    // =====================================================
 
-    res.json({ mensaje: 'Equipo eliminado correctamente' });
+    await prisma.equipo.delete({
+      where: {
+        id
+      }
+    });
+
+    res.json({
+      mensaje: 'Equipo eliminado correctamente'
+    });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error al eliminar' });
+
+    // -----------------------------------------------------
+    // BLOQUEO COMERCIAL
+    // -----------------------------------------------------
+
+    if (error.codigo === 'EQUIPOS_REQUIEREN_PLAN') {
+      return res.status(
+        error.estadoHttp || 403
+      ).json({
+        error: error.message,
+        codigo: error.codigo
+      });
+    }
+
+    res.status(500).json({
+      error: 'Error al eliminar'
+    });
   }
 };
 

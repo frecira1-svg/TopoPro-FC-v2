@@ -1,54 +1,228 @@
 <p-toast></p-toast>
+
 <div class="publicaciones-container">
+
+
+    <!-- ================================================= -->
+    <!-- ENCABEZADO -->
+    <!-- ================================================= -->
 
     <div class="encabezado">
 
         <div>
 
-            <h1>Explora trabajos de la comunidad</h1>
+            <h1>
+                Explora trabajos de la comunidad
+            </h1>
 
             <p>
-                Descubre publicaciones, experiencias y trabajos compartidos por profesionales de la topografía.
+                Descubre publicaciones, experiencias y trabajos
+                compartidos por profesionales de la topografía.
             </p>
 
         </div>
 
-        <button
-            *ngIf="usuario()"
-            class="btn-nueva"
-            (click)="abrirNuevaPublicacion()"
-        >
-            ➕ Nueva publicación
-        </button>
 
-    <a routerLink="/directorio" class="btn-directorio">👥 Buscar profesionales</a>
+        <div class="acciones-encabezado">
+
+            <button
+                *ngIf="usuario()"
+                class="btn-nueva"
+                [class.btn-bloqueado]="!puedePublicar()"
+                [attr.title]="
+                    !puedePublicar()
+                        ? mensajePublicacion()
+                        : 'Crear nueva publicación'
+                "
+                (click)="abrirNuevaPublicacion()"
+            >
+
+                {{
+                    puedePublicar()
+                        ? '➕ Nueva publicación'
+                        : '🔒 Publicar trabajo'
+                }}
+
+            </button>
+
+
+            <a
+                routerLink="/directorio"
+                class="btn-directorio"
+            >
+                👥 Buscar profesionales
+            </a>
+
+        </div>
 
     </div>
+
+
+    <!-- ================================================= -->
+    <!-- PLAN COMERCIAL -->
+    <!-- ================================================= -->
+
+    <section
+        class="comercial-publicaciones"
+        *ngIf="comercial() as comercialActual"
+    >
+
+        <div class="comercial-publicaciones-principal">
+
+            <div>
+
+                <span class="comercial-label">
+                    PLAN ACTUAL
+                </span>
+
+                <h2>
+                    {{ nombrePlanActual() }}
+                </h2>
+
+                <p>
+
+                    {{
+                        comercialActual.esAdmin
+
+                            ? 'Acceso administrativo completo a las publicaciones.'
+
+                            : comercialActual.esFree
+
+                                ? 'Puedes explorar las publicaciones. Publicar trabajos está disponible en los planes Profesional y Empresa.'
+
+                                : 'Tu plan permite publicar y administrar trabajos de la comunidad.'
+                    }}
+
+                </p>
+
+            </div>
+
+
+            <span
+                class="plan-badge admin"
+                *ngIf="comercialActual.esAdmin"
+            >
+                ADMIN
+            </span>
+
+
+            <span
+                class="plan-badge free"
+                *ngIf="
+                    !comercialActual.esAdmin &&
+                    comercialActual.esFree
+                "
+            >
+                GRATIS
+            </span>
+
+
+            <span
+                class="plan-badge professional"
+                *ngIf="
+                    !comercialActual.esAdmin &&
+                    comercialActual.plan?.codigo === 'PROFESSIONAL'
+                "
+            >
+                PROFESIONAL
+            </span>
+
+
+            <span
+                class="plan-badge company"
+                *ngIf="
+                    !comercialActual.esAdmin &&
+                    comercialActual.plan?.codigo === 'COMPANY'
+                "
+            >
+                EMPRESA
+            </span>
+
+        </div>
+
+
+        <div
+            class="aviso-publicaciones"
+            [class.publicaciones-activa]="puedePublicar()"
+            [class.publicaciones-bloqueada]="!puedePublicar()"
+        >
+
+            <span class="aviso-icono">
+
+                {{
+                    puedePublicar()
+                        ? '✓'
+                        : '🔒'
+                }}
+
+            </span>
+
+            <div>
+
+                <strong>
+                    Publicaciones
+                </strong>
+
+                <p>
+
+                    {{
+                        puedePublicar()
+
+                            ? 'Puedes crear, editar y eliminar publicaciones.'
+
+                            : 'Puedes consultar el contenido, pero publicar trabajos requiere un plan Profesional o Empresa.'
+                    }}
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- FILTROS -->
+    <!-- ================================================= -->
 
     <div class="barra-filtros">
 
         <button
-            [class.activo]="filtro() === 'TODAS'"
+            [class.activo]="
+                filtro() === 'TODAS'
+            "
             (click)="cambiarFiltro('TODAS')"
         >
             Todas
         </button>
 
+
         <button
-            [class.activo]="filtro() === 'NOTICIA'"
+            [class.activo]="
+                filtro() === 'NOTICIA'
+            "
             (click)="cambiarFiltro('NOTICIA')"
         >
             Noticias
         </button>
 
+
         <button
-            [class.activo]="filtro() === 'COMUNIDAD'"
+            [class.activo]="
+                filtro() === 'COMUNIDAD'
+            "
             (click)="cambiarFiltro('COMUNIDAD')"
         >
             Comunidad
         </button>
 
     </div>
+
+
+    <!-- ================================================= -->
+    <!-- CARGANDO -->
+    <!-- ================================================= -->
 
     <div
         class="estado"
@@ -59,70 +233,132 @@
 
     </div>
 
+
+    <!-- ================================================= -->
+    <!-- SIN PUBLICACIONES -->
+    <!-- ================================================= -->
+
     <div
         class="estado"
-        *ngIf="!cargando() && publicacionesFiltradas().length === 0"
+        *ngIf="
+            !cargando()
+            &&
+            publicacionesFiltradas().length === 0
+        "
     >
 
         No hay publicaciones para mostrar.
 
     </div>
 
+
+    <!-- ================================================= -->
+    <!-- PUBLICACIONES -->
+    <!-- ================================================= -->
+
     <app-publicacion-card
 
-        *ngFor="let publicacion of publicacionesFiltradas()"
+        *ngFor="
+            let publicacion
+            of publicacionesFiltradas()
+        "
 
         [publicacion]="publicacion"
 
-        [usuarioId]="usuario()?.id ?? null"
+        [usuarioId]="
+            usuario()?.id ?? null
+        "
 
-        [esAdmin]="usuario()?.rol === 'ADMIN'"
+        [esAdmin]="
+            usuario()?.rol === 'ADMIN'
+        "
 
-        (editar)="editarPublicacion($event)"
+        (editar)="
+            editarPublicacion($event)
+        "
 
-        (eliminar)="eliminarPublicacion($event)"
+        (eliminar)="
+            eliminarPublicacion($event)
+        "
 
-        (abrir)="abrirDetalle($event)"
+        (abrir)="
+            abrirDetalle($event)
+        "
 
     >
     </app-publicacion-card>
 
-    <!-- Diálogo para crear o editar publicaciones -->
+
+    <!-- ================================================= -->
+    <!-- DIÁLOGO CREAR / EDITAR -->
+    <!-- ================================================= -->
+
     <app-publicacion-dialog
 
-        [visible]="dialogoVisible()"
+        [visible]="
+            dialogoVisible()
+        "
 
-        [modoEdicion]="modoEdicion()"
+        [modoEdicion]="
+            modoEdicion()
+        "
 
-        [esAdmin]="usuario()?.rol === 'ADMIN'"
+        [esAdmin]="
+            usuario()?.rol === 'ADMIN'
+        "
 
-        [publicacion]="publicacionActual"
+        [publicacion]="
+            publicacionActual
+        "
 
-        (guardar)="guardarPublicacion($event)"
+        (guardar)="
+            guardarPublicacion($event)
+        "
 
-        (cerrar)="cerrarDialogo()"
+        (cerrar)="
+            cerrarDialogo()
+        "
 
     >
     </app-publicacion-dialog>
 
-    <!-- Diálogo de detalle y comentarios -->
+
+    <!-- ================================================= -->
+    <!-- DETALLE -->
+    <!-- ================================================= -->
+
     <app-publicacion-detalle
 
-    [visible]="detalleVisible()"
+        [visible]="
+            detalleVisible()
+        "
 
-    [publicacion]="publicacionDetalle()"
+        [publicacion]="
+            publicacionDetalle()
+        "
 
-    [usuarioId]="usuario()?.id ?? null"
+        [usuarioId]="
+            usuario()?.id ?? null
+        "
 
-    [esAdmin]="usuario()?.rol === 'ADMIN'"
+        [esAdmin]="
+            usuario()?.rol === 'ADMIN'
+        "
 
-    (cerrar)="cerrarDetalle()"
+        (cerrar)="
+            cerrarDetalle()
+        "
 
-    (comentar)="crearComentario($event)"
+        (comentar)="
+            crearComentario($event)
+        "
 
-    (eliminarComentario)="eliminarComentario($event)"
+        (eliminarComentario)="
+            eliminarComentario($event)
+        "
 
->
-</app-publicacion-detalle>
+    >
+    </app-publicacion-detalle>
+
 
 </div>

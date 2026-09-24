@@ -1,6 +1,6 @@
 /* =========================================================
-   TOPOPRO FC — REPORTES
-   Diseño compacto y profesional
+   TOPOPRO FC â€” REPORTES
+   DiseÃ±o compacto y profesional
    ========================================================= */
 
 .reportes-container {
@@ -87,7 +87,7 @@
 }
 
 /* =========================================================
-   ESTADÍSTICAS
+   ESTADÃSTICAS
    ========================================================= */
 
 .estadisticas {
@@ -251,7 +251,7 @@ td strong {
 }
 
 /* =========================================================
-   REPORTE TÉCNICO
+   REPORTE TÃ‰CNICO
    ========================================================= */
 
 .reporte-tecnico {
@@ -285,7 +285,7 @@ td strong {
 }
 
 /* =========================================================
-   INFORMACIÓN DEL REPORTE
+   INFORMACIÃ“N DEL REPORTE
    ========================================================= */
 
 .reporte-grid {
@@ -342,7 +342,7 @@ td strong {
 }
 
 /* =========================================================
-   ESTADÍSTICAS DEL REPORTE
+   ESTADÃSTICAS DEL REPORTE
    ========================================================= */
 
 .reporte-estadisticas {
@@ -482,7 +482,7 @@ td strong {
 }
 
 /* =========================================================
-   MÓVIL
+   MÃ“VIL
    ========================================================= */
 
 @media (max-width: 700px) {
@@ -545,5 +545,142 @@ td strong {
 
   .reporte-exportaciones .btn-reporte {
     width: 100%;
+  }
+}
+
+
+/* =========================================================
+   PLAN COMERCIAL
+   ========================================================= */
+
+.comercial-reportes {
+  margin-bottom: 24px;
+  padding: 22px 24px;
+  background: #ffffff;
+  border: 1px solid #e7ecf2;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+}
+
+.comercial-reportes-principal {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.comercial-label {
+  display: block;
+  margin-bottom: 6px;
+  color: #667085;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.comercial-reportes-principal h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.comercial-reportes-principal p {
+  margin: 6px 0 0;
+  color: #667085;
+  font-size: 13px;
+}
+
+.plan-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 13px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.plan-badge.admin {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.plan-badge.free {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.plan-badge.professional {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.plan-badge.company {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.aviso-exportacion {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+}
+
+.aviso-exportacion i {
+  margin-top: 2px;
+  font-size: 17px;
+}
+
+.aviso-exportacion strong {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 13px;
+}
+
+.aviso-exportacion p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.exportacion-activa {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.exportacion-bloqueada {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+}
+
+.btn-reporte.btn-bloqueado {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #94a3b8;
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.btn-reporte.btn-bloqueado:hover {
+  transform: none;
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+@media (max-width: 700px) {
+  .comercial-reportes-principal {
+    flex-direction: column;
+  }
+
+  .comercial-reportes {
+    padding: 18px;
   }
 }

@@ -17,15 +17,59 @@
         </div>
 
         <button
-            *ngIf="puedeCrear"
-            class="btn-nuevo"
-            type="button"
-            (click)="nuevoEquipo()"
-        >
-            <i class="bi bi-plus-circle"></i>
-            Nuevo Equipo
-        </button>
+  *ngIf="puedeCrear"
+  type="button"
+  class="btn-nuevo"
+  [class.btn-bloqueado]="!puedeCrearComercial()"
+  [disabled]="!puedeCrearComercial()"
+  [title]="!puedeCrearComercial() ? mensajeEquiposComercial() : 'Crear nuevo equipo'"
+  (click)="nuevoEquipo()"
+>
+  <span *ngIf="puedeCrearComercial()">➕ Nuevo equipo</span>
+  <span *ngIf="!puedeCrearComercial()">🔒 Nuevo equipo</span>
+</button>
 
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- PLAN COMERCIAL -->
+    <!-- ===================================================== -->
+
+    <section class="comercial-card">
+        <div class="comercial-info">
+            <div class="comercial-icono">
+                💼
+            </div>
+
+            <div>
+                <span class="comercial-label">PLAN ACTUAL</span>
+
+                <h3>
+                    {{ nombrePlanActual() }}
+                </h3>
+
+                <p *ngIf="esAdminComercial()">
+                    Tu cuenta tiene acceso administrativo completo al sistema.
+                </p>
+
+                <p *ngIf="!esAdminComercial() && puedeAdministrarComercial()">
+                    Tu plan permite administrar los equipos registrados.
+                </p>
+
+                <p *ngIf="!esAdminComercial() && !puedeAdministrarComercial()">
+                    Puedes consultar los equipos, pero su administración requiere un plan Profesional o Empresa.
+                </p>
+            </div>
+        </div>
+
+        <span
+            class="plan-badge"
+            [class.plan-admin]="esAdminComercial()"
+            [class.plan-free]="!esAdminComercial() && !puedeAdministrarComercial()"
+            [class.plan-pago]="!esAdminComercial() && puedeAdministrarComercial()"
+        >
+            {{ esAdminComercial() ? 'ADMIN' : nombrePlanActual() }}
+        </span>
     </section>
 
 
@@ -294,6 +338,9 @@
                 <button
                     type="submit"
                     class="btn-guardar"
+                    [class.btn-bloqueado]="!puedeGuardarComercial()"
+                    [disabled]="!puedeGuardarComercial()"
+                    [title]="!puedeGuardarComercial() ? mensajeEquiposComercial() : ''"
                 >
                     {{
                         editando
@@ -400,8 +447,10 @@
                         <button
                             *ngIf="puedeEditar"
                             class="btn-editar"
+                            [class.btn-bloqueado]="!puedeEditarComercial()"
+                            [disabled]="!puedeEditarComercial()"
                             type="button"
-                            title="Editar equipo"
+                            [title]="!puedeEditarComercial() ? mensajeEquiposComercial() : 'Editar equipo'"
                             (click)="editarEquipo(equipo)"
                         >
                             ✏️
@@ -413,8 +462,10 @@
                         <button
                             *ngIf="puedeEliminar"
                             class="btn-eliminar"
+                            [class.btn-bloqueado]="!puedeEliminarComercial()"
+                            [disabled]="!puedeEliminarComercial()"
                             type="button"
-                            title="Eliminar equipo"
+                            [title]="!puedeEliminarComercial() ? mensajeEquiposComercial() : 'Eliminar equipo'"
                             (click)="eliminarEquipo(equipo)"
                         >
                             🗑️

@@ -1,8 +1,6 @@
 <div class="dashboard-container">
 
-
     <!-- ENCABEZADO -->
-
     <section class="dashboard-header">
 
         <div>
@@ -17,7 +15,6 @@
             </p>
 
         </div>
-
 
         <div class="user-badge">
 
@@ -42,14 +39,10 @@
     </section>
 
 
-
     <!-- TARJETAS DE ESTADÍSTICAS -->
-
     <section class="stats-grid">
 
-
         <!-- PROYECTOS -->
-
         <article class="stat-card">
 
             <div class="stat-icon blue">
@@ -67,9 +60,7 @@
         </article>
 
 
-
         <!-- CLIENTES -->
-
         <article class="stat-card">
 
             <div class="stat-icon green">
@@ -87,13 +78,11 @@
         </article>
 
 
-
         <!-- LEVANTAMIENTOS -->
-
         <article class="stat-card">
 
             <div class="stat-icon orange">
-                📍
+                🗺️
             </div>
 
             <div class="stat-title">
@@ -107,9 +96,7 @@
         </article>
 
 
-
         <!-- EQUIPOS -->
-
         <article class="stat-card">
 
             <div class="stat-icon purple">
@@ -126,13 +113,187 @@
 
         </article>
 
+    </section>
+
+
+    <!-- PLAN COMERCIAL -->
+    <section
+        class="commercial-card"
+        *ngIf="authService.comercialActual() as comercial"
+    >
+
+        <div class="commercial-header">
+
+            <div>
+
+                <span class="commercial-label">
+                    PLAN ACTUAL
+                </span>
+
+                <h2 class="commercial-title">
+
+                    {{
+                        comercial.esAdmin
+                            ? 'Administrador'
+                            : (
+                                comercial.plan?.nombre ||
+                                'Primer proyecto gratis'
+                            )
+                    }}
+
+                </h2>
+
+                <p class="commercial-description">
+
+                    {{
+                        comercial.esAdmin
+                            ? 'Acceso administrativo a TopoPro.'
+                            : (
+                                comercial.plan?.descripcion ||
+                                'Prueba TopoPro con tu primer proyecto.'
+                            )
+                    }}
+
+                </p>
+
+            </div>
+
+
+            <div
+                class="plan-badge admin"
+                *ngIf="comercial.esAdmin"
+            >
+                ADMIN
+            </div>
+
+
+            <div
+                class="plan-badge free"
+                *ngIf="!comercial.esAdmin && comercial.esFree"
+            >
+                GRATIS
+            </div>
+
+
+            <div
+                class="plan-badge professional"
+                *ngIf="
+                    !comercial.esAdmin &&
+                    comercial.plan?.codigo === 'PROFESSIONAL'
+                "
+            >
+                PROFESIONAL
+            </div>
+
+
+            <div
+                class="plan-badge company"
+                *ngIf="
+                    !comercial.esAdmin &&
+                    comercial.plan?.codigo === 'COMPANY'
+                "
+            >
+                EMPRESA
+            </div>
+
+        </div>
+
+
+        <div
+            class="commercial-details"
+            *ngIf="!comercial.esAdmin && comercial.plan"
+        >
+
+            <div class="commercial-detail">
+
+                <span class="detail-label">
+                    Proyectos
+                </span>
+
+                <strong>
+
+                    {{
+                        comercial.plan.maxProyectos !== null
+                            ? comercial.plan.maxProyectos
+                            : 'Mayor capacidad'
+                    }}
+
+                </strong>
+
+            </div>
+
+
+            <div class="commercial-detail">
+
+                <span class="detail-label">
+                    Puntos por proyecto
+                </span>
+
+                <strong>
+
+                    {{
+                        comercial.plan.maxPuntosProyecto !== null
+                            ? comercial.plan.maxPuntosProyecto
+                            : 'Mayor capacidad'
+                    }}
+
+                </strong>
+
+            </div>
+
+
+            <div class="commercial-detail">
+
+                <span class="detail-label">
+                    Usuarios
+                </span>
+
+                <strong>
+
+                    {{
+                        comercial.plan.maxUsuarios !== null
+                            ? comercial.plan.maxUsuarios
+                            : '—'
+                    }}
+
+                </strong>
+
+            </div>
+
+
+            <div class="commercial-detail">
+
+                <span class="detail-label">
+                    Exportación
+                </span>
+
+                <strong
+                    [class.detail-enabled]="comercial.puedeExportar"
+                    [class.detail-disabled]="!comercial.puedeExportar"
+                >
+                    {{
+                        comercial.puedeExportar
+                            ? 'Disponible'
+                            : 'Requiere plan'
+                    }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="commercial-admin-message"
+            *ngIf="comercial.esAdmin"
+        >
+            Tu cuenta tiene acceso administrativo completo al sistema.
+        </div>
 
     </section>
 
 
-
     <!-- ACCESOS RÁPIDOS -->
-
     <section class="quick-section">
 
         <h2 class="section-title">
@@ -142,9 +303,7 @@
 
         <div class="quick-grid">
 
-
             <!-- NUEVO PROYECTO -->
-
             <div
                 class="quick-card"
                 (click)="irAProyectos()"
@@ -161,9 +320,7 @@
             </div>
 
 
-
             <!-- NUEVO CLIENTE -->
-
             <div
                 class="quick-card"
                 (click)="irAClientes()"
@@ -180,9 +337,7 @@
             </div>
 
 
-
             <!-- NUEVO PUNTO -->
-
             <div
                 class="quick-card"
                 (click)="irAPuntos()"
@@ -199,9 +354,7 @@
             </div>
 
 
-
             <!-- REPORTES -->
-
             <div
                 class="quick-card"
                 (click)="irAReportes()"
@@ -217,15 +370,12 @@
 
             </div>
 
-
         </div>
 
     </section>
 
 
-
     <!-- PANEL FUTURO -->
-
     <section class="dashboard-panel">
 
         <h2 class="section-title">
@@ -240,6 +390,5 @@
         </p>
 
     </section>
-
 
 </div>

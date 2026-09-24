@@ -1,5 +1,5 @@
 /* =========================================================
-   TOPoPRO — PROYECTOS
+   TOPOPRO — PROYECTOS
    Diseño moderno, espacioso y responsive
 ========================================================= */
 
@@ -24,7 +24,7 @@
   justify-content: space-between;
   gap: 32px;
 
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   padding: 30px 34px;
 
   background: #ffffff;
@@ -54,6 +54,217 @@
 
 
 /* =========================================================
+   PANEL COMERCIAL
+========================================================= */
+
+.comercial-proyectos {
+  margin-bottom: 32px;
+
+  padding: 24px 28px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 20px;
+
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.05);
+}
+
+
+.comercial-principal {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 24px;
+}
+
+
+.comercial-label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #6b7280;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+}
+
+
+.comercial-principal h2 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 24px;
+
+  font-weight: 800;
+}
+
+
+.comercial-principal p {
+  margin: 7px 0 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+
+.comercial-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 8px 13px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.05em;
+
+  white-space: nowrap;
+}
+
+
+.comercial-badge.admin {
+  background: #ede9fe;
+
+  color: #7c3aed;
+}
+
+
+.comercial-badge.free {
+  background: #dcfce7;
+
+  color: #15803d;
+}
+
+
+.comercial-badge.professional {
+  background: #dbeafe;
+
+  color: #1d4ed8;
+}
+
+
+.comercial-badge.company {
+  background: #ffedd5;
+
+  color: #c2410c;
+}
+
+
+.comercial-metricas {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(180px, 1fr));
+
+  gap: 14px;
+
+  margin-top: 22px;
+}
+
+
+.comercial-metrica {
+  padding: 15px 17px;
+
+  background: #f8fafc;
+
+  border-radius: 13px;
+}
+
+
+.comercial-metrica span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #6b7280;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+
+.comercial-metrica strong {
+  color: #111827;
+
+  font-size: 14px;
+}
+
+
+.comercial-metrica strong.disponible {
+  color: #15803d;
+}
+
+
+.comercial-metrica strong.restringido {
+  color: #dc2626;
+}
+
+
+.aviso-limite {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 12px;
+
+  margin-top: 18px;
+
+  padding: 14px 16px;
+
+  background: #fff7ed;
+
+  border: 1px solid #fed7aa;
+
+  border-radius: 12px;
+
+  color: #9a3412;
+}
+
+
+.aviso-limite i {
+  margin-top: 2px;
+
+  font-size: 17px;
+}
+
+
+.aviso-limite strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 14px;
+}
+
+
+.aviso-limite p {
+  margin: 0;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
    ESTADÍSTICAS
 ========================================================= */
 
@@ -64,6 +275,7 @@
 
   margin-bottom: 36px;
 }
+
 
 .stat-proyecto {
   display: flex;
@@ -84,10 +296,12 @@
     box-shadow 0.2s ease;
 }
 
+
 .stat-proyecto:hover {
   transform: translateY(-3px);
   box-shadow: 0 14px 32px rgba(15, 23, 42, 0.09);
 }
+
 
 .stat-proyecto .icono {
   display: flex;
@@ -103,21 +317,26 @@
   font-size: 25px;
 }
 
+
 .stat-proyecto .icono.blue {
   background: #eff6ff;
 }
+
 
 .stat-proyecto .icono.orange {
   background: #fff7ed;
 }
 
+
 .stat-proyecto .icono.green {
   background: #ecfdf5;
 }
 
+
 .stat-proyecto .icono.purple {
   background: #f5f3ff;
 }
+
 
 .stat-proyecto span {
   display: block;
@@ -128,6 +347,7 @@
   font-size: 14px;
   font-weight: 600;
 }
+
 
 .stat-proyecto strong {
   display: block;
@@ -155,9 +375,11 @@
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
 }
 
+
 :host ::ng-deep .p-datatable-table {
   min-width: 1050px;
 }
+
 
 :host ::ng-deep .p-datatable-header {
   padding: 20px 24px;
@@ -195,9 +417,11 @@
   transition: background 0.15s ease;
 }
 
+
 :host ::ng-deep .p-datatable-tbody > tr:hover {
   background: #f8fafc;
 }
+
 
 :host ::ng-deep .p-datatable-tbody > tr > td {
   padding: 20px 24px;
@@ -211,6 +435,7 @@
   line-height: 1.5;
   vertical-align: middle;
 }
+
 
 :host ::ng-deep .p-datatable-tbody > tr:last-child > td {
   border-bottom: none;
@@ -230,6 +455,7 @@
   font-size: 15px;
   font-weight: 700;
 }
+
 
 :host ::ng-deep .p-datatable-tbody > tr > td small {
   display: inline-block;
@@ -268,6 +494,7 @@
   white-space: nowrap;
 }
 
+
 :host ::ng-deep .p-datatable-tbody .p-button {
   width: 40px;
   height: 40px;
@@ -276,6 +503,7 @@
 
   border-radius: 10px;
 }
+
 
 :host ::ng-deep .p-datatable-tbody .p-button:last-child {
   margin-right: 0;
@@ -295,10 +523,12 @@
   padding: 0;
 }
 
+
 .tabla-caption .p-input-icon-left {
   position: relative;
   display: block;
 }
+
 
 .tabla-caption .p-input-icon-left > i {
   position: absolute;
@@ -311,6 +541,7 @@
 
   color: #9ca3af;
 }
+
 
 .tabla-caption input {
   width: 340px;
@@ -330,6 +561,7 @@
     border-color 0.2s ease,
     box-shadow 0.2s ease;
 }
+
 
 .tabla-caption input:focus {
   border-color: #2563eb;
@@ -352,6 +584,7 @@
 
   background: #ffffff;
 }
+
 
 :host ::ng-deep .p-paginator .p-paginator-page,
 :host ::ng-deep .p-paginator .p-paginator-next,
@@ -393,6 +626,7 @@
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
 }
 
+
 .sin-permiso-icono {
   display: flex;
   align-items: center;
@@ -410,12 +644,14 @@
   font-size: 30px;
 }
 
+
 .sin-permiso h2 {
   margin: 0 0 8px;
 
   color: #111827;
   font-size: 22px;
 }
+
 
 .sin-permiso p {
   margin: 0;
@@ -433,6 +669,7 @@
   margin-bottom: 22px;
 }
 
+
 .form-campo label {
   display: block;
 
@@ -444,11 +681,13 @@
   font-weight: 650;
 }
 
+
 .form-campo input,
 .form-campo textarea {
   width: 100%;
   box-sizing: border-box;
 }
+
 
 :host ::ng-deep .form-campo .p-inputtext,
 :host ::ng-deep .form-campo .p-select,
@@ -456,10 +695,12 @@
   border-radius: 10px;
 }
 
+
 :host ::ng-deep .p-dialog {
   border-radius: 18px;
   overflow: hidden;
 }
+
 
 :host ::ng-deep .p-dialog .p-dialog-header {
   padding: 22px 26px;
@@ -467,9 +708,11 @@
   border-bottom: 1px solid #eef0f3;
 }
 
+
 :host ::ng-deep .p-dialog .p-dialog-content {
   padding: 26px;
 }
+
 
 :host ::ng-deep .p-dialog .p-dialog-footer {
   padding: 18px 26px;
@@ -516,6 +759,14 @@
 
   .encabezado h1 {
     font-size: 29px;
+  }
+
+  .comercial-principal {
+    flex-direction: column;
+  }
+
+  .comercial-proyectos {
+    padding: 22px;
   }
 
   .stats-proyectos {

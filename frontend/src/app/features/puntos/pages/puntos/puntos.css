@@ -9,7 +9,6 @@
 }
 
 
-
 /* =========================================================
    ENCABEZADO
 ========================================================= */
@@ -19,7 +18,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
 }
 
 
@@ -82,6 +81,282 @@
     gap: 10px;
 }
 
+
+/* =========================================================
+   PANEL COMERCIAL
+========================================================= */
+
+.limite-comercial {
+    margin-bottom: 24px;
+
+    padding: 22px 24px;
+
+    background: #ffffff;
+
+    border: 1px solid #e8ebf0;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 4px 15px rgba(15, 23, 42, 0.05);
+}
+
+
+.limite-principal {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.limite-label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #6b7280;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
+
+.limite-principal h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 21px;
+
+    font-weight: 800;
+}
+
+
+.limite-principal p {
+    margin: 6px 0 0;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+
+.plan-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 8px 13px;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.05em;
+
+    white-space: nowrap;
+}
+
+
+.plan-badge.admin {
+    background: #ede9fe;
+    color: #7c3aed;
+}
+
+
+.plan-badge.free {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+
+.plan-badge.professional {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+
+.plan-badge.company {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+
+.limite-contenido {
+    margin-top: 18px;
+}
+
+
+.limite-indicador {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 15px 17px;
+
+    background: #f8fafc;
+
+    border-radius: 12px;
+}
+
+
+.limite-indicador span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.limite-indicador strong {
+    color: #111827;
+
+    font-size: 18px;
+
+    font-weight: 800;
+}
+
+
+.limite-indicador i {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 18px;
+}
+
+
+.barra-limite {
+    height: 8px;
+
+    margin-top: 12px;
+
+    overflow: hidden;
+
+    background: #e5e7eb;
+
+    border-radius: 999px;
+}
+
+
+.barra-progreso {
+    height: 100%;
+
+    background: #2563eb;
+
+    border-radius: inherit;
+
+    transition:
+        width 0.3s ease,
+        background 0.3s ease;
+}
+
+
+.barra-progreso.cerca {
+    background: #f59e0b;
+}
+
+
+.barra-progreso.completa {
+    background: #dc2626;
+}
+
+
+.limite-restante {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 7px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+}
+
+
+.limite-restante strong {
+    color: #172033;
+}
+
+
+.aviso-limite {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 11px;
+
+    margin-top: 14px;
+
+    padding: 13px 15px;
+
+    background: #eff6ff;
+
+    border: 1px solid #bfdbfe;
+
+    border-radius: 11px;
+
+    color: #1e40af;
+}
+
+
+.aviso-limite i {
+    margin-top: 2px;
+
+    font-size: 16px;
+}
+
+
+.aviso-limite strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: 13px;
+}
+
+
+.aviso-limite p {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
 
 
 /* =========================================================
@@ -194,7 +469,6 @@
 }
 
 
-
 /* =========================================================
    TARJETAS
 ========================================================= */
@@ -284,7 +558,6 @@
 }
 
 
-
 /* =========================================================
    MAPA
 ========================================================= */
@@ -300,7 +573,6 @@
 .mapa :global(.leaflet-container) {
     font-family: inherit;
 }
-
 
 
 /* =========================================================
@@ -431,7 +703,6 @@
 }
 
 
-
 /* =========================================================
    SIN DATOS
 ========================================================= */
@@ -488,7 +759,6 @@
 
     font-size: 12px;
 }
-
 
 
 /* =========================================================
@@ -572,7 +842,6 @@
 }
 
 
-
 /* =========================================================
    RESPONSIVE
 ========================================================= */
@@ -598,6 +867,11 @@
 
     .acciones-header p-button {
         flex: 1;
+    }
+
+
+    .limite-principal {
+        flex-direction: column;
     }
 
 
@@ -641,6 +915,11 @@
     }
 
 
+    .acciones-header p-button {
+        width: 100%;
+    }
+
+
     .form-grid {
         grid-template-columns:
             1fr;
@@ -659,6 +938,11 @@
 
     .card-header {
         padding: 15px;
+    }
+
+
+    .limite-comercial {
+        padding: 18px;
     }
 
 }

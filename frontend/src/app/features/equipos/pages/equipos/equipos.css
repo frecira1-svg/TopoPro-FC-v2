@@ -537,6 +537,195 @@
   font-size: 14px;
 }
 
+
+
+/* =========================================================
+   PLAN COMERCIAL
+   ========================================================= */
+
+.comercial-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  width: 100%;
+  margin-bottom: 30px;
+  padding: 22px 26px;
+
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid #dbe4f0;
+  border-radius: 16px;
+
+  box-shadow: 0 7px 22px rgba(15, 23, 42, 0.055);
+  box-sizing: border-box;
+}
+
+.comercial-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+.comercial-icono {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+  background: #eff6ff;
+  font-size: 27px;
+}
+
+.comercial-label {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.8px;
+}
+
+.comercial-card h3 {
+  margin: 0 0 5px;
+
+  color: #172033;
+  font-size: 21px;
+  line-height: 1.2;
+  font-weight: 750;
+}
+
+.comercial-card p {
+  margin: 0;
+
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.plan-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 34px;
+  padding: 0 13px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.plan-admin {
+  background: #ede9fe;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+}
+
+.plan-free {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.plan-pago {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+/* =========================================================
+   BLOQUEOS COMERCIALES
+   ========================================================= */
+
+.btn-bloqueado,
+.btn-bloqueado:hover,
+.btn-bloqueado:active {
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.65;
+}
+
+.btn-nuevo.btn-bloqueado {
+  background: #94a3b8;
+  color: #ffffff;
+}
+
+.btn-guardar.btn-bloqueado {
+  border-color: #94a3b8;
+  background: #94a3b8;
+  color: #ffffff;
+}
+
+.btn-editar.btn-bloqueado {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.btn-eliminar.btn-bloqueado {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+/* Evita que el hover de los botones bloqueados cambie su apariencia */
+.btn-editar:disabled,
+.btn-eliminar:disabled,
+.btn-nuevo:disabled,
+.btn-guardar:disabled {
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   RESPONSIVE - PLAN COMERCIAL
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .comercial-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .plan-badge {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .comercial-card {
+    padding: 20px;
+  }
+
+  .comercial-info {
+    align-items: flex-start;
+  }
+
+  .comercial-icono {
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
+    font-size: 23px;
+  }
+
+  .comercial-card h3 {
+    font-size: 19px;
+  }
+
+  .comercial-card p {
+    font-size: 13px;
+  }
+}
+
 /* =========================================================
    RESPONSIVE - TABLET
    ========================================================= */

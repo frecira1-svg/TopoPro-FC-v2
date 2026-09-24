@@ -7,237 +7,125 @@ import {
   DashboardResumen
 } from '../../services/dashboard.service';
 
+import {
+  AuthService
+} from '../../../../core/services/auth.service';
 
 interface UsuarioDashboard {
-
   nombre: string;
   apellido?: string;
   correo?: string;
   rol?: string;
-
 }
 
-
-
 @Component({
-
   selector: 'app-dashboard',
-
   standalone: true,
-
   imports: [
     CommonModule
   ],
-
   templateUrl: './dashboard.html',
-
   styleUrl: './dashboard.css'
-
 })
-
-
 export class Dashboard implements OnInit {
-
 
   usuario: UsuarioDashboard | null = null;
 
-
-
   resumen: DashboardResumen = {
-  proyectos: 0,
-  clientes: 0,
-  levantamientos: 0,
-  equipos: 0
-};
-
-
+    proyectos: 0,
+    clientes: 0,
+    levantamientos: 0,
+    equipos: 0
+  };
 
   cargando = true;
 
-
-
   constructor(
-
     private dashboardService: DashboardService,
-
-    private router: Router
-
+    private router: Router,
+    public authService: AuthService
   ) {}
 
-
-
-
   ngOnInit(): void {
-
-
     this.cargarUsuario();
-
-
     this.obtenerResumen();
-
-
   }
 
-
-
-
   cargarUsuario(): void {
-
-
-    const usuarioGuardado = localStorage.getItem('topopro_usuario');
-
-
+    const usuarioGuardado =
+      localStorage.getItem('topopro_usuario');
 
     if (!usuarioGuardado) {
-
       return;
-
     }
 
-
-
     try {
-
-
-      this.usuario = JSON.parse(usuarioGuardado);
-
-
-
+      this.usuario =
+        JSON.parse(usuarioGuardado);
     } catch (error) {
-
-
       console.error(
         'Error leyendo usuario guardado:',
         error
       );
 
-
-      localStorage.removeItem('topopro_usuario');
-
-
+      localStorage.removeItem(
+        'topopro_usuario'
+      );
     }
-
-
   }
 
-
-
-
   obtenerResumen(): void {
-
-
     this.cargando = true;
-
-
 
     this.dashboardService.obtenerResumen()
       .subscribe({
-
-
-
         next: (respuesta: DashboardResumen) => {
 
-
-
-    this.resumen = {
-  proyectos: respuesta.proyectos ?? 0,
-  clientes: respuesta.clientes ?? 0,
-  levantamientos: respuesta.levantamientos ?? 0,
-  equipos: respuesta.equipos ?? 0
-};
-
-
+          this.resumen = {
+            proyectos: respuesta.proyectos ?? 0,
+            clientes: respuesta.clientes ?? 0,
+            levantamientos:
+              respuesta.levantamientos ?? 0,
+            equipos: respuesta.equipos ?? 0
+          };
 
           this.cargando = false;
-
-
-
         },
 
-
-
         error: (error) => {
-
-
           console.error(
             'Error cargando dashboard:',
             error
           );
 
-
-
           this.cargando = false;
-
-
-
         }
-
-
-
       });
-
-
-
   }
-
-
-
-
 
   irAProyectos(): void {
-
     this.router.navigate(['/proyectos']);
-
   }
-
-
-
 
   irAClientes(): void {
-
     this.router.navigate(['/clientes']);
-
   }
-
-
-
 
   irAPuntos(): void {
-
     this.router.navigate(['/proyectos']);
-
   }
 
-
-
-
   irAReportes(): void {
-
     console.log(
       'Módulo de reportes próximamente'
     );
-
   }
-
-
-
 
   cerrarSesion(): void {
-
-
-
     localStorage.removeItem('topopro_token');
-
     localStorage.removeItem('topopro_usuario');
-
-
+    localStorage.removeItem('topopro_comercial');
 
     this.router.navigate(['/login']);
-
-
-
   }
-
-
-
 }
