@@ -1,0 +1,234 @@
+<div class="suscripcion-page">
+
+  <div class="checkout-card">
+
+    <!-- ================================================== -->
+    <!-- ENCABEZADO -->
+    <!-- ================================================== -->
+
+    <div class="checkout-header">
+
+      <div>
+
+        <span class="eyebrow">
+          TOPOPRO FC
+        </span>
+
+        <h1>
+          Suscripción Profesional
+        </h1>
+
+        <p>
+          Potencia tu trabajo topográfico con todas las
+          herramientas profesionales de TopoPro.
+        </p>
+
+      </div>
+
+
+      <div class="price">
+
+        <span class="currency">
+          $
+        </span>
+
+        <span class="amount">
+          39.900
+        </span>
+
+        <span class="period">
+          / mes
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- CARGANDO -->
+    <!-- ================================================== -->
+
+    <div
+      *ngIf="cargando"
+      class="loading"
+    >
+
+      <span *ngIf="!procesando">
+        Consultando tu suscripción...
+      </span>
+
+      <span *ngIf="procesando">
+        Procesando tu suscripción...
+      </span>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- SUSCRIPCIÓN ACTIVA -->
+    <!-- ================================================== -->
+
+    <div
+      *ngIf="!cargando && tieneSuscripcionActiva"
+      class="active-subscription"
+    >
+
+      <div class="active-icon">
+        ✓
+      </div>
+
+      <div class="active-content">
+
+        <h2>
+          Suscripción Profesional activa
+        </h2>
+
+        <p>
+          Tu cuenta tiene acceso al plan Profesional de TopoPro.
+        </p>
+
+        <div class="subscription-details">
+
+          <div>
+            <span>
+              Estado
+            </span>
+
+            <strong>
+              Activa
+            </strong>
+          </div>
+
+          <div>
+            <span>
+              Plan
+            </span>
+
+            <strong>
+              Profesional
+            </strong>
+          </div>
+
+          <div>
+            <span>
+              Precio
+            </span>
+
+            <strong>
+              $39.900 / mes
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- PLAN PROFESIONAL -->
+    <!-- ================================================== -->
+
+    <div
+      *ngIf="!tieneSuscripcionActiva"
+      class="plan-section"
+    >
+
+      <div class="section-title">
+        Plan Profesional
+      </div>
+
+      <p class="plan-description">
+        Acceso a las herramientas profesionales de TopoPro.
+      </p>
+
+
+      <ul class="features">
+
+        <li>
+          <span>✓</span>
+          Gestión de proyectos topográficos
+        </li>
+
+        <li>
+          <span>✓</span>
+          Puntos y mapas
+        </li>
+
+        <li>
+          <span>✓</span>
+          Reportes profesionales
+        </li>
+
+        <li>
+          <span>✓</span>
+          Herramientas profesionales
+        </li>
+
+        <li>
+          <span>✓</span>
+          Exportación de información
+        </li>
+
+        <li>
+          <span>✓</span>
+          Trabajo offline
+        </li>
+
+      </ul>
+
+
+      <!-- ================================================== -->
+      <!-- MENSAJES -->
+      <!-- ================================================== -->
+
+      <div
+        *ngIf="error"
+        class="message error"
+      >
+        {{ error }}
+      </div>
+
+
+      <div
+        *ngIf="mensaje"
+        class="message success"
+      >
+        {{ mensaje }}
+      </div>
+
+
+      <!-- ================================================== -->
+      <!-- BOTÓN -->
+      <!-- ================================================== -->
+
+      <button
+        type="button"
+        class="subscribe-button"
+        [disabled]="cargando || procesando"
+        (click)="contratarPlan()"
+      >
+
+        <span *ngIf="!procesando">
+          Suscribirme por $39.900
+        </span>
+
+        <span *ngIf="procesando">
+          Procesando...
+        </span>
+
+      </button>
+
+
+      <p class="security-note">
+        🔒 El pago y los datos de tu tarjeta son procesados
+        de forma segura por Mercado Pago.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>

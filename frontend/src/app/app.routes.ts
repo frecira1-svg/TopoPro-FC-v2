@@ -21,12 +21,14 @@ import { Reportes } from './features/reportes/pages/reportes/reportes';
 import { Configuracion } from './features/configuracion/pages/configuracion/configuracion';
 import { BandejaContactos } from './features/contactos/pages/bandeja-contactos/bandeja-contactos';
 import { Mensajeria } from './features/mensajeria/pages/mensajeria/mensajeria';
+import { Suscripcion } from './features/suscripcion/pages/suscripcion/suscripcion';
 
 import { authGuard } from './core/guards/auth.guard';
 import { permisoGuard } from './core/guards/permiso.guard';
 
 
 export const routes: Routes = [
+
 
   // =====================================================
   // RUTA PRINCIPAL
@@ -70,6 +72,14 @@ export const routes: Routes = [
       authGuard
     ]
   },
+
+  {
+  path: 'suscripcion',
+  component: Suscripcion,
+  canActivate: [
+    authGuard
+  ]
+},
 
 
   // =====================================================

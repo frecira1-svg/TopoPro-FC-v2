@@ -1,5 +1,5 @@
-import { Component, HostListener } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, HostListener, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -18,6 +18,8 @@ interface BeforeInstallPromptEvent extends Event {
   styleUrl: './inicio-publico.css'
 })
 export class InicioPublico {
+
+  private readonly router = inject(Router);
 
   deferredPrompt: BeforeInstallPromptEvent | null = null;
   mostrarInstalar = false;
@@ -47,13 +49,29 @@ export class InicioPublico {
 
     await this.deferredPrompt.prompt();
 
-    const { outcome } = await this.deferredPrompt.userChoice;
+    const { outcome } =
+      await this.deferredPrompt.userChoice;
 
     console.log(
-      `TopoPro: instalación ${outcome === 'accepted' ? 'aceptada' : 'cancelada'}.`
+      `TopoPro: instalación ${
+        outcome === 'accepted'
+          ? 'aceptada'
+          : 'cancelada'
+      }.`
     );
 
     this.deferredPrompt = null;
     this.mostrarInstalar = false;
   }
+
+  // ==========================================
+  // CONTRATAR PLAN PROFESIONAL
+  // ==========================================
+
+  contratarProfesional(): void {
+
+    this.router.navigate(['/suscripcion']);
+
+  }
+
 }

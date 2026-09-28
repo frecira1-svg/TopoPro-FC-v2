@@ -2,10 +2,20 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
+const {
+  obtenerSuscripcionMercadoPago
+} = require('./mercadopago.service');
+
 const CODIGO_PLAN_FREE = 'FREE';
 const ESTADO_ACTIVA = 'ACTIVA';
 
+
+// ==========================================
+// PLAN FREE
+// ==========================================
+
 async function obtenerPlanFree() {
+
   const plan = await prisma.plan.findUnique({
     where: {
       codigo: CODIGO_PLAN_FREE
@@ -13,25 +23,21 @@ async function obtenerPlanFree() {
   });
 
   if (!plan) {
-    throw new Error('El plan FREE no está configurado en la base de datos');
+    throw new Error(
+      'El plan FREE no está configurado en la base de datos'
+    );
   }
 
   return plan;
 }
 
-/**
- * Obtiene el contexto comercial actual de un usuario.
- *
- * Si el usuario no tiene suscripción:
- * - Se considera FREE.
- *
- * Si la suscripción está vencida/cancelada:
- * - También se considera FREE.
- *
- * ADMIN:
- * - No queda limitado por las reglas comerciales.
- */
+
+// ==========================================
+// CONTEXTO COMERCIAL
+// ==========================================
+
 async function obtenerContextoComercial(usuarioId) {
+
   const usuario = await prisma.usuario.findUnique({
     where: {
       id: usuarioId
@@ -51,8 +57,9 @@ async function obtenerContextoComercial(usuarioId) {
     throw new Error('Usuario no encontrado');
   }
 
-  // El administrador tiene acceso completo.
+  // ADMIN
   if (usuario.rol === 'ADMIN') {
+
     return {
       usuarioId: usuario.id,
       rol: usuario.rol,
@@ -69,9 +76,15 @@ async function obtenerContextoComercial(usuarioId) {
   let plan = null;
   let suscripcion = usuario.suscripcion || null;
 
-  if (suscripcion && suscripcion.estado === ESTADO_ACTIVA) {
+  if (
+    suscripcion &&
+    suscripcion.estado === ESTADO_ACTIVA
+  ) {
+
     plan = suscripcion.plan;
+
   } else {
+
     plan = await obtenerPlanFree();
     suscripcion = null;
   }
@@ -85,35 +98,40 @@ async function obtenerContextoComercial(usuarioId) {
     esFree: plan.codigo === CODIGO_PLAN_FREE,
     puedeExportar: Boolean(plan.permiteExportacion),
     puedeCrearProyecto: true,
-    puedeAdministrarEquipos: plan.codigo !== CODIGO_PLAN_FREE
+    puedeAdministrarEquipos:
+      plan.codigo !== CODIGO_PLAN_FREE
   };
 }
 
-/**
- * Verifica si el usuario puede crear otro proyecto.
- *
- * FREE:
- * - Solo puede tener 1 proyecto.
- *
- * PROFESSIONAL / COMPANY:
- * - Se utiliza maxProyectos cuando tenga un límite definido.
- */
+
+// ==========================================
+// VERIFICAR PROYECTOS
+// ==========================================
+
 async function verificarPuedeCrearProyecto(usuarioId) {
-  const contexto = await obtenerContextoComercial(usuarioId);
+
+  const contexto =
+    await obtenerContextoComercial(usuarioId);
 
   if (contexto.esAdmin) {
     return contexto;
   }
 
-  const cantidadProyectos = await prisma.proyecto.count({
-    where: {
-      usuarioId
-    }
-  });
+  const cantidadProyectos =
+    await prisma.proyecto.count({
+      where: {
+        usuarioId
+      }
+    });
 
-  const limite = contexto.plan.maxProyectos;
+  const limite =
+    contexto.plan.maxProyectos;
 
-  if (limite !== null && cantidadProyectos >= limite) {
+  if (
+    limite !== null &&
+    cantidadProyectos >= limite
+  ) {
+
     const error = new Error(
       contexto.esFree
         ? 'Tu primer proyecto gratuito ya fue utilizado. Activa un plan para crear nuevos proyectos.'
@@ -133,37 +151,37 @@ async function verificarPuedeCrearProyecto(usuarioId) {
   };
 }
 
-/**
- * Verifica si se puede agregar un punto a un proyecto.
- *
- * FREE:
- * - Máximo 500 puntos por proyecto.
- *
- * PROFESSIONAL / COMPANY:
- * - Se respeta maxPuntosProyecto si está definido.
- */
+
+// ==========================================
+// VERIFICAR PUNTOS
+// ==========================================
+
 async function verificarPuedeAgregarPunto(
   usuarioId,
   proyectoId,
   cantidadAAgregar = 1
 ) {
-  const contexto = await obtenerContextoComercial(usuarioId);
+
+  const contexto =
+    await obtenerContextoComercial(usuarioId);
 
   if (contexto.esAdmin) {
     return contexto;
   }
 
-  const proyecto = await prisma.proyecto.findFirst({
-    where: {
-      id: proyectoId,
-      usuarioId
-    },
-    select: {
-      id: true
-    }
-  });
+  const proyecto =
+    await prisma.proyecto.findFirst({
+      where: {
+        id: proyectoId,
+        usuarioId
+      },
+      select: {
+        id: true
+      }
+    });
 
   if (!proyecto) {
+
     const error = new Error(
       'No tienes autorización para agregar puntos a este proyecto.'
     );
@@ -174,20 +192,25 @@ async function verificarPuedeAgregarPunto(
     throw error;
   }
 
-  const limite = contexto.plan.maxPuntosProyecto;
+  const limite =
+    contexto.plan.maxPuntosProyecto;
 
-  // null significa que el plan no tiene límite configurado.
   if (limite === null) {
     return contexto;
   }
 
-  const cantidadActual = await prisma.puntoTopografico.count({
-    where: {
-      proyectoId
-    }
-  });
+  const cantidadActual =
+    await prisma.puntoTopografico.count({
+      where: {
+        proyectoId
+      }
+    });
 
-  if (cantidadActual + cantidadAAgregar > limite) {
+  if (
+    cantidadActual + cantidadAAgregar >
+    limite
+  ) {
+
     const error = new Error(
       contexto.esFree
         ? `El proyecto gratuito permite máximo ${limite} puntos. Actualmente tienes ${cantidadActual}.`
@@ -209,23 +232,20 @@ async function verificarPuedeAgregarPunto(
   };
 }
 
-/**
- * Verifica si el usuario puede administrar equipos.
- *
- * FREE:
- * - Puede consultar equipos.
- * - No puede crear, editar ni eliminar.
- *
- * PROFESSIONAL / COMPANY:
- * - Puede administrar equipos.
- *
- * ADMIN:
- * - Acceso completo.
- */
-async function verificarPuedeAdministrarEquipos(usuarioId) {
-  const contexto = await obtenerContextoComercial(usuarioId);
 
-  if (contexto.esAdmin || contexto.puedeAdministrarEquipos) {
+// ==========================================
+// VERIFICAR EQUIPOS
+// ==========================================
+
+async function verificarPuedeAdministrarEquipos(usuarioId) {
+
+  const contexto =
+    await obtenerContextoComercial(usuarioId);
+
+  if (
+    contexto.esAdmin ||
+    contexto.puedeAdministrarEquipos
+  ) {
     return contexto;
   }
 
@@ -239,17 +259,20 @@ async function verificarPuedeAdministrarEquipos(usuarioId) {
   throw error;
 }
 
-/**
- * Verifica si el usuario puede exportar/entregar un proyecto.
- *
- * FREE:
- * - Puede trabajar y visualizar.
- * - No puede realizar la exportación/entrega final.
- */
-async function verificarPuedeExportar(usuarioId) {
-  const contexto = await obtenerContextoComercial(usuarioId);
 
-  if (contexto.esAdmin || contexto.puedeExportar) {
+// ==========================================
+// VERIFICAR EXPORTACIÓN
+// ==========================================
+
+async function verificarPuedeExportar(usuarioId) {
+
+  const contexto =
+    await obtenerContextoComercial(usuarioId);
+
+  if (
+    contexto.esAdmin ||
+    contexto.puedeExportar
+  ) {
     return contexto;
   }
 
@@ -263,10 +286,693 @@ async function verificarPuedeExportar(usuarioId) {
   throw error;
 }
 
+
+// ==========================================
+// CREAR SUSCRIPCIÓN COMERCIAL
+// ==========================================
+//
+// IMPORTANTE:
+//
+// Ya NO creamos directamente el preapproval
+// con cardTokenId.
+//
+// En su lugar:
+//
+// 1. Creamos/actualizamos la suscripción local
+//    como PENDIENTE.
+// 2. Devolvemos el checkout del plan de Mercado Pago.
+// 3. El comprador inicia sesión.
+// 4. Mercado Pago crea la suscripción.
+// 5. Mercado Pago devuelve preapproval_id.
+// 6. TopoPro confirma ese ID.
+//
+// ==========================================
+
+async function crearSuscripcionComercial(
+  usuarioId,
+  {
+    codigoPlan
+  }
+) {
+
+  const codigo = String(codigoPlan || '')
+    .trim()
+    .toUpperCase();
+
+
+  // ==========================================
+  // VALIDAR PLAN
+  // ==========================================
+
+  if (
+    !['PROFESSIONAL', 'COMPANY'].includes(codigo)
+  ) {
+
+    const error = new Error(
+      'Solo están disponibles los planes Profesional y Empresa.'
+    );
+
+    error.codigo = 'PLAN_COMERCIAL_INVALIDO';
+    error.estadoHttp = 400;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // OBTENER USUARIO
+  // ==========================================
+
+  const usuario =
+    await prisma.usuario.findUnique({
+
+      where: {
+        id: Number(usuarioId)
+      },
+
+      select: {
+        id: true,
+        correo: true,
+        rol: true,
+        suscripcion: true
+      }
+
+    });
+
+
+  if (!usuario) {
+
+    const error = new Error(
+      'Usuario no encontrado.'
+    );
+
+    error.codigo = 'USUARIO_NO_ENCONTRADO';
+    error.estadoHttp = 404;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // ADMIN
+  // ==========================================
+
+  if (usuario.rol === 'ADMIN') {
+
+    const error = new Error(
+      'El administrador no necesita una suscripción comercial.'
+    );
+
+    error.codigo = 'ADMIN_SIN_SUSCRIPCION';
+    error.estadoHttp = 400;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // OBTENER PLAN TOPOPRO
+  // ==========================================
+
+  const plan =
+    await prisma.plan.findUnique({
+
+      where: {
+        codigo
+      }
+
+    });
+
+
+  if (!plan || !plan.activo) {
+
+    const error = new Error(
+      'El plan comercial no está disponible.'
+    );
+
+    error.codigo = 'PLAN_NO_DISPONIBLE';
+    error.estadoHttp = 404;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // VERIFICAR SUSCRIPCIÓN EXISTENTE
+  // ==========================================
+
+  const suscripcionActual =
+    usuario.suscripcion || null;
+
+
+  if (
+    suscripcionActual &&
+    (
+      suscripcionActual.estado === 'ACTIVA' ||
+      (
+        suscripcionActual.estado === 'PENDIENTE' &&
+        suscripcionActual.proveedorSuscripcionId
+      )
+    )
+  ) {
+
+    const error = new Error(
+      'Ya tienes una suscripción en proceso o activa.'
+    );
+
+    error.codigo = 'SUSCRIPCION_EXISTENTE';
+    error.estadoHttp = 409;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // PLAN MERCADO PAGO
+  // ==========================================
+
+  let planMercadoPagoId = null;
+
+  if (codigo === 'PROFESSIONAL') {
+
+    planMercadoPagoId =
+      process.env.MERCADOPAGO_PLAN_PROFESSIONAL_ID;
+
+  }
+
+  if (codigo === 'COMPANY') {
+
+    planMercadoPagoId =
+      process.env.MERCADOPAGO_PLAN_COMPANY_ID;
+
+  }
+
+
+  if (!planMercadoPagoId) {
+
+    const error = new Error(
+      'El plan de Mercado Pago no está configurado.'
+    );
+
+    error.codigo =
+      'PLAN_MERCADOPAGO_NO_CONFIGURADO';
+
+    error.estadoHttp = 500;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // REGISTRAR INTENTO PENDIENTE
+  // ==========================================
+
+  await prisma.suscripcion.upsert({
+
+    where: {
+      usuarioId: usuario.id
+    },
+
+    create: {
+
+      usuarioId: usuario.id,
+      planId: plan.id,
+      estado: 'PENDIENTE',
+      proveedor: 'MERCADOPAGO',
+      fechaInicio: new Date()
+
+    },
+
+    update: {
+
+      planId: plan.id,
+      estado: 'PENDIENTE',
+      proveedor: 'MERCADOPAGO',
+      proveedorClienteId: null,
+      proveedorSuscripcionId: null,
+      fechaInicio: new Date(),
+      fechaFin: null
+
+    }
+
+  });
+
+
+  // ==========================================
+  // CHECKOUT DEL PLAN MERCADO PAGO
+  // ==========================================
+
+  const initPoint =
+    `https://www.mercadopago.com.co/subscriptions/checkout?preapproval_plan_id=${encodeURIComponent(planMercadoPagoId)}`;
+
+
+  console.log(
+    'CHECKOUT MERCADO PAGO:',
+    initPoint
+  );
+
+
+  return {
+
+    pendiente: true,
+
+    codigoPlan: codigo,
+
+    plan: {
+      id: plan.id,
+      codigo: plan.codigo,
+      nombre: plan.nombre
+    },
+
+    mercadoPago: {
+
+      planId: planMercadoPagoId,
+
+      initPoint
+
+    }
+
+  };
+}
+
+
+// ==========================================
+// CONFIRMAR SUSCRIPCIÓN COMERCIAL
+// ==========================================
+//
+// Mercado Pago regresa:
+//
+// ?preapproval_id=XXXXXXXX
+//
+// TopoPro consulta directamente a Mercado Pago
+// y NO confía únicamente en el frontend.
+//
+// ==========================================
+
+async function confirmarSuscripcionComercial(
+  usuarioId,
+  {
+    preapprovalId
+  }
+) {
+
+  const idUsuario =
+    Number(usuarioId);
+
+
+  // ==========================================
+  // VALIDAR ID
+  // ==========================================
+
+  if (!preapprovalId) {
+
+    const error = new Error(
+      'El preapproval_id de Mercado Pago es obligatorio.'
+    );
+
+    error.codigo =
+      'PREAPPROVAL_ID_REQUERIDO';
+
+    error.estadoHttp = 400;
+
+    throw error;
+  }
+
+
+  const usuario =
+    await prisma.usuario.findUnique({
+
+      where: {
+        id: idUsuario
+      },
+
+      select: {
+        id: true,
+        rol: true,
+        correo: true,
+        suscripcion: true
+      }
+
+    });
+
+
+  if (!usuario) {
+
+    const error = new Error(
+      'Usuario no encontrado.'
+    );
+
+    error.codigo =
+      'USUARIO_NO_ENCONTRADO';
+
+    error.estadoHttp = 404;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // CONSULTAR MERCADO PAGO
+  // ==========================================
+
+  const mercadoPago =
+    await obtenerSuscripcionMercadoPago(
+      preapprovalId
+    );
+
+
+  console.log(
+    'SUSCRIPCIÓN MERCADO PAGO:',
+    JSON.stringify(
+      mercadoPago,
+      null,
+      2
+    )
+  );
+
+
+  // ==========================================
+  // VALIDAR ESTADO
+  // ==========================================
+
+  const estadoMP =
+    String(
+      mercadoPago.status || ''
+    ).toLowerCase();
+
+
+  if (
+    !['authorized', 'paused'].includes(
+      estadoMP
+    )
+  ) {
+
+    const error = new Error(
+      `La suscripción de Mercado Pago no está autorizada. Estado actual: ${mercadoPago.status || 'desconocido'}`
+    );
+
+    error.codigo =
+      'SUSCRIPCION_MP_NO_AUTORIZADA';
+
+    error.estadoHttp = 400;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // DETERMINAR PLAN
+  // ==========================================
+
+  const planMercadoPagoId =
+    String(
+      mercadoPago.preapproval_plan_id || ''
+    );
+
+
+  let codigoPlan = null;
+
+
+  if (
+    planMercadoPagoId ===
+    process.env.MERCADOPAGO_PLAN_PROFESSIONAL_ID
+  ) {
+
+    codigoPlan = 'PROFESSIONAL';
+
+  } else if (
+    planMercadoPagoId ===
+    process.env.MERCADOPAGO_PLAN_COMPANY_ID
+  ) {
+
+    codigoPlan = 'COMPANY';
+
+  }
+
+
+  if (!codigoPlan) {
+
+    const error = new Error(
+      'La suscripción de Mercado Pago corresponde a un plan no reconocido por TopoPro.'
+    );
+
+    error.codigo =
+      'PLAN_MERCADOPAGO_NO_RECONOCIDO';
+
+    error.estadoHttp = 400;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // OBTENER PLAN TOPOPRO
+  // ==========================================
+
+  const plan =
+    await prisma.plan.findUnique({
+
+      where: {
+        codigo: codigoPlan
+      }
+
+    });
+
+
+  if (!plan || !plan.activo) {
+
+    const error = new Error(
+      'El plan correspondiente no está disponible en TopoPro.'
+    );
+
+    error.codigo =
+      'PLAN_TOPOPRO_NO_DISPONIBLE';
+
+    error.estadoHttp = 404;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // VALIDAR COLLECTOR
+  // ==========================================
+
+  const collectorEsperado =
+    process.env.MERCADOPAGO_TEST_MODE === 'true'
+      ? process.env.MERCADOPAGO_TEST_SELLER_ID
+      : null;
+
+
+  if (
+    collectorEsperado &&
+    mercadoPago.collector_id &&
+    String(
+      mercadoPago.collector_id
+    ) !== String(
+      collectorEsperado
+    )
+  ) {
+
+    const error = new Error(
+      'La suscripción de Mercado Pago no pertenece al vendedor de prueba configurado.'
+    );
+
+    error.codigo =
+      'COLLECTOR_MERCADOPAGO_INVALIDO';
+
+    error.estadoHttp = 400;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // VALIDAR PAYER
+  // ==========================================
+
+  if (
+    mercadoPago.payer_id &&
+    Number(mercadoPago.payer_id) <= 0
+  ) {
+
+    const error = new Error(
+      'Mercado Pago devolvió un payer_id inválido.'
+    );
+
+    error.codigo =
+      'PAYER_MERCADOPAGO_INVALIDO';
+
+    error.estadoHttp = 400;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // GUARDAR SUSCRIPCIÓN
+  // ==========================================
+
+  const suscripcion =
+    await prisma.suscripcion.upsert({
+
+      where: {
+        usuarioId: usuario.id
+      },
+
+      create: {
+
+        usuarioId: usuario.id,
+
+        planId: plan.id,
+
+        estado: ESTADO_ACTIVA,
+
+        proveedor: 'MERCADOPAGO',
+
+        proveedorClienteId:
+          mercadoPago.payer_id
+            ? String(
+                mercadoPago.payer_id
+              )
+            : null,
+
+        proveedorSuscripcionId:
+          String(
+            mercadoPago.id
+          ),
+
+        fechaInicio:
+          mercadoPago.auto_recurring &&
+          mercadoPago.auto_recurring.start_date
+            ? new Date(
+                mercadoPago.auto_recurring.start_date
+              )
+            : new Date(),
+
+        fechaFin: null
+
+      },
+
+      update: {
+
+        planId: plan.id,
+
+        estado: ESTADO_ACTIVA,
+
+        proveedor: 'MERCADOPAGO',
+
+        proveedorClienteId:
+          mercadoPago.payer_id
+            ? String(
+                mercadoPago.payer_id
+              )
+            : null,
+
+        proveedorSuscripcionId:
+          String(
+            mercadoPago.id
+          ),
+
+        fechaInicio:
+          mercadoPago.auto_recurring &&
+          mercadoPago.auto_recurring.start_date
+            ? new Date(
+                mercadoPago.auto_recurring.start_date
+              )
+            : new Date(),
+
+        fechaFin: null
+
+      },
+
+      include: {
+        plan: true
+      }
+
+    });
+
+
+  // ==========================================
+  // RESPUESTA
+  // ==========================================
+
+  return {
+
+    ok: true,
+
+    suscripcion,
+
+    mercadoPago: {
+
+      id:
+        mercadoPago.id
+          ? String(
+              mercadoPago.id
+            )
+          : null,
+
+      status:
+        mercadoPago.status || null,
+
+      payerId:
+        mercadoPago.payer_id
+          ? Number(
+              mercadoPago.payer_id
+            )
+          : null,
+
+      collectorId:
+        mercadoPago.collector_id
+          ? Number(
+              mercadoPago.collector_id
+            )
+          : null,
+
+      planId:
+        mercadoPago.preapproval_plan_id
+          ? String(
+              mercadoPago.preapproval_plan_id
+            )
+          : null,
+
+      monto:
+        mercadoPago.auto_recurring
+          ? mercadoPago.auto_recurring.transaction_amount
+          : null,
+
+      moneda:
+        mercadoPago.auto_recurring
+          ? mercadoPago.auto_recurring.currency_id
+          : null,
+
+      proximoCobro:
+        mercadoPago.next_payment_date || null
+
+    }
+
+  };
+}
+
+
+// ==========================================
+// EXPORTS
+// ==========================================
+
 module.exports = {
+
   obtenerContextoComercial,
+
   verificarPuedeCrearProyecto,
+
   verificarPuedeAgregarPunto,
+
   verificarPuedeAdministrarEquipos,
-  verificarPuedeExportar
+
+  verificarPuedeExportar,
+
+  crearSuscripcionComercial,
+
+  confirmarSuscripcionComercial
+
 };

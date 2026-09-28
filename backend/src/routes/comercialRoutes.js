@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 
 const router = express.Router();
 
@@ -7,7 +7,9 @@ const {
 } = require('../middleware/authMiddleware');
 
 const {
-  obtenerComercial
+  obtenerComercial,
+  crearSuscripcion,
+  confirmarSuscripcion
 } = require('../controllers/comercialController');
 
 
@@ -25,6 +27,26 @@ router.use(protegerRuta);
 router.get(
   '/',
   obtenerComercial
+);
+
+
+// ==========================================
+// CREAR SUSCRIPCIÓN
+// ==========================================
+
+router.post(
+  '/suscripciones',
+  crearSuscripcion
+);
+
+
+// ==========================================
+// CONFIRMAR SUSCRIPCIÓN MERCADO PAGO
+// ==========================================
+
+router.post(
+  '/suscripciones/confirmar',
+  confirmarSuscripcion
 );
 
 
