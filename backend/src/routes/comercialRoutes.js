@@ -9,8 +9,18 @@ const {
 const {
   obtenerComercial,
   crearSuscripcion,
-  confirmarSuscripcion
+  confirmarSuscripcion,
+  recibirWebhookMercadoPago
 } = require('../controllers/comercialController');
+
+// ==========================================
+// WEBHOOK MERCADO PAGO
+// ==========================================
+
+router.post(
+  '/webhook/mercadopago',
+  recibirWebhookMercadoPago
+);
 
 
 // ==========================================

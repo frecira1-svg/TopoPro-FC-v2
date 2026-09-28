@@ -1,7 +1,8 @@
 ﻿const {
   obtenerContextoComercial,
   crearSuscripcionComercial,
-  confirmarSuscripcionComercial
+  confirmarSuscripcionComercial,
+  procesarWebhookMercadoPago
 } = require('../services/comercial.service');
 
 
@@ -209,6 +210,85 @@ async function confirmarSuscripcion(req, res) {
 
 }
 
+// ==========================================
+// WEBHOOK MERCADO PAGO
+// ==========================================
+
+async function recibirWebhookMercadoPago(req, res) {
+
+  try {
+
+    console.log(
+      '========== WEBHOOK MERCADO PAGO =========='
+    );
+
+    console.log(
+      'QUERY:',
+      req.query
+    );
+
+    console.log(
+      'BODY:',
+      req.body
+    );
+
+
+    const tipo =
+      req.body?.type ||
+      req.query?.type ||
+      req.body?.topic ||
+      req.query?.topic ||
+      null;
+
+
+    const preapprovalId =
+      req.body?.data?.id ||
+      req.query?.['data.id'] ||
+      req.query?.id ||
+      null;
+
+
+    const resultado =
+      await procesarWebhookMercadoPago({
+
+        tipo,
+
+        preapprovalId:
+          preapprovalId
+            ? String(preapprovalId)
+            : null
+
+      });
+
+
+    console.log(
+      'RESULTADO WEBHOOK:',
+      resultado
+    );
+
+
+    console.log(
+      '=========================================='
+    );
+
+
+    return res.sendStatus(200);
+
+
+  } catch (error) {
+
+    console.error(
+      'ERROR WEBHOOK MERCADO PAGO:',
+      error
+    );
+
+    // Mercado Pago espera una respuesta rápida.
+    return res.sendStatus(200);
+
+  }
+
+}
+
 
 // ==========================================
 // EXPORTACIONES
@@ -220,6 +300,8 @@ module.exports = {
 
   crearSuscripcion,
 
-  confirmarSuscripcion
+  confirmarSuscripcion,
+
+  recibirWebhookMercadoPago
 
 };
