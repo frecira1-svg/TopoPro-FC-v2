@@ -1,4 +1,4 @@
-import {
+﻿import {
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -9,8 +9,11 @@ import { CommonModule } from '@angular/common';
 
 import {
   SuscripcionService,
-  ContextoComercial
+  ContextoComercial,
+  CrearSuscripcionResponse
 } from '../../../../core/services/suscripcion.service';
+
+import { environment } from '../../../../environments/environment';
 
 
 @Component({
@@ -22,7 +25,8 @@ import {
   templateUrl: './suscripcion.html',
   styleUrl: './suscripcion.css'
 })
-export class Suscripcion implements OnInit {
+export class Suscripcion
+  implements OnInit {
 
   private readonly suscripcionService =
     inject(SuscripcionService);
@@ -35,24 +39,32 @@ export class Suscripcion implements OnInit {
   // PLAN
   // ==========================================================
 
-  readonly codigoPlan = 'PROFESSIONAL';
+  readonly codigoPlan =
+    'PROFESSIONAL';
 
-  readonly precio = 39900;
+  readonly precio =
+    39900;
 
 
   // ==========================================================
   // ESTADO
   // ==========================================================
 
-  cargando = false;
+  cargando =
+    false;
 
-  procesando = false;
+  procesando =
+    false;
 
-  mensaje = '';
+  mensaje =
+    '';
 
-  error = '';
+  error =
+    '';
 
-  contexto: ContextoComercial | null = null;
+  contexto:
+    ContextoComercial | null =
+    null;
 
 
   // ==========================================================
@@ -60,6 +72,34 @@ export class Suscripcion implements OnInit {
   // ==========================================================
 
   ngOnInit(): void {
+
+    console.log(
+      '=========================================='
+    );
+
+    console.log(
+      'INICIANDO PÁGINA DE SUSCRIPCIÓN'
+    );
+
+    console.log(
+      'PLAN:',
+      this.codigoPlan
+    );
+
+    console.log(
+      'PRECIO:',
+      this.precio
+    );
+
+    console.log(
+      'API URL:',
+      environment.apiUrl
+    );
+
+    console.log(
+      '=========================================='
+    );
+
 
     this.cargarContextoComercial();
 
@@ -69,12 +109,13 @@ export class Suscripcion implements OnInit {
 
 
   // ==========================================================
-  // OBTENER CONTEXTO COMERCIAL
+  // CONTEXTO COMERCIAL
   // ==========================================================
 
   private cargarContextoComercial(): void {
 
-    this.cargando = true;
+    this.cargando =
+      true;
 
     this.suscripcionService
       .obtenerContextoComercial()
@@ -95,13 +136,16 @@ export class Suscripcion implements OnInit {
           );
 
 
-          this.contexto = contexto;
+          this.contexto =
+            contexto;
 
-          this.cargando = false;
+          this.cargando =
+            false;
 
           this.cdr.detectChanges();
 
         },
+
 
         error: (error) => {
 
@@ -110,7 +154,9 @@ export class Suscripcion implements OnInit {
             error
           );
 
-          this.cargando = false;
+
+          this.cargando =
+            false;
 
           this.error =
             error?.error?.error ||
@@ -126,15 +172,223 @@ export class Suscripcion implements OnInit {
 
 
   // ==========================================================
-  // VERIFICAR SI TIENE SUSCRIPCIÓN ACTIVA
+  // SUSCRIPCIÓN ACTIVA
   // ==========================================================
 
   get tieneSuscripcionActiva(): boolean {
 
     return (
-      this.contexto?.suscripcion?.estado === 'ACTIVA' &&
-      this.contexto?.plan?.codigo === this.codigoPlan
+      this.contexto?.suscripcion?.estado ===
+        'ACTIVA' &&
+      this.contexto?.plan?.codigo ===
+        this.codigoPlan
     );
+
+  }
+
+
+  // ==========================================================
+  // CREAR SUSCRIPCIÓN
+  // ==========================================================
+
+  crearSuscripcion(): void {
+
+    if (this.procesando) {
+
+      return;
+
+    }
+
+
+    if (this.tieneSuscripcionActiva) {
+
+      this.mensaje =
+        'Ya tienes una suscripción activa para este plan.';
+
+      this.cdr.detectChanges();
+
+      return;
+
+    }
+
+
+    this.procesando =
+      true;
+
+    this.cargando =
+      true;
+
+    this.error =
+      '';
+
+    this.mensaje =
+      'Preparando tu suscripción con Mercado Pago...';
+
+    this.cdr.detectChanges();
+
+
+    console.log(
+      '=========================================='
+    );
+
+    console.log(
+      'CREANDO CHECKOUT MERCADO PAGO'
+    );
+
+    console.log(
+      'PLAN:',
+      this.codigoPlan
+    );
+
+    console.log(
+      '=========================================='
+    );
+
+
+    this.suscripcionService
+      .crearSuscripcion({
+
+        codigoPlan:
+          this.codigoPlan
+
+      })
+      .subscribe({
+
+        next: (
+          respuesta: CrearSuscripcionResponse
+        ) => {
+
+          console.log(
+            '=========================================='
+          );
+
+          console.log(
+            'CHECKOUT MERCADO PAGO CREADO'
+          );
+
+          console.log(
+            respuesta
+          );
+
+          console.log(
+            '=========================================='
+          );
+
+
+          const initPoint =
+            respuesta?.mercadoPago?.initPoint;
+
+
+          // ==================================================
+          // REDIRECCIÓN A MERCADO PAGO
+          // ==================================================
+
+          if (initPoint) {
+
+            this.mensaje =
+              'Redirigiendo a Mercado Pago para completar el pago...';
+
+            this.cdr.detectChanges();
+
+
+            window.location.href =
+              initPoint;
+
+            return;
+
+          }
+
+
+          // ==================================================
+          // COMPATIBILIDAD CON RESPUESTA QUE YA TRAIGA ID
+          // ==================================================
+
+          const preapprovalId =
+            respuesta?.mercadoPago?.preapprovalId ||
+            respuesta?.proveedorSuscripcionId;
+
+
+          if (preapprovalId) {
+
+            this.mensaje =
+              'Suscripción creada. Verificando estado...';
+
+            this.cdr.detectChanges();
+
+
+            this.confirmarSuscripcion(
+              preapprovalId
+            );
+
+            return;
+
+          }
+
+
+          // ==================================================
+          // NO SE OBTUVO CHECKOUT
+          // ==================================================
+
+          this.procesando =
+            false;
+
+          this.cargando =
+            false;
+
+          this.mensaje =
+            '';
+
+          this.error =
+            'No fue posible obtener el enlace de pago de Mercado Pago.';
+
+          this.cdr.detectChanges();
+
+        },
+
+
+        error: (error) => {
+
+          console.error(
+            '=========================================='
+          );
+
+          console.error(
+            'ERROR CREANDO CHECKOUT MERCADO PAGO'
+          );
+
+          console.error(
+            'STATUS:',
+            error?.status
+          );
+
+          console.error(
+            'BODY:',
+            error?.error
+          );
+
+          console.error(
+            '=========================================='
+          );
+
+
+          this.procesando =
+            false;
+
+          this.cargando =
+            false;
+
+          this.mensaje =
+            '';
+
+          this.error =
+            error?.error?.error ||
+            'No fue posible crear la suscripción.';
+
+          this.cdr.detectChanges();
+
+        }
+
+      });
 
   }
 
@@ -147,14 +401,16 @@ export class Suscripcion implements OnInit {
 
     try {
 
-      const params =
-        new URLSearchParams(
-          window.location.search
+      const url =
+        new URL(
+          window.location.href
         );
 
 
       const preapprovalId =
-        params.get('preapproval_id');
+        url.searchParams.get(
+          'preapproval_id'
+        );
 
 
       if (!preapprovalId) {
@@ -169,7 +425,7 @@ export class Suscripcion implements OnInit {
       );
 
       console.log(
-        'RETORNO MERCADO PAGO'
+        'RETORNO DE MERCADO PAGO'
       );
 
       console.log(
@@ -193,11 +449,6 @@ export class Suscripcion implements OnInit {
         error
       );
 
-      this.error =
-        'No fue posible procesar la respuesta de Mercado Pago.';
-
-      this.cdr.detectChanges();
-
     }
 
   }
@@ -211,11 +462,32 @@ export class Suscripcion implements OnInit {
     preapprovalId: string
   ): void {
 
-    this.procesando = true;
+    if (!preapprovalId) {
 
-    this.cargando = true;
+      this.error =
+        'Mercado Pago no devolvió un identificador de suscripción válido.';
 
-    this.error = '';
+      this.procesando =
+        false;
+
+      this.cargando =
+        false;
+
+      this.cdr.detectChanges();
+
+      return;
+
+    }
+
+
+    this.procesando =
+      true;
+
+    this.cargando =
+      true;
+
+    this.error =
+      '';
 
     this.mensaje =
       'Verificando tu suscripción con Mercado Pago...';
@@ -223,9 +495,29 @@ export class Suscripcion implements OnInit {
     this.cdr.detectChanges();
 
 
+    console.log(
+      '=========================================='
+    );
+
+    console.log(
+      'CONFIRMANDO SUSCRIPCIÓN'
+    );
+
+    console.log(
+      'PREAPPROVAL ID:',
+      preapprovalId
+    );
+
+    console.log(
+      '=========================================='
+    );
+
+
     this.suscripcionService
       .confirmarSuscripcion({
+
         preapprovalId
+
       })
       .subscribe({
 
@@ -248,58 +540,44 @@ export class Suscripcion implements OnInit {
           );
 
 
-          this.procesando = false;
+          this.procesando =
+            false;
 
-          this.cargando = false;
+          this.cargando =
+            false;
 
-          this.error = '';
+          this.error =
+            '';
 
           this.mensaje =
             '¡Tu suscripción fue activada correctamente!';
 
 
-          // Volvemos a consultar el contexto para que
-          // la pantalla refleje inmediatamente el nuevo plan.
-          this.cargarContextoComercial();
+          this.limpiarParametrosURL();
 
+          this.cargarContextoComercial();
 
           this.cdr.detectChanges();
 
-
-          this.limpiarParametrosURL();
-
         },
+
 
         error: (error) => {
 
           console.error(
-            '=========================================='
-          );
-
-          console.error(
-            'ERROR CONFIRMANDO SUSCRIPCIÓN'
-          );
-
-          console.error(
-            'STATUS:',
-            error?.status
-          );
-
-          console.error(
-            'BODY:',
-            error?.error
-          );
-
-          console.error(
-            '=========================================='
+            'ERROR CONFIRMANDO SUSCRIPCIÓN:',
+            error
           );
 
 
-          this.procesando = false;
+          this.procesando =
+            false;
 
-          this.cargando = false;
+          this.cargando =
+            false;
 
-          this.mensaje = '';
+          this.mensaje =
+            '';
 
           this.error =
             error?.error?.error ||
@@ -328,20 +606,19 @@ export class Suscripcion implements OnInit {
         );
 
 
-      url.searchParams.delete(
-        'preapproval_id'
-      );
-
-      url.searchParams.delete(
-        'status'
-      );
-
-      url.searchParams.delete(
-        'collection_status'
-      );
-
-      url.searchParams.delete(
+      [
+        'preapproval_id',
+        'status',
+        'collection_status',
         'payment_id'
+      ].forEach(
+        (parametro) => {
+
+          url.searchParams.delete(
+            parametro
+          );
+
+        }
       );
 
 
@@ -356,6 +633,7 @@ export class Suscripcion implements OnInit {
         )
       );
 
+
     } catch (error) {
 
       console.warn(
@@ -364,162 +642,6 @@ export class Suscripcion implements OnInit {
       );
 
     }
-
-  }
-
-
-  // ==========================================================
-  // CONTRATAR PLAN
-  // ==========================================================
-
-  contratarPlan(): void {
-
-    if (this.procesando) {
-
-      return;
-
-    }
-
-
-    if (this.tieneSuscripcionActiva) {
-
-      this.mensaje =
-        'Ya tienes una suscripción Profesional activa.';
-
-      return;
-
-    }
-
-
-    this.error = '';
-
-    this.mensaje = '';
-
-    this.procesando = true;
-
-    this.cargando = true;
-
-    this.mensaje =
-      'Preparando el pago seguro con Mercado Pago...';
-
-    this.cdr.detectChanges();
-
-
-    console.log(
-      '=========================================='
-    );
-
-    console.log(
-      'INICIANDO CHECKOUT MERCADO PAGO'
-    );
-
-    console.log(
-      'PLAN:',
-      this.codigoPlan
-    );
-
-    console.log(
-      'PRECIO:',
-      this.precio
-    );
-
-    console.log(
-      '=========================================='
-    );
-
-
-    this.suscripcionService
-      .crearSuscripcion({
-        codigoPlan: this.codigoPlan
-      })
-      .subscribe({
-
-        next: (respuesta) => {
-
-          console.log(
-            'CHECKOUT MERCADO PAGO:',
-            respuesta
-          );
-
-
-          const initPoint =
-            respuesta?.mercadoPago?.initPoint;
-
-
-          if (!initPoint) {
-
-            console.error(
-              'Mercado Pago no devolvió initPoint.'
-            );
-
-
-            this.procesando = false;
-
-            this.cargando = false;
-
-            this.mensaje = '';
-
-            this.error =
-              'No fue posible obtener el enlace de pago de Mercado Pago.';
-
-            this.cdr.detectChanges();
-
-            return;
-
-          }
-
-
-          console.log(
-            'REDIRIGIENDO A:',
-            initPoint
-          );
-
-
-          window.location.href =
-            initPoint;
-
-        },
-
-        error: (error) => {
-
-          console.error(
-            '=========================================='
-          );
-
-          console.error(
-            'ERROR CREANDO CHECKOUT'
-          );
-
-          console.error(
-            'STATUS:',
-            error?.status
-          );
-
-          console.error(
-            'BODY:',
-            error?.error
-          );
-
-          console.error(
-            '=========================================='
-          );
-
-
-          this.procesando = false;
-
-          this.cargando = false;
-
-          this.mensaje = '';
-
-          this.error =
-            error?.error?.error ||
-            'No fue posible iniciar el proceso de suscripción.';
-
-          this.cdr.detectChanges();
-
-        }
-
-      });
 
   }
 
