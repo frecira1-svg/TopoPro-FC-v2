@@ -211,7 +211,9 @@ async function crearSuscripcionComercial(
   }
 ) {
 
-  const idUsuario = Number(usuarioId);
+  const idUsuario =
+    Number(usuarioId);
+
 
   // ==========================================
   // VALIDAR USUARIO
@@ -226,7 +228,9 @@ async function crearSuscripcionComercial(
       'El ID del usuario no es válido.'
     );
 
-    error.codigo = 'USUARIO_ID_INVALIDO';
+    error.codigo =
+      'USUARIO_ID_INVALIDO';
+
     error.estadoHttp = 400;
 
     throw error;
@@ -258,7 +262,9 @@ async function crearSuscripcionComercial(
       'Usuario no encontrado.'
     );
 
-    error.codigo = 'USUARIO_NO_ENCONTRADO';
+    error.codigo =
+      'USUARIO_NO_ENCONTRADO';
+
     error.estadoHttp = 404;
 
     throw error;
@@ -266,28 +272,14 @@ async function crearSuscripcionComercial(
 
 
   // ==========================================
-  // VALIDAR PLAN
-  // ==========================================
-
-  const codigo =
-    String(codigoPlan || '')
-      .trim()
-      .toUpperCase();
-
-
-  const planMercadoPagoId =
-    obtenerPlanId(codigo);
-
-
-  // ==========================================
-  // BUSCAR PLAN EN TOPOPRO
+  // OBTENER PLAN TOPOPRO
   // ==========================================
 
   const plan =
     await prisma.plan.findUnique({
 
       where: {
-        codigo
+        codigo: codigoPlan
       }
 
     });
@@ -299,7 +291,9 @@ async function crearSuscripcionComercial(
       'El plan no existe en TopoPro.'
     );
 
-    error.codigo = 'PLAN_NO_ENCONTRADO';
+    error.codigo =
+      'PLAN_NO_ENCONTRADO';
+
     error.estadoHttp = 404;
 
     throw error;
@@ -307,13 +301,23 @@ async function crearSuscripcionComercial(
 
 
   // ==========================================
-  // CREAR / OBTENER CHECKOUT MERCADO PAGO
+  // VALIDAR PLAN MERCADO PAGO
+  // ==========================================
+
+  const planMercadoPagoId =
+    obtenerPlanId(
+      codigoPlan
+    );
+
+
+  // ==========================================
+  // CREAR / OBTENER CHECKOUT
   // ==========================================
 
   const respuestaMercadoPago =
     await crearSuscripcion({
 
-      codigoPlan: codigo,
+      codigoPlan,
 
       payerEmail:
         payerEmail ||
@@ -326,7 +330,7 @@ async function crearSuscripcionComercial(
 
 
   // ==========================================
-  // INIT POINT
+  // INIT POINT MERCADO PAGO
   // ==========================================
 
   const initPoint =
@@ -351,25 +355,254 @@ async function crearSuscripcionComercial(
 
 
   // ==========================================
-  // ID DE SUSCRIPCIÓN
+  // GUARDAR SUSCRIPCIÓN PENDIENTE
   // ==========================================
   //
-  // En este flujo todavía NO existe un
-  // preapproval creado para el usuario.
+  // IMPORTANTE:
   //
-  // El usuario primero entra al checkout.
-  // Mercado Pago generará la suscripción
-  // después de completar/autorizAR el proceso.
+  // En este momento Mercado Pago todavía
+  // NO nos ha entregado un preapproval_id.
+  //
+  // El usuario todavía debe completar
+  // el checkout.
+  //
+  // Por eso proveedorSuscripcionId
+  // permanece en null.
+  //
+  // El webhook/confirmación posterior
+  // será quien registre el ID real.
+  // ==========================================
+
+  const suscripcion =
+    await prisma.suscripcion.upsert({
+
+      where: {
+        usuarioId: idUsuario
+      },
+
+      create: {
+
+        usuarioId:
+          idUsuario,
+
+        planId:
+          plan.id,
+
+        estado:
+          ESTADO_PENDIENTE,
+
+        proveedor:
+          'MERCADOPAGO',
+
+        proveedorSuscripcionId:
+          null,
+
+        fechaInicio:
+          new Date(),
+
+        fechaFin:
+          null
+
+      },
+
+      update: {
+
+        planId:
+          plan.id,
+
+        estado:
+          ESTADO_PENDIENTE,
+
+        proveedor:
+          'MERCADOPAGO',
+
+        proveedorSuscripcionId:
+          null,
+
+        fechaInicio:
+          new Date(),
+
+        fechaFin:
+          null
+
+      },
+
+      include: {
+        plan: true
+      }
+
+    });
+
+
+  // ==========================================
+  // RESPUESTA AL FRONTEND
+  // ==========================================
+
+  return {
+
+    suscripcion,
+
+    mercadoPago: {
+
+      id:
+        null,
+
+      status:
+        'PENDING',
+
+      planId:
+        planMercadoPagoId,
+
+      initPoint:
+        initPoint,
+
+      preapprovalId:
+        null
+
+    }
+
+  };
+
+}
+// ==========================================
+  // VALIDAR USUARIO
+  // ==========================================
+
+  if (
+    !Number.isInteger(idUsuario) ||
+    idUsuario <= 0
+  ) {
+
+    const error = new Error(
+      'El ID del usuario no es válido.'
+    );
+
+    error.codigo =
+      'USUARIO_ID_INVALIDO';
+
+    error.estadoHttp = 400;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // BUSCAR USUARIO
+  // ==========================================
+
+  const usuario =
+    await prisma.usuario.findUnique({
+
+      where: {
+        id: idUsuario
+      },
+
+      select: {
+  id: true,
+  correo: true
+}
+
+    });
+
+
+  if (!usuario) {
+
+    const error = new Error(
+      'Usuario no encontrado.'
+    );
+
+    error.codigo =
+      'USUARIO_NO_ENCONTRADO';
+
+    error.estadoHttp = 404;
+
+    throw error;
+  }
+
+
+  // ==========================================
+  // VALIDAR PLAN
+  // ==========================================
+
+  const planMercadoPagoId =
+    obtenerPlanId(
+      codigoPlan
+    );
+
+
+  const respuestaMercadoPago =
+  await crearSuscripcion({
+
+    codigoPlan,
+
+    payerEmail:
+      usuario.email,
+
+    externalReference:
+      String(idUsuario)
+
+  });
+
+
+// ==========================================
+// INIT POINT MERCADO PAGO
+// ==========================================
+
+const initPoint =
+  respuestaMercadoPago?.initPoint ||
+  null;
+
+
+if (!initPoint) {
+
+  const error = new Error(
+    'Mercado Pago no devolvió el enlace de checkout.'
+  );
+
+  error.codigo =
+    'MERCADOPAGO_INIT_POINT_NO_RECIBIDO';
+
+  error.estadoHttp = 502;
+
+  throw error;
+
+}
+
+
+  // ==========================================
+  // CREAR SUSCRIPCIÓN EN MERCADO PAGO
+  // ==========================================
+
+
+  // ==========================================
+  // OBTENER ID DE MERCADO PAGO
   // ==========================================
 
   const proveedorSuscripcionId =
     respuestaMercadoPago?.id
-      ? String(respuestaMercadoPago.id)
+      ? String(
+          respuestaMercadoPago.id
+        )
       : null;
 
 
+  if (!proveedorSuscripcionId) {
+
+    const error = new Error(
+      'Mercado Pago no devolvió el ID de la suscripción.'
+    );
+
+    error.codigo =
+      'MERCADOPAGO_ID_NO_RECIBIDO';
+
+    error.estadoHttp = 502;
+
+    throw error;
+  }
+
+
   // ==========================================
-  // GUARDAR ESTADO PENDIENTE
+  // GUARDAR SUSCRIPCIÓN EN TOPOPRO
   // ==========================================
 
   const suscripcion =
@@ -434,36 +667,39 @@ async function crearSuscripcionComercial(
 
 
   // ==========================================
-  // RESPUESTA AL FRONTEND
+  // RESPUESTA
   // ==========================================
 
-  return {
+ return {
 
-    suscripcion,
+  suscripcion,
 
-    mercadoPago: {
+  mercadoPago: {
 
-      id:
-        proveedorSuscripcionId,
+    id:
+      proveedorSuscripcionId,
 
-      status:
-        respuestaMercadoPago?.status ||
-        'PENDING',
+    status:
+      respuestaMercadoPago.status ||
+      null,
 
-      planId:
-        planMercadoPagoId,
+    initPoint:
+      respuestaMercadoPago.init_point ||
+      null,
 
-      initPoint:
-        initPoint,
+    preapprovalId:
+      proveedorSuscripcionId,
 
-      preapprovalId:
-        null
+    planId:
+      planMercadoPagoId
 
-    }
+  }
 
-  };
+};
 
 }
+
+
 // ==========================================
 // CONFIRMAR SUSCRIPCIÓN COMERCIAL
 // ==========================================
@@ -540,7 +776,7 @@ async function confirmarSuscripcionComercial(
 
       select: {
         id: true,
-        correo: true
+        email: true
       }
 
     });
@@ -602,7 +838,12 @@ async function confirmarSuscripcionComercial(
     ).toLowerCase();
 
 
-  if (estadoMP !== 'authorized') {
+  if (
+    ![
+      'authorized',
+      'paused'
+    ].includes(estadoMP)
+  ) {
 
     const error = new Error(
       `La suscripción de Mercado Pago no está autorizada. Estado actual: ${mercadoPago.status || 'desconocido'}`
@@ -1121,8 +1362,5 @@ module.exports = {
   procesarWebhookMercadoPago
 
 };
-
-
-
 
 

@@ -1,4 +1,4 @@
-import {
+﻿import {
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -408,7 +408,9 @@ export class Suscripcion
 
 
       const preapprovalId =
-        url.searchParams.get('preapproval_id') || sessionStorage.getItem('mp_preapproval_id');
+        url.searchParams.get(
+          'preapproval_id'
+        );
 
 
       if (!preapprovalId) {
@@ -550,8 +552,6 @@ export class Suscripcion
           this.mensaje =
             '¡Tu suscripción fue activada correctamente!';
 
-
-          sessionStorage.removeItem('mp_preapproval_id');
 
           this.limpiarParametrosURL();
 

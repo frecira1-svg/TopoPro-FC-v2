@@ -1,0 +1,1043 @@
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
+
+import { CommonModule } from '@angular/common';
+
+import { loadMercadoPago } from '@mercadopago/sdk-js';
+
+import {
+  SuscripcionService,
+  ContextoComercial,
+  CrearSuscripcionResponse
+} from '../../../../core/services/suscripcion.service';
+
+import { environment } from '../../../../environments/environment';
+
+
+interface MercadoPagoCardFormData {
+  token: string;
+  issuerId?: string;
+  installments?: number;
+  paymentMethodId?: string;
+  cardholderName?: string;
+  cardholderEmail?: string;
+  identificationType?: string;
+  identificationNumber?: string;
+}
+
+
+interface MercadoPagoCardForm {
+  getCardFormData(): MercadoPagoCardFormData;
+
+  unmount?(): void;
+}
+
+
+interface MercadoPagoInstance {
+  cardForm(options: unknown): MercadoPagoCardForm;
+}
+
+
+@Component({
+  selector: 'app-suscripcion',
+  standalone: true,
+  imports: [
+    CommonModule
+  ],
+  templateUrl: './suscripcion.html',
+  styleUrl: './suscripcion.css'
+})
+export class Suscripcion
+  implements OnInit, AfterViewInit {
+
+  private readonly suscripcionService =
+    inject(SuscripcionService);
+
+  private readonly cdr =
+    inject(ChangeDetectorRef);
+
+
+  // ==========================================================
+  // PLAN
+  // ==========================================================
+
+  readonly codigoPlan =
+    'PROFESSIONAL';
+
+  readonly precio =
+    39900;
+
+
+  // ==========================================================
+  // ESTADO
+  // ==========================================================
+
+  cargando =
+    false;
+
+  procesando =
+    false;
+
+  mensaje =
+    '';
+
+  error =
+    '';
+
+  contexto:
+    ContextoComercial | null =
+    null;
+
+
+  // ==========================================================
+  // MERCADO PAGO
+  // ==========================================================
+
+  private mercadoPago:
+    MercadoPagoInstance | null =
+    null;
+
+  private cardForm:
+    MercadoPagoCardForm | null =
+    null;
+
+  tarjetaLista =
+    false;
+
+  private inicializandoFormulario =
+    false;
+
+
+  // ==========================================================
+  // INICIO
+  // ==========================================================
+
+  ngOnInit(): void {
+
+    this.cargarContextoComercial();
+
+    this.procesarRetornoMercadoPago();
+
+  }
+
+
+  // ==========================================================
+  // DESPUÉS DE PINTAR EL HTML
+  // ==========================================================
+
+  ngAfterViewInit(): void {
+
+    setTimeout(() => {
+
+      this.inicializarMercadoPago();
+
+    }, 300);
+
+  }
+
+
+  // ==========================================================
+  // CONTEXTO COMERCIAL
+  // ==========================================================
+
+  private cargarContextoComercial(): void {
+
+    this.cargando =
+      true;
+
+    this.suscripcionService
+      .obtenerContextoComercial()
+      .subscribe({
+
+        next: (contexto) => {
+
+          console.log(
+            '========== CONTEXTO COMERCIAL =========='
+          );
+
+          console.log(
+            contexto
+          );
+
+          console.log(
+            '========================================'
+          );
+
+          this.contexto =
+            contexto;
+
+          this.cargando =
+            false;
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'ERROR OBTENIENDO CONTEXTO COMERCIAL:',
+            error
+          );
+
+          this.cargando =
+            false;
+
+          this.error =
+            error?.error?.error ||
+            'No fue posible consultar el estado de tu suscripción.';
+
+          this.cdr.detectChanges();
+
+        }
+
+      });
+
+  }
+
+
+  // ==========================================================
+  // SUSCRIPCIÓN ACTIVA
+  // ==========================================================
+
+  get tieneSuscripcionActiva(): boolean {
+
+    return (
+      this.contexto?.suscripcion?.estado ===
+        'ACTIVA' &&
+      this.contexto?.plan?.codigo ===
+        this.codigoPlan
+    );
+
+  }
+
+
+  // ==========================================================
+  // INICIALIZAR MERCADO PAGO
+  // ==========================================================
+
+  private async inicializarMercadoPago():
+    Promise<void> {
+
+    if (this.inicializandoFormulario) {
+      return;
+    }
+
+    if (this.cardForm) {
+      return;
+    }
+
+    if (this.tieneSuscripcionActiva) {
+      return;
+    }
+
+
+    this.inicializandoFormulario =
+      true;
+
+    this.error =
+      '';
+
+    this.mensaje =
+      'Preparando formulario de pago...';
+
+    this.cdr.detectChanges();
+
+
+    try {
+
+      console.log(
+        '=========================================='
+      );
+
+      console.log(
+        'INICIALIZANDO MERCADO PAGO'
+      );
+
+      console.log(
+        'PUBLIC KEY:',
+        environment.mercadopagoPublicKey
+      );
+
+      console.log(
+        '=========================================='
+      );
+
+
+      const MercadoPago =
+        await loadMercadoPago();
+
+
+      if (!MercadoPago) {
+
+        throw new Error(
+          'Mercado Pago SDK no disponible.'
+        );
+
+      }
+
+
+      console.log(
+        'SDK MERCADO PAGO CARGADO:',
+        MercadoPago
+      );
+
+
+      const MercadoPagoConstructor =
+        MercadoPago as unknown as new (
+          publicKey: string,
+          options?: {
+            locale?: string;
+          }
+        ) => MercadoPagoInstance;
+
+
+      this.mercadoPago =
+        new MercadoPagoConstructor(
+          environment.mercadopagoPublicKey,
+          {
+            locale:
+              'es-CO'
+          }
+        );
+
+
+      console.log(
+        'INSTANCIA MERCADO PAGO CREADA'
+      );
+
+
+      this.cardForm =
+        this.mercadoPago.cardForm({
+
+          amount:
+            String(this.precio),
+
+          iframe:
+            true,
+
+          form: {
+
+            id:
+              'form-checkout',
+
+            cardNumber: {
+
+              id:
+                'form-checkout__cardNumber',
+
+              placeholder:
+                'Número de tarjeta'
+
+            },
+
+            expirationDate: {
+
+              id:
+                'form-checkout__expirationDate',
+
+              placeholder:
+                'MM/YY'
+
+            },
+
+            securityCode: {
+
+              id:
+                'form-checkout__securityCode',
+
+              placeholder:
+                'CVV'
+
+            },
+
+            cardholderName: {
+
+              id:
+                'form-checkout__cardholderName',
+
+              placeholder:
+                'Nombre completo'
+
+            },
+
+            cardholderEmail: {
+
+              id:
+                'form-checkout__cardholderEmail',
+
+              placeholder:
+                'correo@ejemplo.com'
+
+            },
+
+            identificationType: {
+
+              id:
+                'form-checkout__identificationType'
+
+            },
+
+            identificationNumber: {
+
+              id:
+                'form-checkout__identificationNumber',
+
+              placeholder:
+                'Número de documento'
+
+            },
+
+            issuer: {
+
+              id:
+                'form-checkout__issuer'
+
+            },
+
+            installments: {
+
+              id:
+                'form-checkout__installments'
+
+            }
+
+          },
+
+
+          callbacks: {
+
+  onFormMounted: (error: unknown) => {
+
+    if (error) {
+
+      console.error(
+        'ERROR MONTANDO CARD FORM:',
+        error
+      );
+
+      this.tarjetaLista = false;
+      this.cargando = false;
+
+      this.error =
+        'No fue posible cargar el formulario de pago.';
+
+      this.cdr.detectChanges();
+
+      return;
+    }
+
+    console.log(
+      'CARD FORM MONTADO CORRECTAMENTE'
+    );
+
+    this.tarjetaLista = true;
+    this.cargando = false;
+
+    this.cdr.detectChanges();
+  },
+
+
+  onSubmit: (event: Event) => {
+
+    event.preventDefault();
+
+    if (this.procesando) {
+      return;
+    }
+
+    this.procesando = true;
+
+    this.cargando = true;
+
+    this.error = '';
+
+    this.mensaje =
+      'Generando token seguro de la tarjeta...';
+
+    this.cdr.detectChanges();
+
+
+    try {
+
+      const datos =
+        this.cardForm.getCardFormData();
+
+
+      console.log(
+        '=========================================='
+      );
+
+      console.log(
+        'DATOS CARD FORM'
+      );
+
+      console.log(
+        'PAYMENT METHOD:',
+        datos.paymentMethodId
+      );
+
+      console.log(
+        'ISSUER:',
+        datos.issuerId
+      );
+
+      console.log(
+        'INSTALLMENTS:',
+        datos.installments
+      );
+
+      console.log(
+        'TOKEN GENERADO:',
+        !!datos.token
+      );
+
+      console.log(
+        '=========================================='
+      );
+
+
+      if (!datos.token) {
+
+        this.procesando = false;
+
+        this.cargando = false;
+
+        this.error =
+          'Mercado Pago no generó el token de la tarjeta.';
+
+        this.cdr.detectChanges();
+
+        return;
+      }
+
+
+      this.mensaje =
+        'Procesando tu suscripción...';
+
+      this.cdr.detectChanges();
+
+
+      this.suscripcionService
+        .crearSuscripcion({
+
+          codigoPlan:
+            this.codigoPlan,
+
+          cardTokenId:
+            datos.token
+
+        })
+        .subscribe({
+
+          next: (respuesta) => {
+
+            console.log(
+              '=========================================='
+            );
+
+            console.log(
+              'SUSCRIPCIÓN CREADA'
+            );
+
+            console.log(
+              respuesta
+            );
+
+            console.log(
+              '=========================================='
+            );
+
+
+            const initPoint =
+              respuesta?.mercadoPago?.initPoint;
+
+
+            if (initPoint) {
+
+              this.mensaje =
+                'Redirigiendo a Mercado Pago...';
+
+              this.cdr.detectChanges();
+
+              window.location.href =
+                initPoint;
+
+              return;
+            }
+
+
+            const preapprovalId =
+              respuesta?.mercadoPago?.preapprovalId ||
+              respuesta?.proveedorSuscripcionId;
+
+
+            if (preapprovalId) {
+
+              this.mensaje =
+                'Suscripción creada. Verificando estado...';
+
+              this.confirmarSuscripcion(
+                preapprovalId
+              );
+
+              return;
+            }
+
+
+            this.procesando = false;
+
+            this.cargando = false;
+
+            this.mensaje =
+              'La suscripción fue procesada correctamente.';
+
+            this.cdr.detectChanges();
+
+          },
+
+
+          error: (error) => {
+
+            console.error(
+              '=========================================='
+            );
+
+            console.error(
+              'ERROR CREANDO SUSCRIPCIÓN'
+            );
+
+            console.error(
+              'STATUS:',
+              error?.status
+            );
+
+            console.error(
+              'BODY:',
+              error?.error
+            );
+
+            console.error(
+              '=========================================='
+            );
+
+
+            this.procesando = false;
+
+            this.cargando = false;
+
+            this.mensaje = '';
+
+            this.error =
+              error?.error?.error ||
+              'No fue posible crear la suscripción.';
+
+            this.cdr.detectChanges();
+
+          }
+
+        });
+
+    } catch (error) {
+
+      console.error(
+        'ERROR OBTENIENDO DATOS DEL CARD FORM:',
+        error
+      );
+
+      this.procesando = false;
+
+      this.cargando = false;
+
+      this.mensaje = '';
+
+      this.error =
+        'No fue posible procesar los datos de la tarjeta.';
+
+      this.cdr.detectChanges();
+
+    }
+
+  }
+
+}
+
+
+  // ==========================================================
+  // CONTRATAR PLAN
+  // ==========================================================
+
+  contratarPlan(): void {
+
+    if (this.procesando) {
+      return;
+    }
+
+
+    if (this.tieneSuscripcionActiva) {
+
+      this.mensaje =
+        'Ya tienes una suscripción Profesional activa.';
+
+      return;
+
+    }
+
+
+    if (!this.cardForm) {
+
+      this.error =
+        'El formulario de pago todavía no está listo.';
+
+      return;
+
+    }
+
+
+    this.error =
+      '';
+
+    this.mensaje =
+      'Procesando los datos de tu tarjeta...';
+
+    this.procesando =
+      true;
+
+    this.cargando =
+      true;
+
+    this.cdr.detectChanges();
+
+
+    try {
+
+      const datos = this.cardForm.getCardFormData();
+
+console.log('==========================================');
+console.log('DATOS COMPLETOS CARD FORM');
+console.log(datos);
+console.log('TOKEN:', datos?.token);
+console.log('ISSUER:', datos?.issuerId);
+console.log('INSTALLMENTS:', datos?.installments);
+console.log('PAYMENT METHOD:', datos?.paymentMethodId);
+console.log('==========================================');
+
+if (!datos?.token) {
+  console.error(
+    'MERCADO PAGO DEVOLVIÓ EL TOKEN VACÍO:',
+    datos
+  );
+
+  this.procesando = false;
+  this.cargando = false;
+
+  this.error =
+    'Mercado Pago no generó el token de la tarjeta. Revisa los datos de prueba y vuelve a intentarlo.';
+
+  this.cdr.detectChanges();
+
+  return;
+}
+
+
+      this.suscripcionService
+        .crearSuscripcion({
+
+          codigoPlan:
+            this.codigoPlan,
+
+          cardTokenId:
+            datos.token,
+
+          issuerId:
+            datos.issuerId,
+
+          installments:
+            datos.installments
+
+        })
+        .subscribe({
+
+          next:
+            (respuesta:
+              CrearSuscripcionResponse) => {
+
+            console.log(
+              '=========================================='
+            );
+
+            console.log(
+              'CHECKOUT MERCADO PAGO CREADO'
+            );
+
+            console.log(
+              respuesta
+            );
+
+            console.log(
+              '=========================================='
+            );
+
+
+            const initPoint =
+              respuesta
+                ?.mercadoPago
+                ?.initPoint;
+
+
+            if (initPoint) {
+
+              window.location.href =
+                initPoint;
+
+              return;
+
+            }
+
+
+            this.procesando =
+              false;
+
+            this.cargando =
+              false;
+
+            this.mensaje =
+              'Solicitud de suscripción enviada correctamente.';
+
+            this.cargarContextoComercial();
+
+            this.cdr.detectChanges();
+
+          },
+
+          error:
+            (error) => {
+
+            console.error(
+              '=========================================='
+            );
+
+            console.error(
+              'ERROR CREANDO SUSCRIPCIÓN'
+            );
+
+            console.error(
+              'STATUS:',
+              error?.status
+            );
+
+            console.error(
+              'BODY:',
+              error?.error
+            );
+
+            console.error(
+              '=========================================='
+            );
+
+
+            this.procesando =
+              false;
+
+            this.cargando =
+              false;
+
+            this.mensaje =
+              '';
+
+            this.error =
+              error?.error?.error ||
+              'No fue posible iniciar el proceso de suscripción.';
+
+            this.cdr.detectChanges();
+
+          }
+
+        });
+
+
+    } catch (error) {
+
+      console.error(
+        'ERROR OBTENIENDO DATOS DEL CARD FORM:',
+        error
+      );
+
+      this.procesando =
+        false;
+
+      this.cargando =
+        false;
+
+      this.mensaje =
+        '';
+
+      this.error =
+        'No fue posible obtener los datos de la tarjeta.';
+
+      this.cdr.detectChanges();
+
+    }
+
+  }
+
+
+  // ==========================================================
+  // CONFIRMAR SUSCRIPCIÓN
+  // ==========================================================
+
+  private confirmarSuscripcion(
+    preapprovalId: string
+  ): void {
+
+    this.procesando =
+      true;
+
+    this.cargando =
+      true;
+
+    this.error =
+      '';
+
+    this.mensaje =
+      'Verificando tu suscripción con Mercado Pago...';
+
+    this.cdr.detectChanges();
+
+
+    this.suscripcionService
+      .confirmarSuscripcion({
+        preapprovalId
+      })
+      .subscribe({
+
+        next:
+          (respuesta) => {
+
+          console.log(
+            '=========================================='
+          );
+
+          console.log(
+            'SUSCRIPCIÓN CONFIRMADA'
+          );
+
+          console.log(
+            respuesta
+          );
+
+          console.log(
+            '=========================================='
+          );
+
+
+          this.procesando =
+            false;
+
+          this.cargando =
+            false;
+
+          this.error =
+            '';
+
+          this.mensaje =
+            '¡Tu suscripción fue activada correctamente!';
+
+
+          this.limpiarParametrosURL();
+
+          this.cargarContextoComercial();
+
+          this.cdr.detectChanges();
+
+        },
+
+        error:
+          (error) => {
+
+          console.error(
+            'ERROR CONFIRMANDO SUSCRIPCIÓN:',
+            error
+          );
+
+
+          this.procesando =
+            false;
+
+          this.cargando =
+            false;
+
+          this.mensaje =
+            '';
+
+          this.error =
+            error?.error?.error ||
+            'No fue posible confirmar la suscripción.';
+
+          this.cdr.detectChanges();
+
+        }
+
+      });
+
+  }
+
+
+  // ==========================================================
+  // LIMPIAR URL
+  // ==========================================================
+
+  private limpiarParametrosURL(): void {
+
+    try {
+
+      const url =
+        new URL(
+          window.location.href
+        );
+
+
+      [
+        'preapproval_id',
+        'status',
+        'collection_status',
+        'payment_id'
+      ].forEach(
+        (parametro) => {
+
+          url.searchParams.delete(
+            parametro
+          );
+
+        }
+      );
+
+
+      window.history.replaceState(
+        {},
+        document.title,
+        url.pathname +
+        (
+          url.search
+            ? url.search
+            : ''
+        )
+      );
+
+    } catch (error) {
+
+      console.warn(
+        'No fue posible limpiar la URL:',
+        error
+      );
+
+    }
+
+  }
+
+}

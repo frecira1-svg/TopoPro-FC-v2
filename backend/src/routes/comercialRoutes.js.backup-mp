@@ -1,0 +1,63 @@
+﻿const express = require('express');
+
+const router = express.Router();
+
+const {
+  protegerRuta
+} = require('../middleware/authMiddleware');
+
+const {
+  obtenerComercial,
+  crearSuscripcion,
+  confirmarSuscripcion,
+  recibirWebhookMercadoPago
+} = require('../controllers/comercialController');
+
+// ==========================================
+// WEBHOOK MERCADO PAGO
+// ==========================================
+
+router.post(
+  '/webhook/mercadopago',
+  recibirWebhookMercadoPago
+);
+
+
+// ==========================================
+// AUTENTICACIÓN
+// ==========================================
+
+router.use(protegerRuta);
+
+
+// ==========================================
+// CONSULTAR PLAN Y SUSCRIPCIÓN
+// ==========================================
+
+router.get(
+  '/',
+  obtenerComercial
+);
+
+
+// ==========================================
+// CREAR SUSCRIPCIÓN
+// ==========================================
+
+router.post(
+  '/suscripciones',
+  crearSuscripcion
+);
+
+
+// ==========================================
+// CONFIRMAR SUSCRIPCIÓN MERCADO PAGO
+// ==========================================
+
+router.post(
+  '/suscripciones/confirmar',
+  confirmarSuscripcion
+);
+
+
+module.exports = router;

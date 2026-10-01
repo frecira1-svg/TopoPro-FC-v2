@@ -1,5 +1,4 @@
 const { PrismaClient } = require('@prisma/client');
-
 const prisma = new PrismaClient();
 
 const {
@@ -1184,6 +1183,239 @@ async function procesarWebhookMercadoPago({
   };
 }
 
+// ==========================================
+// WEBHOOK MERCADO PAGO
+// ==========================================
+
+async function procesarWebhookMercadoPago({
+  tipo,
+  preapprovalId
+}) {
+
+  console.log(
+    '========== PROCESANDO WEBHOOK MERCADO PAGO =========='
+  );
+
+  console.log(
+    'Tipo:',
+    tipo
+  );
+
+  console.log(
+    'Preapproval ID:',
+    preapprovalId
+  );
+
+
+  // ==========================================
+  // VALIDAR ID
+  // ==========================================
+
+  if (!preapprovalId) {
+
+    console.log(
+      'WEBHOOK SIN PREAPPROVAL_ID'
+    );
+
+    return {
+      procesado: false,
+      motivo: 'PREAPPROVAL_ID_NO_ENCONTRADO'
+    };
+
+  }
+
+
+  // ==========================================
+  // CONSULTAR MERCADO PAGO
+  // ==========================================
+
+  const mercadoPago =
+    await obtenerSuscripcionMercadoPago(
+      preapprovalId
+    );
+
+
+  console.log(
+    'ESTADO MERCADO PAGO:',
+    mercadoPago.status
+  );
+
+
+  // ==========================================
+  // BUSCAR SUSCRIPCIÓN EN TOPOPro
+  // ==========================================
+
+  const suscripcion =
+    await prisma.suscripcion.findFirst({
+
+      where: {
+
+        proveedor:
+          'MERCADOPAGO',
+
+        proveedorSuscripcionId:
+          preapprovalId
+
+      }
+
+    });
+
+
+  if (!suscripcion) {
+
+    console.log(
+      'SUSCRIPCIÓN NO ENCONTRADA EN TOPOPro:',
+      preapprovalId
+    );
+
+    return {
+
+      procesado: false,
+
+      motivo:
+        'SUSCRIPCION_NO_ENCONTRADA'
+
+    };
+
+  }
+
+
+  // ==========================================
+  // MAPEAR ESTADO
+  // ==========================================
+
+  const estadoMP =
+    String(
+      mercadoPago.status || ''
+    ).toLowerCase();
+
+
+  let estadoTopoPro;
+
+
+  switch (estadoMP) {
+
+    case 'authorized':
+
+      estadoTopoPro =
+        'ACTIVA';
+
+      break;
+
+
+    case 'paused':
+
+      estadoTopoPro =
+        'PENDIENTE';
+
+      break;
+
+
+    case 'cancelled':
+
+      estadoTopoPro =
+        'CANCELADA';
+
+      break;
+
+
+    default:
+
+      console.log(
+        'ESTADO NO MANEJADO:',
+        estadoMP
+      );
+
+      return {
+
+        procesado: false,
+
+        motivo:
+          'ESTADO_NO_MANEJADO',
+
+        estadoMercadoPago:
+          estadoMP
+
+      };
+
+  }
+
+
+  // ==========================================
+  // ACTUALIZAR SUSCRIPCIÓN
+  // ==========================================
+
+  const actualizada =
+    await prisma.suscripcion.update({
+
+      where: {
+
+        id:
+          suscripcion.id
+
+      },
+
+      data: {
+
+        estado:
+          estadoTopoPro,
+
+        proveedor:
+          'MERCADOPAGO',
+
+        proveedorClienteId:
+          mercadoPago.payer_id
+            ? String(
+                mercadoPago.payer_id
+              )
+            : suscripcion.proveedorClienteId,
+
+        proveedorSuscripcionId:
+          preapprovalId,
+
+        fechaFin:
+          estadoTopoPro === 'CANCELADA'
+            ? new Date()
+            : suscripcion.fechaFin
+
+      }
+
+    });
+
+
+  console.log(
+    'SUSCRIPCIÓN ACTUALIZADA:',
+    {
+
+      id:
+        actualizada.id,
+
+      usuarioId:
+        actualizada.usuarioId,
+
+      estado:
+        actualizada.estado
+
+    }
+  );
+
+
+  return {
+
+    procesado: true,
+
+    suscripcionId:
+      actualizada.id,
+
+    usuarioId:
+      actualizada.usuarioId,
+
+    estado:
+      actualizada.estado
+
+  };
+
+}
 
 // ==========================================
 // EXPORTS
