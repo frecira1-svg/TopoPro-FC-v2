@@ -241,30 +241,106 @@ async function recibirWebhookMercadoPago(req, res) {
       null;
 
 
-    const preapprovalId =
+    // ==========================================
+    // IDENTIFICAR ID SEGÚN TIPO DE EVENTO
+    // ==========================================
+
+    const dataId =
       req.body?.data?.id ||
       req.query?.['data.id'] ||
       req.query?.id ||
       null;
 
 
-    const resultado =
-      await procesarWebhookMercadoPago({
-
-        tipo,
-
-        preapprovalId:
-          preapprovalId
-            ? String(preapprovalId)
-            : null
-
-      });
-
+    console.log(
+      'TIPO WEBHOOK:',
+      tipo
+    );
 
     console.log(
-      'RESULTADO WEBHOOK:',
-      resultado
+      'DATA.ID:',
+      dataId
     );
+
+
+    // ==========================================
+    // PAGOS AUTORIZADOS DE SUSCRIPCIÓN
+    // ==========================================
+    //
+    // subscription_authorized_payment
+    // data.id = ID DEL PAGO
+    //
+    // NO es un preapproval_id.
+    //
+    // Por ahora confirmamos recepción y no
+    // intentamos consultarlo como suscripción.
+    // ==========================================
+
+    if (
+      tipo === 'subscription_authorized_payment'
+    ) {
+
+      console.log(
+        'WEBHOOK DE PAGO DE SUSCRIPCIÓN RECIBIDO.'
+      );
+
+      console.log(
+        'Payment ID:',
+        dataId
+      );
+
+      console.log(
+        'No se consulta como preapproval.'
+      );
+
+      console.log(
+        '=========================================='
+      );
+
+      return res.sendStatus(200);
+    }
+
+
+    // ==========================================
+    // EVENTOS DE SUSCRIPCIÓN
+    // ==========================================
+
+    const tiposSuscripcion = [
+      'subscription_preapproval',
+      'preapproval'
+    ];
+
+
+    if (
+      tiposSuscripcion.includes(tipo)
+    ) {
+
+      const resultado =
+        await procesarWebhookMercadoPago({
+
+          tipo,
+
+          preapprovalId:
+            dataId
+              ? String(dataId)
+              : null
+
+        });
+
+
+      console.log(
+        'RESULTADO WEBHOOK:',
+        resultado
+      );
+
+    } else {
+
+      console.log(
+        'TIPO DE WEBHOOK NO PROCESADO:',
+        tipo
+      );
+
+    }
 
 
     console.log(
@@ -272,6 +348,7 @@ async function recibirWebhookMercadoPago(req, res) {
     );
 
 
+    // Mercado Pago espera HTTP 200.
     return res.sendStatus(200);
 
 
