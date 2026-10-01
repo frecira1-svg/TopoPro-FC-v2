@@ -66,3 +66,5 @@ reporte_andes.xlsx
 w-config.json
 
 /w-config.json
+
+*.bak
