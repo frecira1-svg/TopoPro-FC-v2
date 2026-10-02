@@ -1,4 +1,4 @@
-﻿const {
+const {
   obtenerContextoComercial,
   crearSuscripcionComercial,
   confirmarSuscripcionComercial,
@@ -214,9 +214,63 @@ async function confirmarSuscripcion(req, res) {
 // WEBHOOK MERCADO PAGO
 // ==========================================
 
+const crypto = require('crypto');
+
+// Verifica la firma x-signature que envia Mercado Pago.
+function firmaWebhookValida(req) {
+  const secreto = process.env.MERCADOPAGO_WEBHOOK_SECRET;
+
+  if (!secreto) {
+    console.warn(
+      'MERCADOPAGO_WEBHOOK_SECRET no configurado: no se valida la firma.'
+    );
+    return true;
+  }
+
+  const cabecera = String(req.headers['x-signature'] || '');
+  const requestId = String(req.headers['x-request-id'] || '');
+  const partes = {};
+
+  cabecera.split(',').forEach((p) => {
+    const i = p.indexOf('=');
+    if (i > 0) {
+      partes[p.slice(0, i).trim()] = p.slice(i + 1).trim();
+    }
+  });
+
+  const ts = partes.ts;
+  const v1 = partes.v1;
+  const dataId = req.query ? req.query['data.id'] : null;
+
+  if (!ts || !v1) {
+    return false;
+  }
+
+  let manifiesto = '';
+  if (dataId) manifiesto += 'id:' + String(dataId).toLowerCase() + ';';
+  if (requestId) manifiesto += 'request-id:' + requestId + ';';
+  manifiesto += 'ts:' + ts + ';';
+
+  const esperado = crypto
+    .createHmac('sha256', secreto)
+    .update(manifiesto)
+    .digest('hex');
+
+  try {
+    return crypto.timingSafeEqual(Buffer.from(esperado), Buffer.from(v1));
+  } catch (e) {
+    return false;
+  }
+}
+
 async function recibirWebhookMercadoPago(req, res) {
 
   try {
+
+    if (!firmaWebhookValida(req)) {
+      console.warn('WEBHOOK MERCADO PAGO: firma invalida.');
+      return res.sendStatus(401);
+    }
 
     console.log(
       '========== WEBHOOK MERCADO PAGO =========='

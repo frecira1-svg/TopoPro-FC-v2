@@ -14,7 +14,7 @@ const {
 const ESTADO_PENDIENTE = 'PENDIENTE';
 const ESTADO_ACTIVA = 'ACTIVA';
 const ESTADO_CANCELADA = 'CANCELADA';
-const ESTADO_PAUSADA = 'PAUSADA';
+const ESTADO_PAUSADA = 'VENCIDA'; // El enum EstadoSuscripcion no tiene PAUSADA
 
 
 // ==========================================
@@ -1049,10 +1049,23 @@ async function procesarWebhookMercadoPago({
     nuevoEstado =
       ESTADO_PAUSADA;
 
-  } else {
+  } else if (estadoMP === 'cancelled') {
 
     nuevoEstado =
       ESTADO_CANCELADA;
+
+  } else {
+
+    console.log(
+      'ESTADO MERCADO PAGO SIN CAMBIO EN TOPOPRO:',
+      estadoMP
+    );
+
+    return {
+      procesado: false,
+      motivo: 'ESTADO_MP_SIN_CAMBIO',
+      estadoMercadoPago: estadoMP
+    };
 
   }
 
