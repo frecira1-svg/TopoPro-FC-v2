@@ -1,4 +1,4 @@
-﻿const prisma = require('../config/prisma');
+const prisma = require('../config/prisma');
 
 const {
   crearSuscripcion,
@@ -736,6 +736,43 @@ async function confirmarSuscripcionComercial(
     throw error;
   }
 
+
+  // ==========================================
+  // VALIDAR PROPIEDAD DE LA SUSCRIPCION
+  // ==========================================
+
+  const usadaPorOtroUsuario =
+    await prisma.suscripcion.findFirst({
+      where: {
+        proveedorSuscripcionId: String(preapprovalId),
+        usuarioId: { not: idUsuario }
+      },
+      select: { id: true }
+    });
+
+  if (usadaPorOtroUsuario) {
+    const error = new Error(
+      'Esta suscripcion de Mercado Pago ya esta asociada a otra cuenta.'
+    );
+    error.codigo = 'SUSCRIPCION_MP_YA_ASOCIADA';
+    error.estadoHttp = 409;
+    throw error;
+  }
+
+  const esLaMismaSuscripcion =
+    suscripcionActual.proveedorSuscripcionId === String(preapprovalId);
+
+  if (
+    suscripcionActual.estado !== ESTADO_PENDIENTE &&
+    !esLaMismaSuscripcion
+  ) {
+    const error = new Error(
+      'Primero debes iniciar el proceso de suscripcion desde TopoPro.'
+    );
+    error.codigo = 'SUSCRIPCION_SIN_CHECKOUT';
+    error.estadoHttp = 409;
+    throw error;
+  }
 
   // ==========================================
   // ACTUALIZAR SUSCRIPCIÓN
