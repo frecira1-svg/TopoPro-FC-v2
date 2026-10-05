@@ -119,80 +119,145 @@
 
     <div class="comercial-metricas">
 
-      <div class="comercial-metrica">
+  <!-- PROYECTOS -->
+  <div class="comercial-metrica">
 
-        <span>
-          Proyectos
-        </span>
+    <span>
+      Proyectos
+    </span>
 
-        <strong>
-          {{ textoLimiteProyectos() }}
-        </strong>
+    <strong>
+      {{
+        comercial.esAdmin
+          ? 'Ilimitados'
+          : comercial.plan?.maxProyectos == null
+            ? 'Ilimitados'
+            : comercial.plan?.maxProyectos
+      }}
+    </strong>
 
-      </div>
-
-
-      <div class="comercial-metrica">
-
-        <span>
-          Puntos por proyecto
-        </span>
-
-        <strong>
-          {{ textoLimitePuntos() }}
-        </strong>
-
-      </div>
+  </div>
 
 
-      <div
-        class="comercial-metrica"
-        *ngIf="!comercial.esAdmin"
-      >
+  <!-- PUNTOS -->
+  <div class="comercial-metrica">
 
-        <span>
-          Exportación
-        </span>
+    <span>
+      Puntos por proyecto
+    </span>
 
-        <strong
-          [class.disponible]="comercial.puedeExportar"
-          [class.restringido]="!comercial.puedeExportar"
-        >
-          {{
-            comercial.puedeExportar
-              ? 'Disponible'
-              : 'Requiere plan'
-          }}
-        </strong>
+    <strong>
+      {{
+        comercial.esAdmin
+          ? 'Ilimitados'
+          : comercial.plan?.maxPuntosProyecto == null
+            ? 'Ilimitados'
+            : comercial.plan?.maxPuntosProyecto
+      }}
+    </strong>
 
-      </div>
-
-    </div>
+  </div>
 
 
-    <div
-      class="aviso-limite"
-      *ngIf="
-        !comercial.esAdmin &&
-        !puedeCrearPorPlan()
-      "
+  <!-- EXPORTACIÓN -->
+  <div
+    class="comercial-metrica"
+    *ngIf="!comercial.esAdmin"
+  >
+
+    <span>
+      Exportación
+    </span>
+
+    <strong
+      [class.disponible]="comercial.plan?.permiteExportacion === true"
+      [class.restringido]="comercial.plan?.permiteExportacion !== true"
     >
+      {{
+        comercial.plan?.permiteExportacion === true
+          ? 'Disponible'
+          : 'Requiere plan'
+      }}
+    </strong>
 
-      <i class="pi pi-lock"></i>
+  </div>
 
-      <div>
 
-        <strong>
-          Límite de proyectos alcanzado
-        </strong>
+  <!-- MODO OFFLINE -->
+  <div
+    class="comercial-metrica"
+    *ngIf="!comercial.esAdmin"
+  >
 
-        <p>
-          {{ mensajeLimiteProyecto() }}
-        </p>
+    <span>
+      Modo offline
+    </span>
 
-      </div>
+    <strong
+      [class.disponible]="comercial.plan?.permiteOffline === true"
+      [class.restringido]="comercial.plan?.permiteOffline !== true"
+    >
+      {{
+        comercial.plan?.permiteOffline === true
+          ? 'Disponible'
+          : 'No disponible'
+      }}
+    </strong>
 
-    </div>
+  </div>
+
+</div>
+
+
+    <!-- =====================================================
+     AVISO DE CAPACIDAD
+====================================================== -->
+
+<div
+  class="aviso-capacidad"
+  *ngIf="
+    !comercial.esAdmin &&
+    !puedeCrearPorPlan()
+  "
+>
+
+  <div class="aviso-capacidad-icono">
+    <i class="pi pi-info-circle"></i>
+  </div>
+
+  <div class="aviso-capacidad-contenido">
+
+    <strong>
+      Capacidad del plan alcanzada
+    </strong>
+
+    <p>
+      {{ mensajeLimiteProyecto() }}
+    </p>
+
+  </div>
+
+</div>
+
+<!-- BOTÓN VER PLANES -->
+<div
+  class="contenedor-ver-planes"
+  *ngIf="
+    !comercial.esAdmin &&
+    comercial.plan?.codigo !== 'COMPANY'
+  "
+>
+
+  <button
+    type="button"
+    class="aviso-capacidad-boton"
+    (click)="verPlanes()"
+  >
+    <i class="pi pi-arrow-up-right"></i>
+    Ver planes
+  </button>
+
+</div>
 
   </section>
 
@@ -312,7 +377,7 @@
       <article class="stat-proyecto">
 
         <div class="icono purple">
-          ⏸️
+          ⏸
         </div>
 
         <div>

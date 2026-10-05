@@ -29,7 +29,7 @@ async function main() {
     console.log('ROL:', u.rol);
 
     console.log(
-      'SUSCRIPCIÓN:',
+      'SUSCRIPCIÃ“N:',
       u.suscripcion
         ? {
             id: u.suscripcion.id,

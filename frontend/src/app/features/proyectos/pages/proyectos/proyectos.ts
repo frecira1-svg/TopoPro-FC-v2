@@ -1332,4 +1332,12 @@ export class Proyectos implements OnInit {
 
   }
 
+  // =====================================================
+  // NAVEGACIÓN A PLANES
+  // =====================================================
+
+  verPlanes(): void {
+    this.router.navigate(['/suscripcion']);
+  }
+
 }

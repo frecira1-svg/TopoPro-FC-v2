@@ -707,7 +707,6 @@ async function confirmarSuscripcionComercial(
     throw error;
   }
 
-
   // ==========================================
   // BUSCAR SUSCRIPCIÓN DEL USUARIO
   // ==========================================
@@ -778,7 +777,7 @@ async function confirmarSuscripcionComercial(
   // ACTUALIZAR SUSCRIPCIÓN
   // ==========================================
 
-  const suscripcion =
+  const suscripcionActualizada =
     await prisma.suscripcion.update({
 
       where: {
@@ -834,7 +833,7 @@ async function confirmarSuscripcionComercial(
 
   console.log(
     'SUSCRIPCIÓN ACTIVADA EN TOPOPRO:',
-    suscripcion.id
+    suscripcionActualizada.id
   );
 
 
@@ -842,7 +841,7 @@ async function confirmarSuscripcionComercial(
 
     ok: true,
 
-    suscripcion,
+    suscripcion: suscripcionActualizada,
 
     mercadoPago: {
 
@@ -1171,8 +1170,3 @@ module.exports = {
   procesarWebhookMercadoPago
 
 };
-
-
-
-
-

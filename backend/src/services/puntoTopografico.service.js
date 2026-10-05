@@ -62,7 +62,7 @@ async function obtenerPuntoAutorizado(id, usuario) {
   if (!punto) {
 
     const error = new Error(
-      'Punto topogrÃ¡fico no encontrado'
+      'Punto topográfico no encontrado'
     );
 
     error.status = 404;
@@ -83,7 +83,7 @@ async function obtenerPuntoAutorizado(id, usuario) {
   ) {
 
     const error = new Error(
-      'No tienes permisos para acceder a este punto topogrÃ¡fico'
+      'No tienes permisos para acceder a este punto topográfico'
     );
 
     error.status = 403;
@@ -124,7 +124,7 @@ async function crearPunto(datos, usuario) {
   if (!codigo || !codigo.trim()) {
 
     const error = new Error(
-      'El cÃ³digo del punto es obligatorio'
+      'El código del punto es obligatorio'
     );
 
     error.status = 400;
@@ -139,7 +139,7 @@ async function crearPunto(datos, usuario) {
   ) {
 
     const error = new Error(
-      'Norte, este y elevaciÃ³n son obligatorios'
+      'Norte, este y elevación son obligatorios'
     );
 
     error.status = 400;
@@ -155,7 +155,7 @@ async function crearPunto(datos, usuario) {
   await obtenerProyectoAutorizado(proyectoId, usuario);
 
   // -----------------------------------------------
-  // VALIDAR LÃMITE COMERCIAL DE PUNTOS
+  // VALIDAR LÍMITE COMERCIAL DE PUNTOS
   // -----------------------------------------------
 
   await verificarPuedeAgregarPunto(
@@ -165,7 +165,7 @@ async function crearPunto(datos, usuario) {
   );
 
   // -----------------------------------------------
-  // VALIDAR CÃ“DIGO DUPLICADO
+  // VALIDAR CÓDIGO DUPLICADO
   // -----------------------------------------------
 
   const codigoLimpio =
@@ -185,7 +185,7 @@ async function crearPunto(datos, usuario) {
   if (puntoExistente) {
 
     const error = new Error(
-      `Ya existe un punto con el cÃ³digo "${codigoLimpio}" en este proyecto`
+      `Ya existe un punto con el código "${codigoLimpio}" en este proyecto`
     );
 
     error.status = 400;
@@ -367,7 +367,7 @@ async function actualizarPunto(
 
 
   // -----------------------------------------------
-  // VALIDAR CÃ“DIGO
+  // VALIDAR CÓDIGO
   // -----------------------------------------------
 
   if (
@@ -382,7 +382,7 @@ async function actualizarPunto(
     if (!codigoLimpio) {
 
       const error = new Error(
-        'El cÃ³digo del punto es obligatorio'
+        'El código del punto es obligatorio'
       );
 
       error.status = 400;
@@ -392,7 +392,7 @@ async function actualizarPunto(
 
 
     // ---------------------------------------------
-    // BUSCAR OTRO PUNTO CON EL MISMO CÃ“DIGO
+    // BUSCAR OTRO PUNTO CON EL MISMO CÓDIGO
     // ---------------------------------------------
 
     const puntoExistente =
@@ -417,7 +417,7 @@ async function actualizarPunto(
     if (puntoExistente) {
 
       const error = new Error(
-        `Ya existe un punto con el cÃ³digo "${codigoLimpio}" en este proyecto`
+        `Ya existe un punto con el código "${codigoLimpio}" en este proyecto`
       );
 
       error.status = 400;
@@ -513,7 +513,7 @@ async function eliminarPunto(
 
   return {
     mensaje:
-      'Punto topogrÃ¡fico eliminado correctamente'
+      'Punto topográfico eliminado correctamente'
   };
 
 }
@@ -723,7 +723,7 @@ async function importarPuntosCSV(
   if (lineas.length < 2) {
 
     const error = new Error(
-      'El archivo CSV estÃ¡ vacÃ­o o no tiene datos'
+      'El archivo CSV está vacío o no tiene datos'
     );
 
     error.status = 400;
@@ -832,7 +832,7 @@ async function importarPuntosCSV(
 
             const error =
               new Error(
-                `Fila ${index + 2}: el cÃ³digo es obligatorio`
+                `Fila ${index + 2}: el código es obligatorio`
               );
 
             error.status =
@@ -868,7 +868,7 @@ async function importarPuntosCSV(
 
             const error =
               new Error(
-                `Fila ${index + 2}: norte, este y elevaciÃ³n son obligatorios y deben ser numÃ©ricos`
+                `Fila ${index + 2}: norte, este y elevación son obligatorios y deben ser numéricos`
               );
 
             error.status =
@@ -934,7 +934,7 @@ async function importarPuntosCSV(
 
 
   // -----------------------------------------------
-  // VALIDAR LÃMITE COMERCIAL DE PUNTOS
+  // VALIDAR LÍMITE COMERCIAL DE PUNTOS
   // -----------------------------------------------
 
   await verificarPuedeAgregarPunto(
@@ -945,7 +945,7 @@ async function importarPuntosCSV(
 
 
   // -----------------------------------------------
-  // VALIDAR CÃ“DIGOS DUPLICADOS EN EL CSV
+  // VALIDAR CÓDIGOS DUPLICADOS EN EL CSV
   // -----------------------------------------------
     const codigos =
     new Set();
@@ -964,7 +964,7 @@ async function importarPuntosCSV(
 
       const error =
         new Error(
-          `El archivo CSV contiene el cÃ³digo duplicado "${codigo}"`
+          `El archivo CSV contiene el código duplicado "${codigo}"`
         );
 
       error.status =
@@ -980,7 +980,7 @@ async function importarPuntosCSV(
 
 
   // -----------------------------------------------
-  // VALIDAR CÃ“DIGOS YA EXISTENTES
+  // VALIDAR CÓDIGOS YA EXISTENTES
   // -----------------------------------------------
 
   const codigosExistentes =
@@ -1019,7 +1019,7 @@ async function importarPuntosCSV(
 
     const error =
       new Error(
-        `Los siguientes cÃ³digos ya existen en este proyecto: ${duplicados}`
+        `Los siguientes códigos ya existen en este proyecto: ${duplicados}`
       );
 
     error.status =

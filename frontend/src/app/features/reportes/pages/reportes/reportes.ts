@@ -245,7 +245,7 @@ export class Reportes implements OnInit {
 
 
     // -------------------------------------------------
-    // ADMIN â†’ ACCESO TOTAL
+    // ADMIN → ACCESO TOTAL
     // -------------------------------------------------
 
     if (usuario.rol === 'ADMIN') {
@@ -261,7 +261,7 @@ export class Reportes implements OnInit {
 
 
     // -------------------------------------------------
-    // USUARIO â†’ SUS PROPIOS PERMISOS
+    // USUARIO → SUS PROPIOS PERMISOS
     // -------------------------------------------------
 
     this.permisoService
@@ -314,7 +314,7 @@ export class Reportes implements OnInit {
 
 
   // =====================================================
-  // CARGAR INFORMACIÃ“N GENERAL
+  // CARGAR INFORMACIÓN GENERAL
   // =====================================================
 
   cargarDatos(): void {
@@ -506,7 +506,7 @@ export class Reportes implements OnInit {
 
 
   // =====================================================
-  // CARGAR REPORTE TÃ‰CNICO
+  // CARGAR REPORTE TÉCNICO
   // =====================================================
 
   cargarReporteProyecto(
@@ -577,7 +577,7 @@ export class Reportes implements OnInit {
           }
 
           console.error(
-            'Error cargando reporte tÃ©cnico:',
+            'Error cargando reporte técnico:',
             error
           );
 
@@ -585,7 +585,7 @@ export class Reportes implements OnInit {
 
           this.error =
             error?.error?.error ||
-            'No se pudo cargar el reporte tÃ©cnico';
+            'No se pudo cargar el reporte técnico';
 
           this.cargandoReporte =
             false;
@@ -668,7 +668,7 @@ export class Reportes implements OnInit {
 
 
   // =====================================================
-  // ESTADÃSTICAS
+  // ESTADÍSTICAS
   // =====================================================
 
   get totalProyectos(): number {
