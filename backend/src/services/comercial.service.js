@@ -105,8 +105,28 @@ async function verificarPuedeCrearProyecto(usuarioId) {
       usuarioId
     );
 
+  if (contexto.esAdmin) {
+    return true;
+  }
 
-  if (!contexto.suscripcion) {
+  if (!contexto.plan) {
+
+    const error = new Error(
+      'No se encontró un plan comercial para el usuario.'
+    );
+
+    error.codigo =
+      'PLAN_NO_ENCONTRADO';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
+
+  if (
+    !contexto.esFree &&
+    !contexto.suscripcion
+  ) {
 
     const error = new Error(
       'El usuario no tiene una suscripción activa.'
@@ -120,14 +140,14 @@ async function verificarPuedeCrearProyecto(usuarioId) {
     throw error;
   }
 
-
   if (
+    contexto.suscripcion &&
     contexto.suscripcion.estado !==
     ESTADO_ACTIVA
   ) {
 
     const error = new Error(
-      'La suscripción del usuario no está activa.'
+      'La suscripción no está activa.'
     );
 
     error.codigo =
@@ -138,60 +158,322 @@ async function verificarPuedeCrearProyecto(usuarioId) {
     throw error;
   }
 
+  if (
+    contexto.plan.maxProyectos !== null &&
+    contexto.plan.maxProyectos !== undefined
+  ) {
+
+    const cantidadProyectos =
+      await prisma.proyecto.count({
+        where: {
+          usuarioId
+        }
+      });
+
+    if (
+      cantidadProyectos >=
+      contexto.plan.maxProyectos
+    ) {
+
+      const error = new Error(
+        `Has alcanzado el límite de ${contexto.plan.maxProyectos} proyecto(s) de tu plan.`
+      );
+
+      error.codigo =
+        'LIMITE_PROYECTOS';
+
+      error.estadoHttp = 403;
+
+      throw error;
+    }
+  }
 
   return true;
-
 }
 
 
-// ==========================================
-// VERIFICAR AGREGAR PUNTO
-// ==========================================
+async function verificarPuedeAgregarPunto(
+  usuarioId,
+  proyectoId,
+  cantidad = 1
+) {
 
-async function verificarPuedeAgregarPunto(usuarioId) {
+  const contexto =
+    await obtenerContextoComercial(
+      usuarioId
+    );
 
-  await verificarPuedeCrearProyecto(
-    usuarioId
-  );
+  if (contexto.esAdmin) {
+    return true;
+  }
+
+  if (!contexto.plan) {
+
+    const error = new Error(
+      'No se encontró un plan comercial para el usuario.'
+    );
+
+    error.codigo =
+      'PLAN_NO_ENCONTRADO';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
+
+  if (
+    !contexto.esFree &&
+    !contexto.suscripcion
+  ) {
+
+    const error = new Error(
+      'El usuario no tiene una suscripción activa.'
+    );
+
+    error.codigo =
+      'SUSCRIPCION_REQUERIDA';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
+
+  if (
+    contexto.suscripcion &&
+    contexto.suscripcion.estado !==
+    ESTADO_ACTIVA
+  ) {
+
+    const error = new Error(
+      'La suscripción no está activa.'
+    );
+
+    error.codigo =
+      'SUSCRIPCION_NO_ACTIVA';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
+
+  if (
+    contexto.plan.maxPuntosProyecto === null ||
+    contexto.plan.maxPuntosProyecto === undefined
+  ) {
+    return true;
+  }
+
+  if (!proyectoId) {
+
+    const error = new Error(
+      'El proyecto es obligatorio para validar el límite de puntos.'
+    );
+
+    error.codigo =
+      'PROYECTO_REQUERIDO';
+
+    error.estadoHttp = 400;
+
+    throw error;
+  }
+
+  if (
+    !Number.isInteger(cantidad) ||
+    cantidad < 1
+  ) {
+
+    const error = new Error(
+      'La cantidad de puntos debe ser un número entero mayor que cero.'
+    );
+
+    error.codigo =
+      'CANTIDAD_PUNTOS_INVALIDA';
+
+    error.estadoHttp = 400;
+
+    throw error;
+  }
+
+  const proyecto =
+    await prisma.proyecto.findFirst({
+      where: {
+        id: Number(proyectoId),
+        usuarioId
+      },
+      select: {
+        id: true
+      }
+    });
+
+  if (!proyecto) {
+
+    const error = new Error(
+      'El proyecto no existe o no pertenece al usuario.'
+    );
+
+    error.codigo =
+      'PROYECTO_NO_ENCONTRADO';
+
+    error.estadoHttp = 404;
+
+    throw error;
+  }
+
+  const cantidadActual =
+    await prisma.puntoTopografico.count({
+      where: {
+        proyectoId: proyecto.id
+      }
+    });
+
+  const cantidadFinal =
+    cantidadActual + cantidad;
+
+  if (
+    cantidadFinal >
+    contexto.plan.maxPuntosProyecto
+  ) {
+
+    const error = new Error(
+      `El proyecto supera el límite de ${contexto.plan.maxPuntosProyecto} puntos permitido por tu plan.`
+    );
+
+    error.codigo =
+      'LIMITE_PUNTOS_PROYECTO';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
 
   return true;
-
 }
 
-
-// ==========================================
-// VERIFICAR ADMINISTRACIÓN DE EQUIPOS
-// ==========================================
 
 async function verificarPuedeAdministrarEquipos(
   usuarioId
 ) {
 
-  await verificarPuedeCrearProyecto(
-    usuarioId
-  );
+  const contexto =
+    await obtenerContextoComercial(
+      usuarioId
+    );
+
+  if (contexto.esAdmin) {
+    return true;
+  }
+
+  if (!contexto.plan) {
+
+    const error = new Error(
+      'No se encontró un plan comercial para el usuario.'
+    );
+
+    error.codigo =
+      'PLAN_NO_ENCONTRADO';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
+
+  if (!contexto.puedeAdministrarEquipos) {
+
+    const error = new Error(
+      'La administración de equipos requiere un plan de pago.'
+    );
+
+    error.codigo =
+      'EQUIPOS_REQUIEREN_PLAN';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
+
+  if (
+    !contexto.suscripcion ||
+    contexto.suscripcion.estado !==
+    ESTADO_ACTIVA
+  ) {
+
+    const error = new Error(
+      'El usuario no tiene una suscripción activa.'
+    );
+
+    error.codigo =
+      'SUSCRIPCION_REQUERIDA';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
 
   return true;
-
 }
 
-
-// ==========================================
-// VERIFICAR EXPORTACIÓN
-// ==========================================
 
 async function verificarPuedeExportar(
   usuarioId
 ) {
 
-  await verificarPuedeCrearProyecto(
-    usuarioId
-  );
+  const contexto =
+    await obtenerContextoComercial(
+      usuarioId
+    );
+
+  if (contexto.esAdmin) {
+    return true;
+  }
+
+  if (!contexto.plan) {
+
+    const error = new Error(
+      'No se encontró un plan comercial para el usuario.'
+    );
+
+    error.codigo =
+      'PLAN_NO_ENCONTRADO';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
+
+  if (!contexto.puedeExportar) {
+
+    const error = new Error(
+      'La exportación requiere un plan de pago.'
+    );
+
+    error.codigo =
+      'EXPORTACION_NO_DISPONIBLE';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
+
+  if (
+    !contexto.suscripcion ||
+    contexto.suscripcion.estado !==
+    ESTADO_ACTIVA
+  ) {
+
+    const error = new Error(
+      'El usuario no tiene una suscripción activa.'
+    );
+
+    error.codigo =
+      'SUSCRIPCION_REQUERIDA';
+
+    error.estadoHttp = 403;
+
+    throw error;
+  }
 
   return true;
-
 }
-
 
 // ==========================================
 // CREAR SUSCRIPCIÓN COMERCIAL
