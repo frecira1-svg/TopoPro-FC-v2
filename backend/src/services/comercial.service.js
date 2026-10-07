@@ -1,4 +1,4 @@
-const prisma = require('../config/prisma');
+﻿const prisma = require('../config/prisma');
 
 const {
   crearSuscripcion,
@@ -76,19 +76,64 @@ async function obtenerContextoComercial(usuarioId) {
   }
 
 
+  if (usuario.rol === 'ADMIN') {
+
+    return {
+      usuarioId: usuario.id,
+      rol: usuario.rol,
+      esAdmin: true,
+      plan: null,
+      suscripcion: null,
+      esFree: false,
+      puedeExportar: true,
+      puedeCrearProyecto: true,
+      puedeAdministrarEquipos: true
+    };
+
+  }
+
+  const planFree =
+    await prisma.plan.findFirst({
+      where: {
+        codigo: 'FREE',
+        activo: true
+      }
+    });
+
+  if (!planFree) {
+
+    const error = new Error(
+      'El plan FREE no está configurado.'
+    );
+
+    error.codigo = 'PLAN_FREE_NO_CONFIGURADO';
+    error.estadoHttp = 500;
+
+    throw error;
+  }
+
+  const suscripcionActiva =
+    usuario.suscripcion &&
+    usuario.suscripcion.estado === 'ACTIVE'
+      ? usuario.suscripcion
+      : null;
+
+  const plan =
+    suscripcionActiva?.plan || planFree;
+
+  const esFree =
+    plan.codigo === 'FREE';
+
   return {
-
-    usuario: {
-      id: usuario.id,
-      rol: usuario.rol
-    },
-
-    suscripcion:
-      usuario.suscripcion || null,
-
-    plan:
-      usuario.suscripcion?.plan || null
-
+    usuarioId: usuario.id,
+    rol: usuario.rol,
+    esAdmin: false,
+    plan,
+    suscripcion: suscripcionActiva,
+    esFree,
+    puedeExportar: Boolean(plan.permiteExportacion),
+    puedeCrearProyecto: true,
+    puedeAdministrarEquipos: !esFree
   };
 
 }
