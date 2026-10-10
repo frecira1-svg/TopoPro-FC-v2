@@ -414,7 +414,7 @@ async function recibirWebhookMercadoPago(req, res) {
     );
 
     // Mercado Pago espera una respuesta rápida.
-    return res.sendStatus(200);
+    return res.sendStatus(500);
 
   }
 

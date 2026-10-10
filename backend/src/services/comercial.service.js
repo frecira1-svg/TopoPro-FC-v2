@@ -113,10 +113,10 @@ async function obtenerContextoComercial(usuarioId) {
   }
 
   const suscripcionActiva =
-    usuario.suscripcion &&
-    usuario.suscripcion.estado === 'ACTIVE'
-      ? usuario.suscripcion
-      : null;
+  usuario.suscripcion &&
+  usuario.suscripcion.estado === ESTADO_ACTIVA
+    ? usuario.suscripcion
+    : null;
 
   const plan =
     suscripcionActiva?.plan || planFree;
@@ -1276,27 +1276,15 @@ async function procesarWebhookMercadoPago({
       await obtenerSuscripcionMercadoPago(
         String(preapprovalId)
       );
+          } catch (error) {
 
-  } catch (error) {
+  console.error(
+    'ERROR CONSULTANDO SUSCRIPCIÓN EN MERCADO PAGO:',
+    error
+  );
 
-    console.error(
-      'ERROR CONSULTANDO SUSCRIPCIÓN EN MERCADO PAGO:',
-      error
-    );
-
-    return {
-
-      procesado: false,
-
-      motivo:
-        'SUSCRIPCION_MERCADOPAGO_NO_ENCONTRADA',
-
-      preapprovalId:
-        String(preapprovalId)
-
-    };
-
-  }
+  throw error;
+}
 
 
   // ==========================================
@@ -1336,22 +1324,20 @@ async function procesarWebhookMercadoPago({
 
 
   if (!suscripcion) {
+  console.error(
+    'SUSCRIPCIÓN NO ENCONTRADA EN TOPOPRO:',
+    String(preapprovalId)
+  );
 
-    console.log(
-      'SUSCRIPCIÓN NO ENCONTRADA EN TOPOPRO:',
-      String(preapprovalId)
-    );
+  const error = new Error(
+    'La suscripción de Mercado Pago todavía no está vinculada a TopoPro.'
+  );
 
-    return {
+  error.codigo = 'SUSCRIPCION_NO_ENCONTRADA';
+  error.estadoHttp = 500;
 
-      procesado: false,
-
-      motivo:
-        'SUSCRIPCION_NO_ENCONTRADA'
-
-    };
-
-  }
+  throw error;
+}
 
 
   // ==========================================
