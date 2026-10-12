@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -7,6 +7,7 @@ import { Sidebar } from './layout/components/sidebar/sidebar';
 import { ThemeService } from './core/services/theme.service';
 import { OfflineDbService } from './core/services/offline/offline-db.service';
 import { OfflineSyncService } from './core/services/offline/offline-sync.service';
+import { SeoService } from './core/services/seo.service';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,7 @@ import { OfflineSyncService } from './core/services/offline/offline-sync.service
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
 
   protected readonly title = signal('TopoPro');
 
@@ -27,6 +28,7 @@ export class App {
   private router = inject(Router);
   private offlineDbService = inject(OfflineDbService);
   private offlineSyncService = inject(OfflineSyncService);
+  private seoService = inject(SeoService);
 
   mostrarLayout = false;
 
@@ -38,6 +40,10 @@ export class App {
     '/directorio',
     '/perfil-publico'
   ];
+
+  ngOnInit(): void {
+    this.seoService.iniciar();
+  }
 
   constructor() {
 
@@ -145,16 +151,6 @@ export class App {
 
     // =====================================================
     // PUBLICACIONES
-    // =====================================================
-    //
-    // Publicaciones tiene doble comportamiento:
-    //
-    // 1. Usuario autenticado:
-    //    Navbar + Sidebar visibles.
-    //
-    // 2. Usuario no autenticado:
-    //    Página pública sin Sidebar.
-    //
     // =====================================================
 
     if (ruta === '/publicaciones') {
