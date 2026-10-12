@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.topopro-fc.com/sitemap.xml
+Sitemap: https://topopro-fc.com/sitemap.xml
