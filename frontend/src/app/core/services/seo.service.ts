@@ -32,49 +32,61 @@ export class SeoService {
     }
   };
 
-  iniciar(): void {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(event => {
-        const url = (event as NavigationEnd).urlAfterRedirects;
-        const ruta = url.split('?')[0].split('#')[0] || '/';
-        const pagina = this.paginas[ruta];
 
-        if (!pagina) {
-          return;
-        }
+iniciar(): void {
+  const actualizarSeo = (url: string): void => {
+    const ruta = url.split('?')[0].split('#')[0] || '/';
+    const pagina = this.paginas[ruta];
 
-        const canonica = `${this.dominio}${ruta === '/' ? '/' : ruta}`;
+    if (!pagina) {
+      return;
+    }
 
-        this.title.setTitle(pagina.titulo);
-        this.meta.updateTag({
-          name: 'description',
-          content: pagina.descripcion
-        });
-        this.meta.updateTag({
-          property: 'og:title',
-          content: pagina.titulo
-        });
-        this.meta.updateTag({
-          property: 'og:description',
-          content: pagina.descripcion
-        });
-        this.meta.updateTag({
-          property: 'og:url',
-          content: canonica
-        });
+    const canonica = `${this.dominio}${ruta === '/' ? '/' : ruta}`;
 
-        let enlace = document.querySelector<HTMLLinkElement>(
-          'link[rel="canonical"]'
-        );
+    this.title.setTitle(pagina.titulo);
 
-        if (!enlace) {
-          enlace = document.createElement('link');
-          enlace.rel = 'canonical';
-          document.head.appendChild(enlace);
-        }
+    this.meta.updateTag({
+      name: 'description',
+      content: pagina.descripcion
+    });
 
-        enlace.href = canonica;
-      });
-  }
+    this.meta.updateTag({
+      property: 'og:title',
+      content: pagina.titulo
+    });
+
+    this.meta.updateTag({
+      property: 'og:description',
+      content: pagina.descripcion
+    });
+
+    this.meta.updateTag({
+      property: 'og:url',
+      content: canonica
+    });
+
+    let enlace = document.querySelector<HTMLLinkElement>(
+      'link[rel="canonical"]'
+    );
+
+    if (!enlace) {
+      enlace = document.createElement('link');
+      enlace.rel = 'canonical';
+      document.head.appendChild(enlace);
+    }
+
+    enlace.href = canonica;
+  };
+
+  // Actualizar también la página inicial.
+  actualizarSeo(this.router.url);
+
+  // Actualizar cuando el usuario navegue a otra ruta.
+  this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe(event => {
+      actualizarSeo((event as NavigationEnd).urlAfterRedirects);
+    });
+}
 }
