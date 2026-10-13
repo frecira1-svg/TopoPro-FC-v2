@@ -69,9 +69,11 @@ export class InicioPublico {
   // ==========================================
 
   contratarProfesional(): void {
-
     this.router.navigate(['/suscripcion']);
+  }
 
+  abrirModoCampo(): void {
+    this.router.navigate(['/proyectos']);
   }
 
 }
