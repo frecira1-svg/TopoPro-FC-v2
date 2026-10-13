@@ -239,7 +239,7 @@ html {
       rgba(3, 42, 31, 0.36) 55%,
       rgba(3, 42, 31, 0.08) 100%
     ),
-    url('/assets/images/topopro-hero-nuevo.webp');
+    url('/assets/images/topopro-hero-limpio.png');
 
   background-size: cover;
   background-position: center center;
@@ -1923,7 +1923,7 @@ html {
       rgba(19, 92, 62, 0.10),
       rgba(19, 92, 62, 0)
     ),
-    url('/assets/images/topopro-hero-nuevo.webp');
+    url('/assets/images/topopro-hero-limpio.png');
 
   background-position: 52% center;
 }
@@ -1935,7 +1935,7 @@ html {
       rgba(19, 92, 62, 0.10),
       rgba(19, 92, 62, 0)
     ),
-    url('/assets/images/topopro-hero-nuevo.webp');
+    url('/assets/images/topopro-hero-limpio.png');
 
   background-position: 70% center;
 }
@@ -1947,7 +1947,7 @@ html {
       rgba(19, 92, 62, 0.10),
       rgba(19, 92, 62, 0)
     ),
-    url('/assets/images/topopro-hero-nuevo.webp');
+    url('/assets/images/topopro-hero-limpio.png');
 
   background-position: 38% bottom;
 }
