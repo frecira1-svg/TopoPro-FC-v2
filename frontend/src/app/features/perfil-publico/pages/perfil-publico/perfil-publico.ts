@@ -6,6 +6,7 @@ import { PerfilPublicoService } from '../../../../core/services/perfil-publico.s
 import { PerfilPublico as PerfilPublicoModel } from '../../../../core/models/perfil-publico.model';
 import { Publicacion, PublicacionImagen } from '../../../../core/models/publicacion.model';
 import { AuthService } from '../../../../core/services/auth.service';
+import { SeoService } from '../../../../core/services/seo.service';
 import { ContactoProfesionalService } from '../../../../core/services/contacto-profesional.service';
 import { PublicacionCard } from '../../../publicaciones/components/publicacion-card/publicacion-card';
 
@@ -19,6 +20,7 @@ import { PublicacionCard } from '../../../publicaciones/components/publicacion-c
 export class PerfilPublico implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly perfilService = inject(PerfilPublicoService);
+  private readonly seoService = inject(SeoService);
   private readonly auth = inject(AuthService);
   private readonly contactoService = inject(ContactoProfesionalService);
   private readonly router = inject(Router);
@@ -43,10 +45,22 @@ export class PerfilPublico implements OnInit {
     }
 
     this.perfilService.obtenerPerfil(id).subscribe({
+
       next: perfil => {
         this.perfil.set(perfil);
+
+        this.seoService.actualizarPerfilPublico({
+          id: perfil.id,
+          nombre: perfil.nombre,
+          apellido: perfil.apellido,
+          profesion: perfil.profesion,
+          ciudad: perfil.ciudad,
+          pais: perfil.pais
+        });
+
         this.cargando.set(false);
       },
+
       error: err => {
         this.error.set(err?.error?.error || 'No se pudo cargar el perfil profesional.');
         this.cargando.set(false);

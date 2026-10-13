@@ -14,6 +14,77 @@ export class SeoService {
 
   private readonly dominio = 'https://topopro-fc.com';
 
+
+actualizarPerfilPublico(datos: {
+  id: number;
+  nombre: string;
+  apellido?: string | null;
+  profesion?: string | null;
+  ciudad?: string | null;
+  pais?: string | null;
+}): void {
+  const nombreCompleto =
+    `${datos.nombre} ${datos.apellido ?? ''}`.trim() ||
+    'Profesional de topografía';
+
+  const profesion = datos.profesion?.trim();
+  const ubicacion = [datos.ciudad, datos.pais]
+    .filter((valor): valor is string => !!valor?.trim())
+    .join(', ');
+
+  const titulo = [
+    nombreCompleto,
+    profesion,
+    'TopoPro FC'
+  ].filter(Boolean).join(' | ');
+
+  const descripcion =
+    `Perfil profesional de ${nombreCompleto}` +
+    `${profesion ? `, ${profesion}` : ''}` +
+    `${ubicacion ? ` en ${ubicacion}` : ''}. ` +
+    'Consulta sus trabajos y publicaciones en TopoPro FC.';
+
+  const canonica =
+    `${this.dominio}/perfil-publico/${datos.id}`;
+
+  this.title.setTitle(titulo);
+
+  this.meta.updateTag({
+    name: 'description',
+    content: descripcion.slice(0, 160)
+  });
+
+  this.meta.updateTag({
+    property: 'og:title',
+    content: titulo
+  });
+
+  this.meta.updateTag({
+    property: 'og:description',
+    content: descripcion.slice(0, 160)
+  });
+
+  this.meta.updateTag({
+    property: 'og:url',
+    content: canonica
+  });
+
+  let enlace = document.querySelector<HTMLLinkElement>(
+    'link[rel="canonical"]'
+  );
+
+  if (!enlace) {
+    enlace = document.createElement('link');
+    enlace.rel = 'canonical';
+    document.head.appendChild(enlace);
+  }
+
+  enlace.href = canonica;
+
+  console.log('[SEO] Perfil público actualizado:', canonica);
+}
+
+
   private readonly paginas: Record<string, {
     titulo: string;
     descripcion: string;
