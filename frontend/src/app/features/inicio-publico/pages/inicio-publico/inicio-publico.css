@@ -1916,6 +1916,7 @@ html {
   background-position: center;
 }
 
+
 .photo-one {
   background-image:
     linear-gradient(
@@ -1923,9 +1924,9 @@ html {
       rgba(19, 92, 62, 0.10),
       rgba(19, 92, 62, 0)
     ),
-    url('/assets/images/topopro-hero-limpio.png');
+    url('/assets/images/comunidad-levantamiento.png');
 
-  background-position: 52% center;
+  background-position: center 45%;
 }
 
 .photo-two {
@@ -1935,9 +1936,9 @@ html {
       rgba(19, 92, 62, 0.10),
       rgba(19, 92, 62, 0)
     ),
-    url('/assets/images/topopro-hero-limpio.png');
+    url('/assets/images/comunidad-control-obra.png');
 
-  background-position: 70% center;
+  background-position: center 40%;
 }
 
 .photo-three {
@@ -1947,10 +1948,11 @@ html {
       rgba(19, 92, 62, 0.10),
       rgba(19, 92, 62, 0)
     ),
-    url('/assets/images/topopro-hero-limpio.png');
+    url('/assets/images/comunidad-modelo-territorio.png');
 
-  background-position: 38% bottom;
+  background-position: center;
 }
+
 
 
 .community-tag {
