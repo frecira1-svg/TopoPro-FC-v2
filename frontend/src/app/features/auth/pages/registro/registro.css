@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    TOPOPRO FC
    REGISTRO PROFESIONAL
    ========================================================= */
@@ -54,7 +54,7 @@
       rgba(3, 50, 37, 0.42) 54%,
       rgba(3, 50, 37, 0.05) 100%
     ),
-    url('/assets/images/topopro-hero-limpio.png');
+    url('/assets/images/topopro-hero.png');
 
   background-size: cover;
 

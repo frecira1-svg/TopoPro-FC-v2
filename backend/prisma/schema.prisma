@@ -380,3 +380,20 @@ enum EstadoSuscripcion {
   CANCELADA
   PENDIENTE
 }
+
+model RedPasivaIGAC {
+  id                 Int      @id @default(autoincrement())
+  fid                Int      @unique
+  nomenclatura       String
+  municipio          String
+  departamento       String
+  estado             String?
+  latitud            Float
+  longitud           Float
+  alturaElipsoidal   Float?
+
+  @@index([departamento])
+  @@index([municipio])
+  @@index([nomenclatura])
+  @@map("red_pasiva_igac")
+}

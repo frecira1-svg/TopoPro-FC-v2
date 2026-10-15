@@ -108,6 +108,53 @@
         >
             🔄 Recargar
         </button>
+        <!-- CONTROLES RED PASIVA IGAC -->
+        <div class="controles-igac">
+            <label for="radioIGAC">Radio IGAC (km):</label>
+
+            <select
+                id="radioIGAC"
+                [value]="radioIGACKm"
+                (change)="cambiarRadioIGAC($event)"
+            >
+                <option value="5">5 km</option>
+                <option value="10">10 km</option>
+                <option value="25">25 km</option>
+                <option value="50">50 km</option>
+                <option value="100">100 km</option>
+                <option value="200">200 km</option>
+            </select>
+
+            <button
+                type="button"
+                class="btn-mapa"
+                (click)="cargarPuntosIGACCercanos()"
+                [disabled]="cargandoIGAC"
+            >
+                {{ cargandoIGAC ? 'Cargando IGAC...' : 'Cargar IGAC cercanos' }}
+            </button>
+
+            <button
+                type="button"
+                class="btn-mapa"
+                (click)="mostrarIGAC()"
+                [disabled]="puntosIGAC.length === 0"
+            >
+                {{ igacVisibles ? 'Ocultar IGAC' : 'Mostrar IGAC' }}
+            </button>
+
+            <span *ngIf="cargandoIGAC">
+                Consultando puntos cercanos...
+            </span>
+
+            <span *ngIf="errorIGAC" class="error-igac">
+                {{ errorIGAC }}
+            </span>
+
+            <span *ngIf="!cargandoIGAC && !errorIGAC && puntosIGAC.length > 0">
+                Puntos IGAC cargados: {{ puntosIGAC.length }}
+            </span>
+        </div>
 
     </section>
 

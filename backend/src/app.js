@@ -18,6 +18,7 @@ const authRoutes = require('./routes/authRoutes');
 const proyectoRoutes = require('./routes/proyectoRoutes');
 const clienteRoutes = require('./routes/clienteRoutes');
 const puntoTopograficoRoutes = require('./routes/puntoTopografico.routes');
+const redPasivaIGACRoutes = require('./routes/redPasivaIGAC.routes');
 const levantamientoRoutes = require('./routes/levantamientoRoutes');
 const archivoRoutes = require('./routes/archivo.routes');
 const publicacionRoutes = require('./routes/publicacion.routes');
@@ -85,6 +86,11 @@ app.use(
 app.use(
   '/api/puntos',
   puntoTopograficoRoutes
+);
+
+app.use(
+  '/api/igac/red-pasiva',
+  redPasivaIGACRoutes
 );
 
 app.use(

@@ -239,8 +239,8 @@ html {
       rgba(3, 42, 31, 0.36) 55%,
       rgba(3, 42, 31, 0.08) 100%
     ),
-    url('/assets/images/topopro-hero-limpio.png');
 
+url('/assets/images/topopro-hero.png');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
